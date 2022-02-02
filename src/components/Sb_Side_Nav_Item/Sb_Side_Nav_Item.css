@@ -1,0 +1,27 @@
+.navItemContainer {
+  border-radius: 5px;
+  color: var(--light);
+  cursor: pointer;
+  margin-left: 0 !important;
+  width: 85% !important;
+  margin: 0 !important;
+}
+
+.iconCol {
+  margin-left: 20px;
+  display: flex;
+  align-items: baseline;
+}
+
+.icon {
+  font-size: 20px;
+  vertical-align: bottom;
+}
+
+.text{
+  padding-bottom: 10px;
+}
+
+.sb-bg-dark {
+  background-color: var(--secondary) !important;
+}

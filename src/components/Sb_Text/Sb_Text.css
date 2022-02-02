@@ -1,0 +1,103 @@
+.hv {
+    font-family: 'HelveticaNeue';
+    margin: 0;
+    display: inline-block;
+}
+.light {
+    color: #e2e2e2;
+}
+.dark {
+    color: #282829
+}
+.right {
+    text-align: right;
+}
+.left {
+    text-align: left;
+}
+.c-bold72 {
+    font-weight: 600;
+    font-size: 72px;
+}
+.c-bold48 {
+    font-weight: 600;
+    font-size: 48px;
+}
+.c-bold32 {
+    font-weight: 600;
+    font-size: 32px;
+}
+.c-bold24 {
+    font-weight: 600;
+    font-size: 24px;
+}
+.bold72 {
+    font-weight: 900;
+    font-size: 72px;
+}
+.bold48 {
+    font-weight: 900;
+    font-size: 48px;
+}
+.bold32 {
+    font-weight: 900;
+    font-size: 32px;
+}
+.bold16 {
+    font-weight: 900;
+    font-size: 16px;
+}
+.bold12 {
+    font-weight: 900;
+    font-size: 12px;
+}
+.reg16 {
+    font-weight: 400;
+    font-size: 16px;
+}
+.reg12 {
+    font-weight: 400;
+    font-size: 12px;
+}
+.med12 {
+    font-weight: 500;
+    font-size: 12px;
+}
+.med16 {
+    font-weight: 500;
+    font-size: 16px;
+}
+.reg24 {
+    font-weight: 400;
+    font-size: 24px;
+}
+.bold24 {
+    font-weight: 900;
+    font-size: 24px;
+}
+.reg32 {
+    font-weight: 400;
+    font-size: 32px;
+}
+.light16 {
+    font-weight: 300;
+    font-size: 16px;
+}
+.light12 {
+    font-weight: 300;
+    font-size: 12px;
+}
+.clamp-1 {
+    overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box !important;
+   -webkit-line-clamp: 1;
+   -webkit-box-orient: vertical;
+}
+.clamp-3 {
+    overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box !important;
+   -webkit-line-clamp: 3; 
+   -webkit-box-orient: vertical;
+}

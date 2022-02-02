@@ -1,0 +1,58 @@
+.sidenav-container {
+  background-image: url("../../assets/images/grained.png");
+  height: 100vh;
+  position: relative;
+  text-align: center;
+}
+
+.circleBg {
+  height: 100px;
+  width: 100px;
+  background-color: var(--light);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  height: 50px;
+  width: 50px;
+}
+
+.divider {
+  color: var(--light);
+}
+
+.userProfile {
+  color: var(--light);
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  text-align: center;
+}
+
+.text {
+  line-height: 2;
+  margin-left: 10px;
+}
+
+.icons {
+  bottom: 0;
+  padding-bottom: 0 !important;
+}
+
+.Sb-divider {
+  height: 1px !important;
+  width: 85%;
+  color: var(--light);
+  display: inline-block;
+  margin-top: 30px;
+  margin-bottom: 0px;
+}
+.btm {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  margin: 0 17px;
+}
