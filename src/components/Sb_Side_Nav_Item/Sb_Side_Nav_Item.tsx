@@ -14,21 +14,20 @@ interface SideNavData {
 
 interface Props {
   navItemData: SideNavData;
-  activeId: number;
+  active?: boolean;
 }
 
-const Sb_Side_Nav_Item: React.FC<Props> = ({ navItemData, activeId }) => {
+const Sb_Side_Nav_Item: React.FC<Props> = (props:Props) => {
+  var {active = false} = props;
   let color = "";
-  activeId === navItemData.id
-    ? (color = "sb-bg-dark")
-    : (color = "bg-transparent");
+  active ? (color = "sb-bg-dark") : (color = "bg-transparent");
 
   return (
     <Container fluid className={" navItemContainer " + color}>
-      <Col className="iconCol py-3 align-items-center ">
-        <FontAwesomeIcon icon={navItemData.icon} className="icon me-3" />
-        <Sb_Text font="light16" className="text">
-          {navItemData.title}
+      <Col className="iconCol py-2 align-items-center ">
+        <FontAwesomeIcon icon={props.navItemData.icon} className="icon me-3" />
+        <Sb_Text font={16} color="--lightGrey">
+          {props.navItemData.title}
         </Sb_Text>
       </Col>
     </Container>
