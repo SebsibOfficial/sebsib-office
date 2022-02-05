@@ -1,8 +1,8 @@
 import {
   faClipboardList,
-  faPlus,
+  faArchive,
   faQuestion,
-  faShoppingCart,
+  faUsers,
   faSignOutAlt,
   faThLarge,
 } from "@fortawesome/free-solid-svg-icons";
@@ -17,42 +17,35 @@ interface SideNavData {
 
 const navData1: SideNavData = {
   id: 1,
-  title: "dashboard",
+  title: "Dashboard",
   icon: faThLarge,
-  path: ['/client/dashboard', '/user/dashboard']
+  path: "#"
 };
 
 const navData2: SideNavData = {
   id: 2,
-  title: "create-survey",
-  icon: faPlus,
-  path: "/client/dashboard/create-survey"
+  title: "Projects",
+  icon: faArchive,
+  path: "#"
 };
 
 const navData3: SideNavData = {
   id: 3,
-  title: "your-surveys",
-  icon: faClipboardList,
-  path: "/client/dashboard/your-surveys"
+  title: "Members",
+  icon: faUsers,
+  path: "#"
 };
 
 const navData4: SideNavData = {
   id: 4,
-  title: "survey-market",
-  icon: faShoppingCart,
-  path: "/client/dashboard/survey-market"
+  title: "Log Out",
+  icon: faSignOutAlt,
+  path: "#"
 };
 
 const navData5: SideNavData = {
   id: 5,
-  title: "log-out",
-  icon: faSignOutAlt,
-  path: ["/client/sign-in", "/user/sign-in"]
-};
-
-const navData6: SideNavData = {
-  id: 6,
-  title: "help",
+  title: "Help",
   icon: faQuestion,
   path: "#" // no idea what goes here
 };
@@ -63,5 +56,4 @@ export const NavData = [
   navData3,
   navData4,
   navData5,
-  navData6,
 ];
