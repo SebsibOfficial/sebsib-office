@@ -1,0 +1,10 @@
+.sb-container {
+    width: 100%;
+    background-color: var(--lightPurple);
+}
+.horizontal {
+    border-top: 6px solid var(--primary);
+}
+.vertical {
+    border-left: 6px solid var(--primary);
+}
