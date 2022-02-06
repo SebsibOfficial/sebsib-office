@@ -1,0 +1,8 @@
+.sb-card {
+    width: fit-content;
+    height: fit-content;
+    background-color: white;
+    border-radius: 5px;
+    padding: 0.5em;
+    box-shadow: 1px 1px 3px rgb(0 0 0 / 16%);
+}
