@@ -1,0 +1,22 @@
+.sb-notice-close {
+    margin-left: 3em;
+    font-size: 1.2em;
+    opacity: 0.3;
+    cursor: pointer;
+}
+.sb-notice-close:hover {
+    opacity: 1;
+}
+.sb-notice-icon {
+    margin-right: 1em;
+    font-size: 1.2em;
+}
+.sb-notice-check {
+    color: var(--yellow);
+}
+.sb-notice-info {
+    color: var(--secondary);
+}
+.sb-notice-error {
+    color: var(--DangerRed);
+}
