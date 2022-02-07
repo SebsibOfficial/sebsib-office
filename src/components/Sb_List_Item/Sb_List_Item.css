@@ -1,0 +1,11 @@
+.sb-list-item {
+    justify-content: space-between;
+    align-items: center;
+}
+.list-select {
+    padding: 1em;
+    border-radius: 5px;
+}
+.list-select:hover {
+    background-color: var(--lightGrey);
+}
