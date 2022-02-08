@@ -4,18 +4,21 @@ import Sb_Checkbox from '../Sb_Checkbox/Sb_Checkbox';
 import Sb_Text from '../Sb_Text/Sb_Text';
 import './Sb_List_Item.css';
 
-type actionType = "REMOVE" | "SELECT-CHANGE";
+type actionType = "REMOVE" | "UNSELECTED" | "SELECTED";
+type compType = "SELECT" | "REMOVE";
 
 interface Props {
     id: string,
     text: string,
     type: "MEMBER" | "PROJECT",
-    actionType: actionType,
+    compType: compType,
+    defaultSelectValue?: "UNSELECTED" | "SELECTED",
     onAction: (id:string, actionType:actionType) => void
 }
 
 export default function Sb_List_Item (props:Props) {
-    if (props.actionType === 'REMOVE') {
+    var {defaultSelectValue = "UNSELECTED"} = props;
+    if (props.compType === 'REMOVE') {
         return (
             <div className='d-flex sb-list-item'>
                 <div className='d-inline-flex align-items-center'>
@@ -24,16 +27,16 @@ export default function Sb_List_Item (props:Props) {
                     <Sb_Text font={16}>{props.text}</Sb_Text>
                 </div>
                 <FontAwesomeIcon icon={faMinusSquare} style={{'color': 'var(--DangerRed)','cursor':'pointer'}} 
-                onClick={() => props.onAction(props.id, props.actionType)}/>
+                onClick={() => props.onAction(props.id, "REMOVE")}/>
             </div>
         )
     }
-    else if (props.actionType === 'SELECT-CHANGE') {
-        // TODO: Send state change here
+    else if (props.compType === 'SELECT' ) {
         return (
             <div className='d-flex sb-list-item list-select'>
                 <div className='d-inline-flex align-items-center'>
-                    <Sb_Checkbox onChange={() => props.onAction(props.id, props.actionType)}/> 
+                    {/* There is something confusing in this component, it is returning the opposite. So i adapted. */}
+                    <Sb_Checkbox default={defaultSelectValue} onChange={(checkState:boolean) => props.onAction(props.id, checkState ? 'UNSELECTED' : 'SELECTED')}/> 
                     <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 
                     style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>
                     <Sb_Text font={16}>{props.text}</Sb_Text>
