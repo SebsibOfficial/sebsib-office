@@ -4,23 +4,24 @@ import Sb_Checkbox from '../Sb_Checkbox/Sb_Checkbox';
 import Sb_Text from '../Sb_Text/Sb_Text';
 import './Sb_List_Item.css';
 
-type actionType = "REMOVE" | "UNSELECTED" | "SELECTED";
-type compType = "SELECT" | "REMOVE";
+export type actionType = "REMOVE" | "UNSELECTED" | "SELECTED";
+export type compType = "SELECT" | "REMOVE";
 
-interface Props {
+export interface Props {
     id: string,
     text: string,
     type: "MEMBER" | "PROJECT",
     compType: compType,
-    defaultSelectValue?: "UNSELECTED" | "SELECTED",
+    defaultSelectValue?: "UNSELECTED" | "SELECTED" | undefined,
     onAction: (id:string, actionType:actionType) => void
 }
 
 export default function Sb_List_Item (props:Props) {
     var {defaultSelectValue = "UNSELECTED"} = props;
+    if (defaultSelectValue === undefined) defaultSelectValue = "UNSELECTED";
     if (props.compType === 'REMOVE') {
         return (
-            <div className='d-flex sb-list-item'>
+            <div className='d-flex sb-list-item list-remove'>
                 <div className='d-inline-flex align-items-center'>
                     <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 
                     style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>

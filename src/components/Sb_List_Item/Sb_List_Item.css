@@ -6,6 +6,9 @@
     padding: 1em;
     border-radius: 5px;
 }
+.list-remove {
+    margin-bottom: 0.7em;
+}
 .list-select:hover {
     background-color: var(--lightGrey);
 }
