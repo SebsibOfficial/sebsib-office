@@ -1,0 +1,10 @@
+.sb-main-items {
+    width: 135px;
+    padding: 1em;
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+}
+.sb-main-items:hover {
+    background-color: var(--lightPurple);
+}
