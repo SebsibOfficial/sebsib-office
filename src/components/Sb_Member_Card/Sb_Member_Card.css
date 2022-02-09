@@ -1,0 +1,9 @@
+.sb-member-card {
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 16%);
+    color: var(--secondary);
+    background-color: white;
+}
