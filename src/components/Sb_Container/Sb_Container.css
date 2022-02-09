@@ -2,9 +2,23 @@
     width: 100%;
     background-color: var(--lightPurple);
 }
-.horizontal {
+.HORIZONTAL-THICK {
     border-top: 6px solid var(--primary);
 }
-.vertical {
+.VERTICAL-THICK {
     border-left: 6px solid var(--primary);
+}
+.HORIZONTAL-THIN {
+    border-top: 2px solid var(--primary);
+}
+.VERTICAL-THIN {
+    border-left: 2px solid var(--primary);
+}
+.PURPLE {
+    background-color: var(--lightPurple) !important;
+    border-color: var(--primary) !important;
+}
+.DARK {
+    background-color: rgba(40, 40, 41, 0.2) !important;
+    border-color: var(--secondary) !important;
 }
