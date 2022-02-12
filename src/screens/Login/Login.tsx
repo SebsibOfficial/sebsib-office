@@ -1,4 +1,4 @@
-import { faIdBadge, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faIdBadge, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import logo from '../../assets/officeLogoBlack.svg';
@@ -27,6 +27,10 @@ export default function Login() {
 							<Col className='login-form-container'>
 								<Sb_Card className='w-100 p-4'>
 									<div className='login-forms'>
+										<div className='error-notif'>
+											<FontAwesomeIcon icon={faTimesCircle} style={{'fontSize':14, 'marginRight':'0.3rem'}}/> 
+											<Sb_Text font={12} color="--lightGrey">Incorrect Email or Password</Sb_Text>
+										</div>
 										<Form>
 											<Form.Group className="mb-3" controlId="LoginEmail">
 												<Form.Label><Sb_Text font={12}>Email</Sb_Text></Form.Label>
