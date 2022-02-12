@@ -2,7 +2,7 @@ import './Sb_Text.css';
 
 interface Props {
    font?: 12 | 16 | 20 | 24 | 32 | 48 | 72,
-   weight?: 300 | 400 | 600 | 900,
+   weight?: 300 | 400 | 500 | 600 | 900,
    color?: "--lightGrey" | "--secondary",
    align?: "center" | "right" | "left",
    clamp?: number,
