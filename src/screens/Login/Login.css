@@ -1,0 +1,20 @@
+.login-screen {
+  padding: 2em 4em;
+}
+.login-screen img {
+  transform: scale(0.8);
+}
+.login-tag {
+  margin-bottom: 1rem;
+}
+.version-tag {
+  position: absolute;
+  bottom: 2em;
+  left: 0px;
+  right: 0px;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  opacity: 0.6;
+}
