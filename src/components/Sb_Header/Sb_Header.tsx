@@ -6,18 +6,20 @@ import { faLongArrowAltLeft } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
     header: string,
+    hideBackButton?: boolean,
     onBackClick(): any,
 }
 
 const Sb_Header = (props:Props) => {
+    var {hideBackButton = false} = props;
     return(
         <Row className="sb-header g-0">
-            <Row className="g-0">
+            <Row className="g-0" style={{'visibility': hideBackButton ? 'hidden' : 'visible'}}>
                 <Col>
                     <FontAwesomeIcon 
                         icon={faLongArrowAltLeft} 
                         className="sb-header-back-btn"
-                        onClick={() => props.onBackClick()}
+                        onClick={ !hideBackButton ? () => props.onBackClick() : () => null}
                     />
                 </Col>
             </Row>
