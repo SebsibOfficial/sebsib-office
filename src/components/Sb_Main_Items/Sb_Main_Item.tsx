@@ -15,7 +15,7 @@ export default function Sb_Main_Items (props:Props) {
         <div className='sb-main-items' onClick={() => props.onClick(props.id)}>
             <FontAwesomeIcon icon={props.type === 'PROJECT' ? faArchive : faFileInvoice}
             style={{'display':'block', 'marginBottom':'0.3em', 'fontSize':'1.5em'}}/>
-            <Sb_Text font={16} clamp={3}>{props.text}</Sb_Text>
+            <Sb_Text font={12} clamp={3}>{props.text}</Sb_Text>
         </div>
     )
 }

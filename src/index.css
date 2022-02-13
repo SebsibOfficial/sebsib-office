@@ -1,5 +1,5 @@
 * {
-  transition: all 200ms ease;
+  transition: all 150ms ease;
 }
 body {
   margin: 0;
@@ -8,6 +8,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--lightGrey);
 }
 
 code {

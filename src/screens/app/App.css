@@ -1,9 +1,4 @@
-.login-parent-screen {
+.parent-screen {
   width: -webkit-fill-available;
-  height: 100vh;
   background-color: var(--lightGrey);
-  padding: 2em 5em;
-}
-.login-scree img {
-  transform: scale(0.8);
 }

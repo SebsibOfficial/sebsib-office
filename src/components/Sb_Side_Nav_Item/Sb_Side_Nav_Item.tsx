@@ -24,7 +24,7 @@ const Sb_Side_Nav_Item: React.FC<Props> = (props:Props) => {
 
   return (
     <Container fluid className={" navItemContainer " + color}>
-      <Col className="iconCol py-2 align-items-center ">
+      <Col className="iconCol p-2 align-items-center ">
         <FontAwesomeIcon icon={props.navItemData.icon} className="icon me-3" />
         <Sb_Text font={16} color="--lightGrey">
           {props.navItemData.title}

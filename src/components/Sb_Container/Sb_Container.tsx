@@ -6,7 +6,7 @@ interface Props {
     borderDir?: "HORIZONTAL" | "VERTICAL",
     thin?: boolean,
     color?: "DARK" | "PURPLE",
-    children: ReactChildren | ReactChild
+    children: ReactChildren | ReactChild | ReactChildren[] | ReactChild[]
 }
 
 export default function Sb_Container(props: Props) {

@@ -1,8 +1,9 @@
 .sidenav-container {
   background-color: var(--secondary);
   height: 100vh;
-  position: relative;
   text-align: center;
+  position: sticky;
+  top: 0;
 }
 
 .circleBg {
