@@ -6,9 +6,17 @@
     padding: 1em;
     border-radius: 5px;
 }
+.list-display {
+    padding: 0.5em;
+    border-radius: 5px;
+    cursor: pointer;
+}
 .list-remove {
     margin-bottom: 0.7em;
 }
 .list-select:hover {
     background-color: var(--lightGrey);
+}
+.list-display:hover {
+    background-color: var(--lightPurple);
 }
