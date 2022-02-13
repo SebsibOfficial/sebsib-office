@@ -7,18 +7,19 @@ interface Props {
     items: item[],
     listType: "MEMBER" | "PROJECT",
     compType: compType;
-    onAction: (id:string, actionType:actionType) => void
+    onAction?: (id:string, actionType:actionType) => void
 }
 
 export default function Sb_List (props:Props) {
+    var {onAction = () => console.log("NOTHING")} = props;
     return (
-        <div>
+        <div style={{'width':'100%'}}>
             {
                 props.items.map((item:item) => (
                     <Sb_List_Item key={item.id} id={item.id} compType={props.compType} 
                     type={props.listType} text={item.text} 
                     defaultSelectValue={item.defaultSelectValue}
-                    onAction={(id:string, actionType:actionType) => props.onAction(id, actionType)}
+                    onAction={(id:string, actionType:actionType) => onAction(id, actionType)}
                     />
                 ))
             }
