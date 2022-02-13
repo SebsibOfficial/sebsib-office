@@ -1,0 +1,25 @@
+.main-content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-areas: 
+  'PROJ PROJ PROJ MEM'
+  'SUR SUR SUR MEM'
+  'REC REC REC MEM';
+  margin-top: 2em;
+}
+.dash-projects {
+  grid-area: PROJ;
+}
+.dash-surveys {
+  grid-area: SUR;
+}
+.dash-recent {
+  grid-area: REC;
+}
+.dash-members {
+  grid-area: MEM;
+}
+.dash-cols {
+  padding: 1em 4em 1em 0em;
+}
