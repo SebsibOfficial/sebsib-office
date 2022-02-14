@@ -16,7 +16,7 @@ export default function Dashboard () {
         <Sb_Side_Nav name='Abebe Beso'/>
       </Col>
       <Col style={{'padding':'1em 4em'}}>
-        <Row className='g-0'>
+        <Row className='g-0 mb-4'>
           <Col>
             <Sb_Header header='Projects' onBackClick={() => console.log('Clicked Back Button')} />
           </Col>
