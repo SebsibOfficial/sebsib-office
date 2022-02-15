@@ -6,6 +6,7 @@ import Sb_Main_Items from '../../components/Sb_Main_Items/Sb_Main_Item';
 import Sb_Row from '../../components/Sb_Row/Sb_Row';
 import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
+import Projects from '../Projects/Projects';
 import './Dashboard.css';
 
 export default function Dashboard () {
@@ -15,13 +16,14 @@ export default function Dashboard () {
         <Sb_Side_Nav name='Abebe Beso'/>
       </Col>
       <Col style={{'padding':'1em 4em'}}>
-        <Row className='g-0'>
+        <Row className='g-0 mb-4'>
           <Col>
-            <Sb_Header header='Dashboard' onBackClick={() => console.log('Clicked Back Button')} hideBackButton/>
+            <Sb_Header header='Projects' onBackClick={() => console.log('Clicked Back Button')} />
           </Col>
         </Row>
         <Row className='g-0'>
-          <Col>
+          {/* office.sebsib.com/dashboard */}
+          <Col className='main-content'>
             <div >
               <Row className='g-0'>
                 <Col md="9">
@@ -114,6 +116,8 @@ export default function Dashboard () {
               </Row>        
             </div>
           </Col>
+          {/* office.sebsib.com/dashboard/projects */}
+          <Projects/>
         </Row>
       </Col>
     </Row>
