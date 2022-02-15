@@ -23,3 +23,6 @@
     background-color: rgba(40, 40, 41, 0.2) !important;
     border-color: var(--secondary) !important;
 }
+.min-height-inherit {
+    min-height: inherit;
+}
