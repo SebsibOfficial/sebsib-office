@@ -3,8 +3,9 @@
     align-items: center;
 }
 .list-select {
-    padding: 1em;
+    padding: 0.5em;
     border-radius: 5px;
+    cursor: pointer;
 }
 .list-display {
     padding: 0.5em;

@@ -2,3 +2,6 @@
   width: -webkit-fill-available;
   background-color: var(--lightGrey);
 }
+.btn:focus {
+  box-shadow: none !important;
+}
