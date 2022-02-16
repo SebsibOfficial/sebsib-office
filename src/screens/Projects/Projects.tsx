@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import Sb_Container from "../../components/Sb_Container/Sb_Container";
 import Sb_List from "../../components/Sb_List/Sb_List";
 import Sb_Main_Items from "../../components/Sb_Main_Items/Sb_Main_Item";
+import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import "./Projects.css";
 
 export default function Projects () {
+  const [modalState, setModalState] = useState(false);
+  
   return (
     <Col>
       <Row className="mb-4">
@@ -46,7 +50,9 @@ export default function Projects () {
                   <Sb_Container borderDir="HORIZONTAL" className="p-0 d-block pe-4 min-height-inherit">
                     <Row className="g-0" style={{marginTop:'-6px'}}>
                       <Col>
-                        <Button size="sm" className="my-4"><Sb_Text font={12} color="--lightGrey">Add Enumerator</Sb_Text></Button>
+                        <Button size="sm" className="my-4" onClick={() => setModalState(true)}>
+                          <Sb_Text font={12} color="--lightGrey">Add Enumerator</Sb_Text>
+                        </Button>
                       </Col>
                     </Row>
                     <Row>
@@ -111,6 +117,13 @@ export default function Projects () {
           </Row>
         </Col>
       </Row>
+      {/* ---------------------------------The Modal------------------------------------------------------ */}
+      <Sb_Modal show={modalState} onHide={() => setModalState(false)} header="Add Enumrators" width={30}>
+        <Sb_List 
+        items={[{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }, {id:'2', text:'Minamin Chala', }, {id:'2', text:'Minamin Chala', }]} 
+        listType="MEMBER" compType='SELECT' onAction={(id, ac) => console.log(id+" CLICKED "+ac)}/>
+        <Button size="sm" className="mt-3"><Sb_Text font={16} color="--lightGrey">Add</Sb_Text></Button>
+      </Sb_Modal>
     </Col>
   )
 }
