@@ -5,13 +5,16 @@ import Sb_List from "../../components/Sb_List/Sb_List";
 import Sb_Main_Items from "../../components/Sb_Main_Items/Sb_Main_Item";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
+import Create_Project from "../Create_Project/Create_Project";
 import "./Projects.css";
 
 export default function Projects () {
   const [modalState, setModalState] = useState(false);
   
   return (
-    <Col>
+    <>
+    {/* office.sebsib.com/dashboard/projects */}
+    <Col className="d-none">
       <Row className="mb-4">
         <Col>
           <Button><Sb_Text font={16} color='--lightGrey'>Create Project</Sb_Text></Button>
@@ -125,5 +128,8 @@ export default function Projects () {
         <Button size="sm" className="mt-3"><Sb_Text font={16} color="--lightGrey">Add</Sb_Text></Button>
       </Sb_Modal>
     </Col>
+    {/* office.sebsib.com/dashboard/projects/create-project */}
+    <Create_Project/>
+    </>
   )
 }

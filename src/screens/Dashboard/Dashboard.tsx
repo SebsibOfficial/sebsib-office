@@ -18,7 +18,7 @@ export default function Dashboard () {
       <Col style={{'padding':'1em 4em'}}>
         <Row className='g-0 mb-4'>
           <Col>
-            <Sb_Header header='Projects' onBackClick={() => console.log('Clicked Back Button')} />
+            <Sb_Header header='Create Project' onBackClick={() => console.log('Clicked Back Button')} />
           </Col>
         </Row>
         <Row className='g-0'>
