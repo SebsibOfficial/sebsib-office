@@ -7,3 +7,6 @@
     color: var(--secondary);
     background-color: white;
 }
+.sb-member-card:hover {
+    background-color: #f8f8ff;
+}

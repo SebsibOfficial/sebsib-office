@@ -8,15 +8,16 @@ interface Props {
     id: string,
     name:string,
     onDelete: (id:string) => void
+    onClick: (id:string) => void
 }
 
 export default function Sb_Member_Card (props:Props) {
     return (
-        <div className='d-flex sb-member-card'>
-            <div className='d-inline-flex align-items-center'>
+        <div className='d-flex sb-member-card mb-4'>
+            <div className='d-inline-flex align-items-center' onClick={() => props.onClick(props.id)} style={{'cursor':'pointer'}}>
                 <FontAwesomeIcon icon={faUserCircle} 
                 style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>
-                <Sb_Text font={16}>{props.name}</Sb_Text>
+                <Sb_Text font={16} clamp={1}>{props.name}</Sb_Text>
             </div>
             <FontAwesomeIcon icon={faTrash} style={{'fontSize':'1em', 'color':'var(--DangerRed)', 'cursor':'pointer'}}
             onClick={() => props.onDelete(props.id)}/>
