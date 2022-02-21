@@ -16,8 +16,8 @@
     margin-bottom: 0.7em;
 }
 .list-select:hover {
-    background-color: var(--lightPurple);
+    background-color: #5050751c;
 }
 .list-display:hover {
-    background-color: var(--lightPurple);
+    background-color: #5050751c;
 }
