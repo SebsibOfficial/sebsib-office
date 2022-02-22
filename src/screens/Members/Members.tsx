@@ -1,6 +1,7 @@
 import { Button, Col, Row } from "react-bootstrap";
 import Sb_Member_Card from "../../components/Sb_Member_Card/Sb_Member_Card";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
+import Add_Modify_Member from "../Add_Member/Add_Member";
 import Add_Member from "../Add_Member/Add_Member";
 import './Members.css';
 
@@ -36,7 +37,7 @@ export default function Members () {
         </Row>
       </Col>
       {/* office.sebsib.com/members/add-member */}
-      <Add_Member/>
+      <Add_Modify_Member pageType="MODIF"/>
     </>
   )
 }
