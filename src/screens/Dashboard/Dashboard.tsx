@@ -8,6 +8,7 @@ import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import Members from '../Members/Members';
 import Projects from '../Projects/Projects';
+import Settings from '../Settings/Settings';
 import './Dashboard.css';
 
 export default function Dashboard () {
@@ -19,7 +20,7 @@ export default function Dashboard () {
       <Col style={{'padding':'1em 4em'}}>
         <Row className='g-0 mb-4'>
           <Col>
-            <Sb_Header header='Members' onBackClick={() => console.log('Clicked Back Button')} />
+            <Sb_Header header='Settings' onBackClick={() => console.log('Clicked Back Button')} />
           </Col>
         </Row>
         <Row className='g-0'>
@@ -122,7 +123,10 @@ export default function Dashboard () {
           {/* <Projects/> */}
           
           {/* office.sebsib.com/dashboard/members */}
-          <Members/>
+          {/* <Members/> */}
+
+          {/* office.sebsib.com/dashboard/settings */}
+          <Settings/>
         </Row>
       </Col>
     </Row>
