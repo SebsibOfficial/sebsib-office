@@ -6,6 +6,7 @@ import Sb_Main_Items from '../../components/Sb_Main_Items/Sb_Main_Item';
 import Sb_Row from '../../components/Sb_Row/Sb_Row';
 import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
+import Create_Survey from '../Create_Survey/Create_Survey';
 import Members from '../Members/Members';
 import Projects from '../Projects/Projects';
 import Settings from '../Settings/Settings';
@@ -126,7 +127,8 @@ export default function Dashboard () {
           {/* <Members/> */}
 
           {/* office.sebsib.com/dashboard/settings */}
-          <Settings/>
+          {/* <Settings/> */}
+          <Create_Survey/>
         </Row>
       </Col>
     </Row>
