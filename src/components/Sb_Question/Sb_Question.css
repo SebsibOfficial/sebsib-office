@@ -1,0 +1,42 @@
+.question-text-area {
+  height: 116px;
+  border: 0;
+  border-radius: 3px;
+}
+.question-text-area:focus-visible{
+  outline: 1px var(--primary) solid;
+}
+.question-trash-icon {
+  font-size: 20px;
+  color: var(--DangerRed);
+  cursor: pointer;
+}
+.question-trash-icon:hover{
+  transform: scale(1.2);
+}
+.question-plus-icon {
+  font-size: 20px;
+  color: var(--primary);
+  cursor: pointer;
+}
+.question-plus-icon:hover{
+  transform: scale(1.2);
+}
+.show-pattern {
+  background-color: var(--lightPurple);
+  padding: 1em;
+  border-radius: 5px;
+}
+.show-pattern label span {
+  transform: scale(0.8);
+}
+.form-control-sm {
+  font-size: 12px !important;
+}
+.form-control:focus, .form-select:focus {
+  box-shadow: none !important;
+  border-color: var(--primary) !important;
+}
+.form-select-sm {
+  font-size: 12px !important;
+}
