@@ -1,0 +1,26 @@
+table {
+  background-color: white;
+  font-family: 'HelveticaNeue';
+}
+
+th {
+  font-size: 12px;
+}
+
+td {
+  min-width: 150px;
+  max-width: 300px;
+  overflow-wrap: break-word;
+  font-size: 12px;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+  background-color: var(--lightPurple);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+}

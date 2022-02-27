@@ -6,6 +6,8 @@ import Sb_Main_Items from "../../components/Sb_Main_Items/Sb_Main_Item";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import Create_Project from "../Create_Project/Create_Project";
+import Create_Survey from "../Create_Survey/Create_Survey";
+import View_Survey from "../View_Survey/View_Survey";
 import "./Projects.css";
 
 export default function Projects () {
@@ -129,7 +131,11 @@ export default function Projects () {
       </Sb_Modal>
     </Col>
     {/* office.sebsib.com/dashboard/projects/create-project */}
-    <Create_Project/>
+    {/* <Create_Project/> */}
+    {/* office.sebsib.com/dashboard/projects/create-survey */}
+    {/* <Create_Survey projectId='1234' /> */}
+    {/* office.sebsib.com/dashboard/projects/view-survey */}
+    <View_Survey projectId="1234"/>
     </>
   )
 }
