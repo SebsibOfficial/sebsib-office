@@ -18,7 +18,7 @@ export default function Dashboard () {
       <Col md='2'>
         <Sb_Side_Nav name='Abebe Beso'/>
       </Col>
-      <Col style={{'padding':'1em 4em'}}>
+      <Col style={{'padding':'1em 4em', 'overflowX':'auto'}}>
         <Row className='g-0 mb-4'>
           <Col>
             <Sb_Header header='Settings' onBackClick={() => console.log('Clicked Back Button')} />
@@ -121,14 +121,14 @@ export default function Dashboard () {
           </Col>
           
           {/* office.sebsib.com/dashboard/projects */}
-          {/* <Projects/> */}
+          <Projects/>
           
           {/* office.sebsib.com/dashboard/members */}
           {/* <Members/> */}
 
           {/* office.sebsib.com/dashboard/settings */}
           {/* <Settings/> */}
-          <Create_Survey/>
+          
         </Row>
       </Col>
     </Row>
