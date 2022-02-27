@@ -2,11 +2,21 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import Sb_Question from "../../components/Sb_Question/Sb_Question";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 
-export default function Create_Survey () {
+type Props = { projectId: string }
+
+export default function Create_Survey (props:Props) {
   return (
     <Col>
       <Row>
-        <Col md="4">
+        <Col md="3">
+          <Form.Group className="mb-3" controlId="LoginEmail">
+              <Form.Label><Sb_Text font={16}>Project Name</Sb_Text></Form.Label>
+              <Form.Select size="sm" placeholder="Name" disabled>
+                <option value="">{props.projectId}</option>
+              </Form.Select>
+					</Form.Group>
+        </Col>
+        <Col md="3">
           <Form.Group className="mb-3" controlId="LoginEmail">
               <Form.Label><Sb_Text font={16}>Survey Name</Sb_Text></Form.Label>
               <Form.Control size="sm" type="text" placeholder="Name"/>
