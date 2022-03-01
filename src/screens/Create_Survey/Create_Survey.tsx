@@ -1,10 +1,10 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import Sb_Question from "../../components/Sb_Question/Sb_Question";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 
-type Props = { projectId: string }
-
-export default function Create_Survey (props:Props) {
+export default function Create_Survey () {
+  let params = useParams();
   return (
     <Col>
       <Row>
@@ -12,7 +12,7 @@ export default function Create_Survey (props:Props) {
           <Form.Group className="mb-3" controlId="LoginEmail">
               <Form.Label><Sb_Text font={16}>Project Name</Sb_Text></Form.Label>
               <Form.Select size="sm" placeholder="Name" disabled>
-                <option value="">{props.projectId}</option>
+                <option value="">{params.pid}</option>
               </Form.Select>
 					</Form.Group>
         </Col>

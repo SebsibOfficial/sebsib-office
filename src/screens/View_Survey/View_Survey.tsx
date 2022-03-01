@@ -1,15 +1,15 @@
 import { Col, Row, Table } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import './View_Survey.css';
 
-type Props = { projectId: string}
-
-export default function View_Survey (props:Props) {
+export default function View_Survey () {
+  let params = useParams()
   return (
     <Col className="veiw-survey">
       <Row className="mb-3">
         <Col>
-          <Sb_Text font={32} weight={600}>{props.projectId}</Sb_Text>
+          <Sb_Text font={32} weight={600}>{params.pid}</Sb_Text>
         </Col>
       </Row>
       <Row>
