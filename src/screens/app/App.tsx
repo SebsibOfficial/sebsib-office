@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes, useOutletContext } from 'react-router-dom';
+import { Link, Outlet, Route, Routes, useOutletContext } from 'react-router-dom';
 import Add_Modify_Member from '../Add_Member/Add_Member';
 import Create_Project from '../Create_Project/Create_Project';
 import Create_Survey from '../Create_Survey/Create_Survey';
@@ -18,7 +18,7 @@ function App() {
       {/* >>Protection from URL routing */}
       <Routes>
         <Route path='/' element={<div><Outlet/></div>}>
-          <Route index element={<div>Hello</div>}/>
+          <Route index element={<div>Hello<br></br><Link to={"/login"} state={true}>Login</Link></div>}/>
           <Route path="dashboard" element={<Dashboard />}>
             <Route index element={<Dashboard_Landing/>}></Route>
             <Route path="projects" element={<Projects />}>

@@ -1,5 +1,6 @@
 .login-screen {
   padding: 2em 4em;
+  height: 100vh;
 }
 .login-screen img {
   transform: scale(0.8);

@@ -42,19 +42,20 @@ export default function Login() {
 											<FontAwesomeIcon icon={faTimesCircle} style={{'fontSize':14, 'marginRight':'0.3rem'}}/> 
 											<Sb_Text font={12} color="--lightGrey">Incorrect Email or Password</Sb_Text>
 										</div>
-										<Form>
+										<div>
 											<Form.Group className="mb-3" controlId="LoginEmail">
 												<Form.Label><Sb_Text font={12}>Email</Sb_Text></Form.Label>
-												<Form.Control size="sm" type="email" placeholder="Enter email"/>
+												<Form.Control size="sm" type="email" placeholder="Enter email" autoComplete='new-password'/>
 											</Form.Group>
 
 											<Form.Group className="mb-3" controlId="LoginPassword">
 												<Form.Label><Sb_Text font={12}>Password</Sb_Text></Form.Label>
-												<Form.Control size="sm" type="password" placeholder="Password"/>
+												<Form.Control size="sm" type="password" placeholder="Password" autoComplete='new-password'/>
 											</Form.Group>
-
+											{/* LOL autoComplete="off doesn't work anymore, this is a work around" */}
+											<input type="text" autoComplete='on' style={{'display':'none'}} /> 
 											<Button size="sm" ><Sb_Text font={12} color="--lightGrey">Log In</Sb_Text></Button>
-										</Form>
+										</div>
 									</div>
 								</Sb_Card>
 							</Col>
