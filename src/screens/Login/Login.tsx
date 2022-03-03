@@ -1,13 +1,24 @@
 import { faIdBadge, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/officeLogoBlack.svg';
 import Sb_Card from '../../components/Sb_Card/Sb_Card';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import './Login.css';
 
 export default function Login() {
-	var plc = true;
+	let location = useLocation();
+  let navigate = useNavigate();
+  
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+  },[location.state]);
+  
 	return (
 		<div className='login-screen'>
 			<Row>

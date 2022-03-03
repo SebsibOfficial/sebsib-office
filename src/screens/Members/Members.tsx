@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Sb_Member_Card from "../../components/Sb_Member_Card/Sb_Member_Card";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import Add_Modify_Member from "../Add_Member/Add_Member";
@@ -7,6 +8,16 @@ import Add_Member from "../Add_Member/Add_Member";
 import './Members.css';
 
 export default function Members () {
+  let location = useLocation();
+  let navigate = useNavigate();
+  
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+  },[location.state]);
+  
   return (
     <>
       <Outlet/>

@@ -1,5 +1,5 @@
 import { Col, Row } from 'react-bootstrap';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sb_Container from '../../components/Sb_Container/Sb_Container';
 import Sb_Header from '../../components/Sb_Header/Sb_Header';
 import Sb_List from '../../components/Sb_List/Sb_List';
@@ -7,13 +7,28 @@ import Sb_Main_Items from '../../components/Sb_Main_Items/Sb_Main_Item';
 import Sb_Row from '../../components/Sb_Row/Sb_Row';
 import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
-import Create_Survey from '../Create_Survey/Create_Survey';
-import Members from '../Members/Members';
-import Projects from '../Projects/Projects';
-import Settings from '../Settings/Settings';
 import './Dashboard.css';
 
 export default function Dashboard () {
+  let location = useLocation();
+
+  function capitalizeFirst (str:string):string {
+    return str.match("^[a-z]") ? str.charAt(0).toUpperCase() + str.substring(1) : str;
+  }
+
+  function getPageTitle ():string {
+    let routeArray:string[] = location.pathname.split("/");
+    let arrayLength = routeArray.length;
+    if (routeArray[arrayLength - 1].match('[0-9]') || routeArray[arrayLength - 1].length > 15) {
+      if (routeArray[arrayLength - 2] === 'add' || routeArray[arrayLength - 2] === 'edit')
+        return routeArray[arrayLength - 3];
+      else
+        return routeArray[arrayLength - 2];
+    }
+    else
+      return routeArray[arrayLength - 1];
+  }
+
   return (
     <Row className='dashboard-container g-0'>
       <Col md='2'>
@@ -22,23 +37,11 @@ export default function Dashboard () {
       <Col style={{'padding':'1em 4em', 'overflowX':'auto'}}>
         <Row className='g-0 mb-4'>
           <Col>
-            <Sb_Header header='Settings' onBackClick={() => console.log('Clicked Back Button')} />
+            <Sb_Header header={capitalizeFirst(getPageTitle().split("-").join(" "))} onBackClick={() => console.log('Clicked Back Button')} />
           </Col>
         </Row>
         <Row className='g-0'>
           <Outlet/>
-          {/* office.sebsib.com/dashboard */}
-          {/* <Dashboard_Landing/> */}
-          
-          {/* office.sebsib.com/dashboard/projects */}
-          {/* <Projects/> */}
-          
-          {/* office.sebsib.com/dashboard/members */}
-          {/* <Members/> */}
-
-          {/* office.sebsib.com/dashboard/settings */}
-          {/* <Settings/> */}
-          
         </Row>
       </Col>
     </Row>

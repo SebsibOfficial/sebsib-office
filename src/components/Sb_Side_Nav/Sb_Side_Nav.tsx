@@ -5,6 +5,7 @@ import "./Sb_Side_Nav.css";
 import Sb_User_Profile from "./Sb_User_Profile";
 import Logo from "../../assets/officeLogoWhite.svg";
 import { Col, Container } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 
 interface Props {
   name: string
@@ -19,18 +20,32 @@ const logo = () => {
 };
 
 const Sb_Side_Nav = (props: Props) => {
+  let location = useLocation();
+  
+  function getParentRoute () {
+    let routeArray = location.pathname.split("/");
+    if (routeArray.includes("members"))
+      return "Members";
+    else if (routeArray.includes("projects"))
+      return "Projects";
+    else if (routeArray.includes("settings"))
+      return "Settings";
+    else
+      return "Dashboard";    
+  }
+
   return (
     <Container fluid className="sidenav-container">
       <Col>{logo()}</Col>
       <hr className="Sb-divider" />
       <Col className=" mt-3">
-        {
+        { 
           NavData.map((data) => (
               <div
                 key={data.id}
                 style={{ display: "flex", justifyContent: "center" }}
               >
-                <Sb_Side_Nav_Item navItemData={data} />
+                <Sb_Side_Nav_Item navItemData={data} active = { getParentRoute() === data.title ? true : false }/>
               </div>
             ))
         }

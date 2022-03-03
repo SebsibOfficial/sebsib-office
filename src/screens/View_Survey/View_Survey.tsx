@@ -1,10 +1,21 @@
+import { useEffect } from "react";
 import { Col, Row, Table } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import './View_Survey.css';
 
 export default function View_Survey () {
-  let params = useParams()
+  let params = useParams();
+  let location = useLocation();
+  let navigate = useNavigate();
+  
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+  },[location.state]);
+  
   return (
     <Col className="veiw-survey">
       <Row className="mb-3">

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Sb_Container from "../../components/Sb_Container/Sb_Container";
 import Sb_List from "../../components/Sb_List/Sb_List";
 import Sb_Main_Items from "../../components/Sb_Main_Items/Sb_Main_Item";
@@ -12,19 +12,19 @@ import View_Survey from "../View_Survey/View_Survey";
 import "./Projects.css";
 
 export default function Projects () {
+  let location = useLocation();
+  let navigate = useNavigate();
   
-  
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+  },[location.state]);
+
   return (
     <>
       <Outlet/>
-      {/* office.sebsib.com/dashboard/projects */}
-      {/* <Projects_Landing/> */}
-      {/* office.sebsib.com/dashboard/projects/create-project */}
-      {/* <Create_Project/> */}
-      {/* office.sebsib.com/dashboard/projects/create-survey */}
-      {/* <Create_Survey projectId='1234' /> */}
-      {/* office.sebsib.com/dashboard/projects/view-survey */}
-      {/* <View_Survey projectId="1234"/> */}
     </>
   )
 }

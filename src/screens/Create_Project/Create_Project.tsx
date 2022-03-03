@@ -1,8 +1,20 @@
+import { useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sb_List from "../../components/Sb_List/Sb_List";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 
 export default function Create_Project () {
+	let location = useLocation();
+  let navigate = useNavigate();
+  
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+  },[location.state]);
+  
 	return (
 		<Col>
 			<Row className="mb-4" style={{'width':'30%'}}>

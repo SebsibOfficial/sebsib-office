@@ -1,10 +1,21 @@
+import { useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sb_Question from "../../components/Sb_Question/Sb_Question";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 
 export default function Create_Survey () {
   let params = useParams();
+  let location = useLocation();
+  let navigate = useNavigate();
+  
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+  },[location.state]);
+  
   return (
     <Col>
       <Row>

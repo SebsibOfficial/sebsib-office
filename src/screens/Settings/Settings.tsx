@@ -1,8 +1,20 @@
+import { useEffect } from "react";
 import { Button, Col, Form } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sb_Container from "../../components/Sb_Container/Sb_Container";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 
 export default function Settings () {
+  let location = useLocation();
+  let navigate = useNavigate();
+  
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+  },[location.state]);
+  
   return (
     <Col md="5">
       <Sb_Text font={16} weight={500}>Credentials</Sb_Text>

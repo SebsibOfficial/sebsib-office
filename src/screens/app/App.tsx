@@ -29,8 +29,8 @@ function App() {
             </Route>
             <Route path="members" element={<Members />}>
               <Route index element = {<Members_Landing/>}/>
-              <Route path='add-edit-member/:pagetype' element = {<Add_Modify_Member/>}/>
-              <Route path='add-edit-member/:pagetype/:id' element = {<Add_Modify_Member/>}/>
+              <Route path='add-member' element = {<Add_Modify_Member pageType='ADD'/>}/>
+              <Route path='edit-member/:id' element = {<Add_Modify_Member pageType='EDIT'/>}/>
             </Route>
             <Route path="settings" element={<Settings />}></Route>
           </Route>
