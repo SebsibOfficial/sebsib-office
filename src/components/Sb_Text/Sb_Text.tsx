@@ -12,7 +12,7 @@ interface Props {
 export default function Sb_Text(props:Props){
     // Set defaults
     var { font = 12, color = "--secondary", align = "left"} = props;
-    return <p style={
+    return <div style={
         {'fontSize':font, 
         'color':`var(${color})`, 
         'fontWeight':props.weight,
@@ -20,5 +20,5 @@ export default function Sb_Text(props:Props){
         }} 
         className = { props.clamp ? `hv clamp c-${props.clamp}` : 'hv'}> 
         {props.children} 
-    </p>
+    </div>
 }
