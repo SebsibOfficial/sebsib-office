@@ -2,13 +2,14 @@ import { faMinusSquare, faPlusCircle, faTrash } from "@fortawesome/free-solid-sv
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { Button, Col, Form, FormGroup, Row } from "react-bootstrap";
+import { generateId } from "../../utils/helpers";
 import Sb_Checkbox from "../Sb_Checkbox/Sb_Checkbox";
 import Sb_Container from "../Sb_Container/Sb_Container";
 import Sb_Text from "../Sb_Text/Sb_Text";
 import './Sb_Question.css';
 
 type ActionType = "ADD" | "EDIT";
-
+type InputType = "CHOICE" | "TEXT" | "SELECT";
 interface Choice {
   id: string,
   choice: string
@@ -27,20 +28,83 @@ interface Props {
   onAddEdit: (id: string, type: ActionType, payload:any) => void
 }
 
+class Payload {
+  constructor(id: string, n: number, q: string, c: Choice[], i: InputType, s: ShowPattern) {
+    this.id = id;
+    this.number = n;
+    this.question = q;
+    this.choices = c;
+    this.inputType = i;
+    this.showPattern = s;
+  }
+  id: string;
+  number: number;
+  question: string;
+  choices: Choice[];
+  inputType: InputType;
+  showPattern: ShowPattern;
+}
+
 export default function Sb_Question (props:Props) {
   const [compState, setCompState] = useState<ActionType>("ADD");
   const [question, setQuestion] = useState("");
-  const [choices, setChoices] = useState<Choice[]>([{id:"ch12", choice:"Choice One"}, {id:"ch34", choice:"Choice Two"}]);
-  const [inputType, setInputType] = useState("CHOICE");
+  const [choices, setChoices] = useState<Choice[]>([{id:generateId(), choice:""}]);
+  const [inputType, setInputType] = useState<InputType>("CHOICE");
   const [showPattern, setShowPattern] = useState<ShowPattern>({hasShow: false, showIfQues: null, ansIs: null})
 
-  function addChoiceHandler() {}
-  function choiceChangeHandler(index:number) {}
-  function choiceRemoveHandler(index:number) {}
-  function questionChangeHandler() {}
-  function selectChangeHandler() {}
-  function showPatternChangeHandler(target:string, state?:boolean) {}
-  function addButtonClickHandler() {}
+  function addChoiceHandler() {
+    var arr = [...choices];
+    arr.push({id:generateId(), choice:""});
+    setChoices(arr); 
+  }
+
+  function choiceChangeHandler(id:string, value: string) {
+    var arr = [...choices];
+    arr.forEach((choice) => {
+      if (choice.id == id)
+        choice.choice = value;
+    })
+    setChoices(arr);
+  }
+
+  function choiceRemoveHandler(id: string) {
+    if (choices.length > 1) {
+      var arr = [...choices];
+      setChoices(arr.filter((choice) => choice.id != id));
+    }
+  }
+
+  function selectChangeHandler(value: string) {
+    setInputType(value as InputType)
+  }
+
+  function showPatternChangeHandler(target:string, payload?:any) {
+    switch (target) {
+      case "STATUS":
+        var temp = {...showPattern}
+        temp.hasShow = !payload;
+        setShowPattern(temp)
+        break;
+      case "QUES":
+        var temp = {...showPattern}
+        temp.showIfQues = payload;
+        setShowPattern(temp)
+        break;
+      case "ANS":
+        var temp = {...showPattern}
+        temp.ansIs = payload;
+        setShowPattern(temp) 
+        break;
+    
+      default:
+        break;
+    }
+  }
+
+  function addButtonClickHandler() {
+    var payload = new Payload(props.id, props.number, question, choices, inputType, showPattern);
+    console.log(payload);
+  }
   
   return (
     <Col className="mb-4">
@@ -60,52 +124,59 @@ export default function Sb_Question (props:Props) {
                 <Form.Group>
                   <Form.Label><Sb_Text font={12}>Question</Sb_Text></Form.Label>
                   <textarea name="question" id="" cols={40} rows={5} className="question-text-area" style={{'fontSize':'12px', 'padding':'1em'}}
-                  onChange={() => questionChangeHandler()}>{question}</textarea>
+                  onChange={(e) => setQuestion(e.target.value)}></textarea>
                 </Form.Group>
-                <div>
+                <div className={`mt-2 ${inputType === 'TEXT' ? 'd-none' : ''}`}>
                   {
                     choices.map((choice:Choice, index:number) => (
-                      <Form.Group className="mb-3" controlId="ChoiceOption">
+                      <Form.Group className="mb-3" controlId="ChoiceOption" key={index}>
                         <div className="d-flex justify-content-between align-items-center">
                           <Form.Label>                          
                             <Sb_Text font={12}>Choice Option #{index + 1}</Sb_Text>                  
                           </Form.Label>
                           <FontAwesomeIcon icon={faMinusSquare} className="question-trash-icon" 
-                          style={{'fontSize':'16px'}} onClick={() => choiceRemoveHandler(index)}/>        
+                          style={{'fontSize':'16px'}} onClick={() => choiceRemoveHandler(choice.id)}/>        
                         </div>
                         <Form.Control size="sm" type="text" placeholder="Choice" 
-                        value={choice.choice} onChange={() => choiceChangeHandler(index)}/>
+                        value={choice.choice} onChange={(e) => choiceChangeHandler(choice.id, e.target.value)}/>
                       </Form.Group>
                     ))
-                  }                  
+                  }   
+                  <FontAwesomeIcon icon={faPlusCircle} className="question-plus-icon" onClick={() => addChoiceHandler()}/>               
                 </div>
-                <FontAwesomeIcon icon={faPlusCircle} className="question-plus-icon" onClick={() => addChoiceHandler()}/>
               </Col>
 
               <Col>
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="Select"><Sb_Text font={12}>Input Type</Sb_Text></Form.Label>
-                  <Form.Select size="sm" id="Select" onChange={() => selectChangeHandler()}>
-                    <option>Choice</option>
+                  <Form.Select size="sm" id="Select" onChange={(e) => selectChangeHandler(e.target.value)}>
+                    <option value={"CHOICE"}>Choice</option>
+                    <option value={"TEXT"}>Text</option>
+                    <option value={"SELECT"}>Multi Select</option>
                   </Form.Select>
                 </Form.Group>
                 <div className="show-pattern">
                   <Form.Group className="mb-3">
                     <div className="d-flex justify-content-between">
                       <Sb_Text font={12}>Show Pattern</Sb_Text>
-                      <Sb_Checkbox default="SELECTED" onChange={(state:boolean) => showPatternChangeHandler("STATUS", !state)}/>
+                      <Sb_Checkbox default={`${showPattern.hasShow ? 'SELECTED' : 'UNSELECTED'}`} 
+                      onChange={(state:boolean) => {showPatternChangeHandler("STATUS", state)}}/>
                     </div>
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="QuesSelect"><Sb_Text font={12}>Show If Question...</Sb_Text></Form.Label>
-                    <Form.Select size="sm" id="QuesSelect" onChange={() => showPatternChangeHandler("QUES")}>
+                    <Form.Select size="sm" id={"QuesSelect"+props.id} disabled = {!showPattern.hasShow}
+                    onChange={(e) => showPatternChangeHandler("QUES", e.target.value)}>
                       <option>Choose...</option>
+                      <option value={1}>1</option>
                     </Form.Select>
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="AnsSelect"><Sb_Text font={12}>Answer Is...</Sb_Text></Form.Label>
-                    <Form.Select size="sm" id="AnsSelect" onChange={() => showPatternChangeHandler("ANS")}>
+                    <Form.Select size="sm" id={"AnsSelect"+props.id} disabled = {!showPattern.hasShow}
+                    onChange={(e) => showPatternChangeHandler("ANS", e.target.value)}>
                       <option>Choose...</option>
+                      <option value={1}>1</option>
                     </Form.Select>
                   </Form.Group>
                 </div>
