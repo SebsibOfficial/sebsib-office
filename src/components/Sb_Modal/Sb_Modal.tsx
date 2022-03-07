@@ -7,7 +7,7 @@ interface Props {
   onHide: Function,
   width?: number,
   header?: string | boolean,
-  children: ReactChild | ReactChildren | ReactChild [] | ReactChildren []
+  children: ReactChild | ReactChildren | ReactChild [] | ReactChildren [] | boolean | boolean[]
 }
 
 export default function Sb_Modal (props:Props) {
