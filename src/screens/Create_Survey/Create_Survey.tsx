@@ -43,7 +43,7 @@ export default function Create_Survey () {
           <Sb_Question id="456" number={2} onAddEdit={() => console.log("EDIT/ADD")} onRemove={() => console.log("REMOVE")}/>
         </Col>
         <Col md="6">
-          <Sb_Question id="456" number={3} onAddEdit={() => console.log("EDIT/ADD")} onRemove={() => console.log("REMOVE")}/>
+          <Sb_Question id="4567" number={3} onAddEdit={() => console.log("EDIT/ADD")} onRemove={() => console.log("REMOVE")}/>
         </Col>
       </Row>
 
