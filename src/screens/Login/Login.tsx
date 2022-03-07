@@ -1,6 +1,6 @@
 import { faIdBadge, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/officeLogoBlack.svg';
@@ -19,6 +19,17 @@ export default function Login() {
     }
   },[location.state]);
   
+	/*############# STATES ############### */
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+
+	/*------------- METHODS -------------- */
+	function loginHandler () {
+		// Get Data here
+		console.log(username+" "+password);
+		navigate('/dashboard', { state:true });
+	}
+
 	return (
 		<div className='login-screen'>
 			<Row>
@@ -45,16 +56,18 @@ export default function Login() {
 										<div>
 											<Form.Group className="mb-3" controlId="LoginEmail">
 												<Form.Label><Sb_Text font={12}>Email</Sb_Text></Form.Label>
-												<Form.Control size="sm" type="email" placeholder="Enter email" autoComplete='new-password'/>
+												<Form.Control size="sm" type="email" placeholder="Enter email" 
+												autoComplete='new-password' value={username} onChange={(e) => setUsername(e.target.value)}/>
 											</Form.Group>
 
 											<Form.Group className="mb-3" controlId="LoginPassword">
 												<Form.Label><Sb_Text font={12}>Password</Sb_Text></Form.Label>
-												<Form.Control size="sm" type="password" placeholder="Password" autoComplete='new-password'/>
+												<Form.Control size="sm" type="password" placeholder="Password" 
+												autoComplete='new-password' value={password} onChange={(e) => setPassword(e.target.value)}/>
 											</Form.Group>
 											{/* LOL autoComplete="off doesn't work anymore, this is a work around" */}
 											<input type="text" autoComplete='on' style={{'display':'none'}} /> 
-											<Button size="sm" ><Sb_Text font={12} color="--lightGrey">Log In</Sb_Text></Button>
+											<Button size="sm" onClick={() => loginHandler()}><Sb_Text font={12} color="--lightGrey">Log In</Sb_Text></Button>
 										</div>
 									</div>
 								</Sb_Card>

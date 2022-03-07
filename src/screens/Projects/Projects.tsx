@@ -1,3 +1,5 @@
+import { faArchive, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -28,8 +30,23 @@ export default function Projects () {
 
 export function Projects_Landing () {
   let navigate = useNavigate();
+  
+  /*############# STATES ############### */
   const [modalState, setModalState] = useState(false);
+  const [modalType, setModalType] = useState<"SELECTION" | "DELETION">("DELETION");
 
+  /*------------- METHODS -------------- */
+  function deleteProjectHandler () {
+    // Logic Here
+    setModalState(false)
+  } 
+
+  function memberRemoveHandler (id: string) {}
+
+  function memberSelectHandler (id: string) {}
+
+  function addMemberHandler () {}
+  
   return (
     <Col md="10">
       <Row className="mb-4">
@@ -45,7 +62,9 @@ export function Projects_Landing () {
               <Sb_Text font={20} weight={500}>Argiculture Studies</Sb_Text>
             </Col>
             <Col className='text-end'>
-              <Button variant="danger" size="sm"><Sb_Text font={12} color="--lightGrey">Delete Project</Sb_Text></Button>
+              <Button variant="danger" size="sm" onClick={() => {setModalType("DELETION");setModalState(true)}}>
+                <Sb_Text font={12} color="--lightGrey">Delete Project</Sb_Text>
+              </Button>
             </Col>
           </Row>
           <Row>
@@ -71,7 +90,7 @@ export function Projects_Landing () {
                   <Sb_Container borderDir="HORIZONTAL" className="p-0 d-block pe-4 min-height-inherit">
                     <Row className="g-0" style={{marginTop:'-6px'}}>
                       <Col>
-                        <Button size="sm" className="my-4" onClick={() => setModalState(true)}>
+                        <Button size="sm" className="my-4" onClick={() => {setModalType("SELECTION");setModalState(true)}}>
                           <Sb_Text font={12} color="--lightGrey">Add Enumerator</Sb_Text>
                         </Button>
                       </Col>
@@ -79,7 +98,7 @@ export function Projects_Landing () {
                     <Row>
                       <Col>
                       <Sb_List items={[{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }]} 
-                        listType="MEMBER" compType='REMOVE' onAction={(id, ac) => console.log(id+" CLICKED "+ac)}/>
+                        listType="MEMBER" compType='REMOVE' onAction={(id) => memberRemoveHandler(id)}/>
                       </Col>
                     </Row>
                   </Sb_Container>
@@ -89,12 +108,48 @@ export function Projects_Landing () {
           </Row>
         </Col>
       </Row>
+      
+      
+      {/* When there are no Projects */}
+      <Row>
+        <Col className="d-none text-center" style={{'opacity':'0.1'}}>
+          <FontAwesomeIcon icon={faArchive} style={{'fontSize':'10em'}}/><br></br>
+          <Sb_Text font={48} weight={900}>No Projects</Sb_Text>
+        </Col>
+      </Row>
+
+
       {/* ---------------------------------The Modal------------------------------------------------------ */}
-      <Sb_Modal show={modalState} onHide={() => setModalState(false)} header="Add Enumrators" width={30}>
-        <Sb_List 
-        items={[{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }, {id:'3', text:'Minamin Chala', }, {id:'4', text:'Minamin Chala', }]} 
-        listType="MEMBER" compType='SELECT' onAction={(id, ac) => console.log(id+" CLICKED "+ac)}/>
-        <Button size="sm" className="mt-3"><Sb_Text font={16} color="--lightGrey">Add</Sb_Text></Button>
+      <Sb_Modal show={modalState} onHide={() => setModalState(false)} header={ modalType == "SELECTION" ? "Add Enumrator" : false } width={30}>
+        <>
+        {modalType === "SELECTION" &&
+          <>
+            <Sb_List 
+            items={[{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }, {id:'3', text:'Minamin Chala', }, {id:'4', text:'Minamin Chala', }]} 
+            listType="MEMBER" compType='SELECT' onAction={(id) => memberSelectHandler(id)}/>
+            <Button size="sm" className="mt-3" onClick={() => addMemberHandler()}>
+              <Sb_Text font={16} color="--lightGrey">Add</Sb_Text>
+            </Button>
+          </>
+        }
+        {modalType === "DELETION" && 
+          <>
+            <div className="d-block text-center" style={{'fontSize':'4em'}}>
+              <FontAwesomeIcon icon={faTrash}/>
+              <Sb_Text font={20} weight={500} align="center">Are you sure you want to delete this project? You will lose all your surveys.</Sb_Text>
+            </div>
+            <div>
+              <Button variant="danger" size="sm" className="mt-3 float-start" onClick={() => deleteProjectHandler()}>
+                <Sb_Text font={16} color="--lightGrey">Continue</Sb_Text>
+              </Button>
+              <Button variant="secondary" size="sm" className="mt-3 float-end"  onClick={() => setModalState(false)}>
+                <Sb_Text font={16} color="--lightGrey">Cancel</Sb_Text>
+              </Button>
+            </div>
+          </>
+        }
+        </>
+        
       </Sb_Modal>
     </Col>
   )
