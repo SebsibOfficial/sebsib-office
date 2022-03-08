@@ -111,11 +111,6 @@ export default function Sb_Question (props:Props) {
   }
 
   function hasDifference() {
-    // console.log(lastExport);
-    // console.log(choices)
-    // console.log(question)
-    // console.log(inputType)
-    // console.log(showPattern)
     if (lastExport?.choices !== choices || lastExport.question !== question || lastExport.inputType !== inputType || lastExport.showPattern !== showPattern)
       return true
     else
