@@ -8,27 +8,29 @@ import Sb_Container from "../Sb_Container/Sb_Container";
 import Sb_Text from "../Sb_Text/Sb_Text";
 import './Sb_Question.css';
 
-type ActionType = "ADD" | "EDIT";
-type InputType = "CHOICE" | "TEXT" | "SELECT";
-interface Choice {
+export type ActionType = "ADD" | "EDIT";
+export type InputType = "CHOICE" | "TEXT" | "SELECT";
+export interface Choice {
   id: string,
   choice: string
 }
 
-interface ShowPattern {
+export interface ShowPattern {
   hasShow: boolean,
-  showIfQues: string | null,
-  ansIs: string | null
+  showIfQues: string,
+  ansIs: string
 }
 
 interface Props {
   id: string,
   number: number,
+  state: ActionType,
+  otherQuestions: Payload[],
   onRemove: (id: string) => void,
   onAddEdit: (id: string, type: ActionType, payload:any) => void
 }
 
-class Payload {
+export class Payload {
   constructor(id: string, n: number, q: string, c: Choice[], i: InputType, s: ShowPattern) {
     this.id = id;
     this.number = n;
@@ -46,11 +48,11 @@ class Payload {
 }
 
 export default function Sb_Question (props:Props) {
-  const [compState, setCompState] = useState<ActionType>("ADD");
   const [question, setQuestion] = useState("");
   const [choices, setChoices] = useState<Choice[]>([{id:generateId(), choice:""}]);
   const [inputType, setInputType] = useState<InputType>("CHOICE");
-  const [showPattern, setShowPattern] = useState<ShowPattern>({hasShow: false, showIfQues: null, ansIs: null})
+  const [showPattern, setShowPattern] = useState<ShowPattern>({hasShow: false, showIfQues: "", ansIs: ""})
+  const [lastExport, setLastExport] = useState<Payload | null>()
 
   function addChoiceHandler() {
     var arr = [...choices];
@@ -102,10 +104,36 @@ export default function Sb_Question (props:Props) {
   }
 
   function addButtonClickHandler() {
+    correction();
     var payload = new Payload(props.id, props.number, question, choices, inputType, showPattern);
-    console.log(payload);
+    props.onAddEdit(props.id, props.state, payload);
+    setLastExport(payload);
+  }
+
+  function hasDifference() {
+    // console.log(lastExport);
+    // console.log(choices)
+    // console.log(question)
+    // console.log(inputType)
+    // console.log(showPattern)
+    if (lastExport?.choices !== choices || lastExport.question !== question || lastExport.inputType !== inputType || lastExport.showPattern !== showPattern)
+      return true
+    else
+      return false
+  }
+
+  function correction() {
+    if (inputType === 'TEXT') {
+      var arr = [...choices];
+      arr.splice(0,arr.length)
+      setChoices(arr); 
+    }
   }
   
+  function getQuestion(id: string) {
+    return props.otherQuestions.filter((question) => question.id === id)[0];
+  }
+
   return (
     <Col className="mb-4">
       <Row>
@@ -156,33 +184,45 @@ export default function Sb_Question (props:Props) {
                   </Form.Select>
                 </Form.Group>
                 <div className="show-pattern">
+                  
                   <Form.Group className="mb-3">
                     <div className="d-flex justify-content-between">
                       <Sb_Text font={12}>Show Pattern</Sb_Text>
-                      <Sb_Checkbox default={`${showPattern.hasShow ? 'SELECTED' : 'UNSELECTED'}`} 
+                      <Sb_Checkbox default={`${showPattern.hasShow ? 'SELECTED' : 'UNSELECTED'}`}
                       onChange={(state:boolean) => {showPatternChangeHandler("STATUS", state)}}/>
                     </div>
                   </Form.Group>
+                  
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="QuesSelect"><Sb_Text font={12}>Show If Question...</Sb_Text></Form.Label>
                     <Form.Select size="sm" id={"QuesSelect"+props.id} disabled = {!showPattern.hasShow}
                     onChange={(e) => showPatternChangeHandler("QUES", e.target.value)}>
                       <option>Choose...</option>
-                      <option value={1}>1</option>
+                      {
+                        props.otherQuestions.filter((question) => question.inputType !== 'TEXT')
+                        .map((question, index) => (
+                          <option key={index} value={question.id}>Question #{index + 1}</option>
+                        ))
+                      }
                     </Form.Select>
                   </Form.Group>
+                  
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="AnsSelect"><Sb_Text font={12}>Answer Is...</Sb_Text></Form.Label>
                     <Form.Select size="sm" id={"AnsSelect"+props.id} disabled = {!showPattern.hasShow}
                     onChange={(e) => showPatternChangeHandler("ANS", e.target.value)}>
                       <option>Choose...</option>
-                      <option value={1}>1</option>
+                      {
+                        getQuestion(showPattern.showIfQues)?.choices.map((choice, index) => (
+                          <option key={index} value={choice.id}>Choice #{index + 1}</option>
+                        ))
+                      }
                     </Form.Select>
                   </Form.Group>
                 </div>
                 <div>
-                  <Button size="sm" className="mt-3 float-end" onClick={() => addButtonClickHandler()}>
-                    <Sb_Text font={12} color="--lightGrey">Add</Sb_Text>
+                  <Button size="sm" className="mt-3 float-end" onClick={() => addButtonClickHandler()} disabled = { !hasDifference() }>
+                    <Sb_Text font={12} color="--lightGrey">{props.state === 'ADD' ? 'Add' : 'Update'}</Sb_Text>
                   </Button>
                 </div>
               </Col>
