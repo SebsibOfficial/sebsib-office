@@ -104,24 +104,23 @@ export default function Sb_Question (props:Props) {
   }
 
   function addButtonClickHandler() {
-    correction();
     var payload = new Payload(props.id, props.number, question, choices, inputType, showPattern);
+    inputType === 'TEXT' ? payload.choices = [] : null
     props.onAddEdit(props.id, props.state, payload);
     setLastExport(payload);
   }
 
   function hasDifference() {
-    if (lastExport?.choices !== choices || lastExport.question !== question || lastExport.inputType !== inputType || lastExport.showPattern !== showPattern)
-      return true
-    else
-      return false
-  }
-
-  function correction() {
     if (inputType === 'TEXT') {
-      var arr = [...choices];
-      arr.splice(0,arr.length)
-      setChoices(arr); 
+      if (lastExport?.question !== question || lastExport.inputType !== inputType || lastExport.showPattern !== showPattern)
+        return true
+    }
+    else {
+      if (lastExport?.choices !== choices || lastExport.question !== question || 
+        lastExport.inputType !== inputType || lastExport.showPattern !== showPattern)
+        return true
+      else
+        return false
     }
   }
   
@@ -131,6 +130,7 @@ export default function Sb_Question (props:Props) {
 
   return (
     <Col className="mb-4">
+      {console.log(lastExport)}
       <Row>
         <Col className="d-flex align-items-center">
           <Sb_Text font={32} weight={900} color="--primary">#{props.number}</Sb_Text>

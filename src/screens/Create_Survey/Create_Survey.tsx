@@ -5,6 +5,15 @@ import Sb_Question, { ActionType, Payload } from "../../components/Sb_Question/S
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { generateId } from "../../utils/helpers";
 
+class FinalPayload {
+  constructor (sn: string, pl: Payload[]) {
+    this.surveyName = sn;
+    this.payload = pl;
+  }
+  surveyName: string;
+  payload: Payload[];
+}
+
 export default function Create_Survey () {
   let params = useParams();
   let location = useLocation();
@@ -20,6 +29,7 @@ export default function Create_Survey () {
   /*############# STATES ############### */
   const [questions, setQuestion] = useState([{id: generateId()}]);
   const [questionsData, setQuestionsData] = useState<Payload[]>([]);
+  const [surveyName, setSurveyName] = useState("");
 
   /*------------- METHODS -------------- */
   function addEditHandler (payload: Payload, actionType: ActionType) {
@@ -46,21 +56,31 @@ export default function Create_Survey () {
     setTimeout(() => handleScroll(), 50);
   }
 
-  function questionExists(Qid: string) {
+  function removeHandler (id: string) {
+    var qdArr = [...questionsData]; var qArr = [...questions];
+    qdArr = qdArr.filter((question) => question.id != id); qArr = qArr.filter((question) => question.id != id);
+    setQuestionsData(qdArr); setQuestion(qArr);
+  }
+  
+  function createSurveyHandler () {
+    // Final Data here
+    //console.log(new FinalPayload(surveyName, questionsData));
+  }
+
+  function questionExists (Qid: string) {
     if (questionsData.findIndex((question) => question.id === Qid) != -1)
       return true
     else 
       return false
   }
 
-  function handleScroll() {
+  function handleScroll () {
     var scrollingElement = (document.scrollingElement || document.body);
     scrollingElement.scrollTop = scrollingElement.scrollHeight;
   }
 
   return (
     <Col>
-      {console.log(questionsData)}
       <Row>
         <Col md="3">
           <Form.Group className="mb-3" controlId="LoginEmail">
@@ -73,7 +93,8 @@ export default function Create_Survey () {
         <Col md="3">
           <Form.Group className="mb-3" controlId="LoginEmail">
               <Form.Label><Sb_Text font={16}>Survey Name</Sb_Text></Form.Label>
-              <Form.Control size="sm" type="text" placeholder="Name"/>
+              <Form.Control size="sm" type="text" placeholder="Name" value={surveyName}
+              onChange={(e) => setSurveyName(e.target.value)}/>
 					</Form.Group>
         </Col>
       </Row>
@@ -85,7 +106,7 @@ export default function Create_Survey () {
               <Sb_Question key={index + 1} id={question.id} number={index + 1} 
               state={ questionExists(question.id) ? 'EDIT' : 'ADD'} otherQuestions={questionsData}
               onAddEdit={(id: string, actionType: ActionType, payload: any) => addEditHandler(payload, actionType)} 
-              onRemove={() => console.log("REMOVE")}/>
+              onRemove={(id: string) => removeHandler(id)}/>
             </Col>
           ))
         }
@@ -96,7 +117,7 @@ export default function Create_Survey () {
           <Button size="sm" variant="secondary" className="mt-3 float-start" onClick={() => newQuestionHandler()}>
             <Sb_Text font={12} color="--lightGrey">New Question</Sb_Text>
           </Button>
-          <Button variant="primary" className="mt-3 float-end">
+          <Button variant="primary" className="mt-3 float-end" onClick={() => createSurveyHandler()}>
             <Sb_Text font={16} color="--lightGrey">Create Survey</Sb_Text>
           </Button>
         </Col>
