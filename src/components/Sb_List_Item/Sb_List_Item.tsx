@@ -13,7 +13,7 @@ export interface Props {
     type: "MEMBER" | "PROJECT",
     compType: compType,
     defaultSelectValue?: "UNSELECTED" | "SELECTED" | undefined,
-    onAction: (id:string, actionType:actionType) => void
+    onAction: (id:string, actionType:actionType, text:string) => void
 }
 
 export default function Sb_List_Item (props:Props) {
@@ -28,7 +28,7 @@ export default function Sb_List_Item (props:Props) {
                     <Sb_Text font={16}>{props.text}</Sb_Text>
                 </div>
                 <FontAwesomeIcon icon={faMinusSquare} style={{'color': 'var(--DangerRed)','cursor':'pointer'}} 
-                onClick={() => props.onAction(props.id, "REMOVE")}/>
+                onClick={() => props.onAction(props.id, "REMOVE", props.text)}/>
             </div>
         )
     }
@@ -37,7 +37,8 @@ export default function Sb_List_Item (props:Props) {
             <div className='d-flex sb-list-item list-select'>
                 <div className='d-inline-flex align-items-center'>
                     {/* There is something confusing in this component, it is returning the opposite. So i adapted. */}
-                    <Sb_Checkbox default={defaultSelectValue} onChange={(checkState:boolean) => props.onAction(props.id, checkState ? 'UNSELECTED' : 'SELECTED')}/> 
+                    <Sb_Checkbox default={defaultSelectValue} 
+                    onChange={(checkState:boolean) => props.onAction(props.id, checkState ? 'UNSELECTED' : 'SELECTED', props.text)}/> 
                     <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 
                     style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>
                     <Sb_Text font={16}>{props.text}</Sb_Text>
@@ -47,7 +48,7 @@ export default function Sb_List_Item (props:Props) {
     }
     else if (props.compType === 'DISPLAY' ) {
         return (
-            <div className='d-flex sb-list-item list-display' onClick={() => props.onAction(props.id, "CLICK")}>
+            <div className='d-flex sb-list-item list-display' onClick={() => props.onAction(props.id, "CLICK", props.text)}>
                 <div className='d-inline-flex align-items-center'>
                     <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 
                     style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>
