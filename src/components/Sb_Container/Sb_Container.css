@@ -26,3 +26,6 @@
 .min-height-inherit {
     min-height: inherit;
 }
+.mnh-100 {
+    min-height: 100%;
+}
