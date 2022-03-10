@@ -1,8 +1,21 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
+import { actionType } from "../../components/Sb_List_Item/Sb_List_Item";
 import Sb_List from "../../components/Sb_List/Sb_List";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
+import { generateId } from "../../utils/helpers";
+
+class CreateProjectPayload {
+	constructor (id: string, pn: string, en: string[]) {
+		this.id = id;
+		this.projectName = pn;
+		this.enums = en;
+	}
+	id: string;
+	projectName: string;
+	enums: string[];
+}
 
 export default function Create_Project () {
 	let location = useLocation();
@@ -17,12 +30,22 @@ export default function Create_Project () {
   
 	/*############# STATES ############### */
 	const [projectname, setProjectname] = useState("");
-	const [members, setMembers] = useState([]);
+	const [members, setMembers] = useState([{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }, {id:'3', text:'Minamin Chala', }, {id:'4', text:'Minamin Chala', }]);
 
+	let selectedMembers: string[] = [];
 	/*------------- METHODS -------------- */
-	function memberSelectHandler (id: string) {}
+	function memberSelectHandler (id: string, actionType: actionType | undefined) {
+    if (actionType === 'SELECTED')
+      selectedMembers.push(id);
+    else if (actionType === 'UNSELECTED')
+      selectedMembers = selectedMembers.filter(memberID => memberID != id);
+  }
 
-	function createProjectHandler () {}
+	function createProjectHandler () {
+		var payload = new CreateProjectPayload (generateId(), projectname, selectedMembers);
+		// Send to API -> If success
+			navigate('/dashboard/projects', {state: true});
+	}
 
 	return (
 		<Col>
@@ -39,8 +62,8 @@ export default function Create_Project () {
 					<Sb_Text font={16}>Enumerators</Sb_Text>
 					<br />
 					<Sb_List 
-					items={[{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }, {id:'2', text:'Minamin Chala', }, {id:'2', text:'Minamin Chala', }]} 
-					listType="MEMBER" compType='SELECT' onAction={(id) => memberSelectHandler(id)}/>
+					items={members} 
+					listType="MEMBER" compType='SELECT' onAction={(id, text, actionType) => memberSelectHandler(id, actionType)}/>
 					<Button size="sm" className="mt-3" onClick={() => createProjectHandler()}>
 						<Sb_Text font={16} color="--lightGrey">Create Project</Sb_Text>
 					</Button>
