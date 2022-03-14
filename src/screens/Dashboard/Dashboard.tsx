@@ -158,7 +158,7 @@ export function Dashboard_Landing () {
               </Row>
               <Row>
                 <Sb_Container borderDir='HORIZONTAL' className='p-3'>
-                  <Sb_List items={[{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }]} 
+                  <Sb_List items={[{_id:'1', name:'Kebede Debebe', }, {_id:'2', name:'Minamin Chala', }]} 
                   listType="MEMBER" compType='DISPLAY' onAction={(id, ac) => console.log()}/>
                 </Sb_Container>
               </Row>

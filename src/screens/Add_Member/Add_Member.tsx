@@ -93,8 +93,8 @@ export default function Add_Modify_Member(props:Props) {
         <Col md="4">
           <Sb_Text font={16} weight={500}><p>Projects Involved In</p></Sb_Text>
           <Sb_List 
-					items={[{id:'1', text:'Agriculture In Gondar', }, {id:'2', text:'AIDS Prevalance', }, {id:'3', text:'Minamin Chala', }, {id:'4', text:'Minamin Chala', }]} 
-					listType="PROJECT" compType='SELECT' onAction={(id, text, ac) => projectSelectHandler(id, ac)}/>
+					items={[{_id:'1', name:'Agriculture In Gondar', }, {_id:'2', name:'A_idS Prevalance', }, {_id:'3', name:'Minamin Chala', }, {_id:'4', name:'Minamin Chala', }]} 
+					listType="PROJECT" compType='SELECT' onAction={(id, name, ac) => projectSelectHandler(id, ac)}/>
           <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
             <Sb_Text font={12} color="--lightGrey">
               {props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}

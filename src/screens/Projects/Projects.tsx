@@ -15,8 +15,8 @@ import "./Projects.css";
 interface Project {
   projectID: string,
   projectName: string,
-  surveys: {id: string, text: string}[],
-  members: {id: string, text: string}[],
+  surveys: {_id: string, name: string}[],
+  members: {_id: string, name: string}[],
 }
 
 class AddMemberUpdatePayload {
@@ -70,15 +70,15 @@ export function Projects_Landing () {
         // {id: generateId(), text: 'Agricultural Studies in South Ethiopia'}
       ], 
       members: [
-        {id: generateId(), text: 'Abebe Beklel'},
-        {id: generateId(), text: 'lela Sew Demo'},
-        {id: generateId(), text: 'Ahunim lela'},
-        {id: generateId(), text: 'Beso abebe'}
+        {_id: generateId(), name: 'Abebe Beklel'},
+        {_id: generateId(), name: 'lela Sew Demo'},
+        {_id: generateId(), name: 'Ahunim lela'},
+        {_id: generateId(), name: 'Beso abebe'}
       ]
     }
   ]);
 
-  let selectedMembers: {id: string, text: string}[] = [];
+  let selectedMembers: {_id: string, name: string}[] = [];
   /*------------- METHODS -------------- */
   function deleteProjectHandler () {
     // Logic Here
@@ -92,7 +92,7 @@ export function Projects_Landing () {
       // Remove from project Arr
       var prjs = [...projects];
       var prj = prjs.filter((project) => project.projectID === projectID)[0];
-      var mmbrs = prj?.members.filter(member => member.id != id);
+      var mmbrs = prj?.members.filter(member => member._id != id);
       prj.members = mmbrs;
       for(var i = 0; i < prjs.length; i++){
         if (prjs[i].projectID == projectID)
@@ -101,11 +101,11 @@ export function Projects_Landing () {
       setProjects(prjs);    
   }
 
-  function memberSelectHandler (id: string, text: string, actionType: actionType | undefined) {
+  function memberSelectHandler (_id: string, name: string, actionType: actionType | undefined) {
     if (actionType === 'SELECTED')
-      selectedMembers.push({id: id, text: text});
+      selectedMembers.push({_id: _id, name: name});
     else if (actionType === 'UNSELECTED')
-      selectedMembers = selectedMembers.filter(member => member.id === id);
+      selectedMembers = selectedMembers.filter(member => member._id === _id);
   }
 
   function addMemberHandler () {
@@ -114,7 +114,7 @@ export function Projects_Landing () {
       // Filter out the id's only
       var memArr: string[] = [];
       selectedMembers.forEach(member => {
-        memArr.push(member.id);
+        memArr.push(member._id);
       })
       // Gather the new members
       var payload = new AddMemberUpdatePayload(currentModalID, memArr);
@@ -165,7 +165,7 @@ export function Projects_Landing () {
                           <Col className={project.surveys.length < 1 ? `d-none` : `d-flex mb-3 ms-3`}>
                             {
                               project.surveys.map((survey, index) => (
-                                <Sb_Main_Items key={index} id={survey.id} text={survey.text} type='SURVEY' 
+                                <Sb_Main_Items key={index} id={survey._id} text={survey.name} type='SURVEY' 
                                 onClick={(id:string) => navigate(`view-survey/${id}`, { state:true })}/>
                               ))
                             }
@@ -229,8 +229,8 @@ export function Projects_Landing () {
         {modalType === "SELECTION" &&
           <>
             <Sb_List 
-            items={[{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }, 
-            {id:'3', text:'Minamin Chala', }, {id:'4', text:'Minamin Chala', }]} 
+            items={[{_id:'1', name:'Kebede Debebe', }, {_id:'2', name:'Minamin Chala', }, 
+            {_id:'3', name:'Minamin Chala', }, {_id:'4', name:'Minamin Chala', }]} 
             listType="MEMBER" compType='SELECT' onAction={(id, text, actionType) => memberSelectHandler(id, text, actionType)}/>
             <Button size="sm" className="mt-3" onClick={() => addMemberHandler()}>
               <Sb_Text font={16} color="--lightGrey">Add</Sb_Text>

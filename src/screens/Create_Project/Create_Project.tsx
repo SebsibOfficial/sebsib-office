@@ -30,7 +30,7 @@ export default function Create_Project () {
   
 	/*############# STATES ############### */
 	const [projectname, setProjectname] = useState("");
-	const [members, setMembers] = useState([{id:'1', text:'Kebede Debebe', }, {id:'2', text:'Minamin Chala', }, {id:'3', text:'Minamin Chala', }, {id:'4', text:'Minamin Chala', }]);
+	const [members, setMembers] = useState([{_id:'1', name:'Kebede Debebe', }, {_id:'2', name:'Minamin Chala', }, {_id:'3', name:'Minamin Chala', }, {_id:'4', name:'Minamin Chala', }]);
 
 	let selectedMembers: string[] = [];
 	/*------------- METHODS -------------- */
