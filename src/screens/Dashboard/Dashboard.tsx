@@ -1,6 +1,7 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faArchive, faCog, faThLarge, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useContext } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sb_Container from '../../components/Sb_Container/Sb_Container';
@@ -10,12 +11,14 @@ import Sb_Main_Items from '../../components/Sb_Main_Items/Sb_Main_Item';
 import Sb_Row from '../../components/Sb_Row/Sb_Row';
 import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
+import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
 import './Dashboard.css';
 
 export default function Dashboard () {
   let location = useLocation();
   let navBack = useNavigate();
-
+  const {notif} = useContext(NotifContext) as NotifContextInterface;
+  
   function capitalizeFirst (str:string):string {
     return str.match("^[a-z]") ? str.charAt(0).toUpperCase() + str.substring(1) : str;
   }
@@ -59,6 +62,7 @@ export default function Dashboard () {
               header = {capitalizeFirst(getPageTitle().split("-").join(" "))} 
               onBackClick = { () => navBack(-1)}
               hideBackButton = { getPageTitle() === 'dashboard' ? true : false}
+              notif = {notif}
             >
               <FontAwesomeIcon icon={getPageIcon()} style={{'fontSize':'2.5em','color':'var(--primary)'}} className="me-3"/>
             </Sb_Header>
