@@ -6,26 +6,50 @@
   box-shadow: none !important;
 }
 .loader {
-  width: 8px;
-  height: 48px;
+  width: 6px;
+  height: 38px;
   display: block;
   margin: auto;
   left: -20px;
   position: relative;
   border-radius: 4px;
   box-sizing: border-box;
-  animation: animloader 1s linear infinite alternate;
+  animation: animloader 500ms linear infinite alternate;
 }
 
 @keyframes animloader {
   0% {
-    box-shadow: 20px 0 rgba(255, 255, 255, 0.25), 40px 0 white, 60px 0 white;
+    box-shadow: 20px 0 #505075, 40px 0 white, 60px 0 white;
   }
   50% {
-    box-shadow: 20px 0 white, 40px 0 rgba(255, 255, 255, 0.25), 60px 0 white;
+    box-shadow: 20px 0 white, 40px 0 #505075, 60px 0 white;
   }
   100% {
-    box-shadow: 20px 0 white, 40px 0 white, 60px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: 20px 0 white, 40px 0 white, 60px 0 #505075;
+  }
+}
+
+.mini-loader {
+  width: 4px;
+  height: 15px;
+  display: block;
+  margin: auto;
+  left: -20px;
+  position: relative;
+  border-radius: 4px;
+  box-sizing: border-box;
+  animation: mini-animloader 300ms linear infinite alternate;
+}
+
+@keyframes mini-animloader {
+  0% {
+    box-shadow: 20px 0 #505075, 30px 0 white, 40px 0 white;
+  }
+  50% {
+    box-shadow: 20px 0 white, 30px 0 #505075, 40px 0 white;
+  }
+  100% {
+    box-shadow: 20px 0 white, 30px 0 white, 40px 0 #505075;
   }
 }
     
