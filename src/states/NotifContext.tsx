@@ -17,8 +17,7 @@ export const NotifContext = createContext<NotifContextInterface | null>(null);
 
 export const NotifProvider = (props:any) => 
 {
-  const [notif, setNotif] = useState<NotifInterface | null>(
-    {id:1 , message: "Server Error", type: "ERROR", code: 500});
+  const [notif, setNotif] = useState<NotifInterface | null>(null);
   
     // Disapear after 3 seconds
   useEffect(() => {
