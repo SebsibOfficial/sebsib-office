@@ -1,6 +1,6 @@
 type Prop = {off?:boolean, full?:boolean}
 
-export default function Sb_Mini_Loader (prop:Prop) {
+export default function Sb_Loader (prop:Prop) {
   var {off = false, full = false} = prop;
   return (
     <>
