@@ -10,16 +10,19 @@ import Settings from '../Settings/Settings';
 import View_Survey from '../View_Survey/View_Survey';
 import { NotifProvider } from '../../states/NotifContext';
 import './App.css';
+import axios from 'axios';
+import {AuthContext} from '../../states/AuthContext';
+import { useContext } from 'react';
 
 function App() {
+  const Auth = useContext(AuthContext);  
+  axios.defaults.headers.common['auth-token'] = Auth.token; 
   return (
     <div className='parent-screen'>
-      {/* REMEBER TO USE useNavigate('/location',{ state: data}) TO PASS SOME STATE TO THE NEXT SCREEN */}
-      {/* ALSO USE useLocation() to get the state passed */}
-      {/* >>Protection from URL routing */}
       <Routes>
         <Route path='/' element={<div><Outlet/></div>}>
-          <Route index element={<div>Hello<br></br><Link to={"/login"} state={true}>Login</Link></div>}/>
+          {/* WHAT YOU DID HERE DOES NOT LOOK SAFE....WATCH OUT */}
+          <Route index element={<div>Hello<br></br><Link to={Auth.token == '' ? "/login" : "/dashboard"} state={true}>Login</Link></div>}/>
           
             <Route path="dashboard" element={<NotifProvider><Dashboard /></NotifProvider>}>
               <Route index element={<Dashboard_Landing/>}></Route>
