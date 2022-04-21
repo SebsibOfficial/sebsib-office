@@ -16,11 +16,10 @@ export default function Login() {
   let navigate = useNavigate();
   const Auth = useContext(AuthContext);
 
-	// Prevents routing to login page once logged in
+	// State clean up because of that one console error
 	useEffect(() => {
-		if (Auth.token != '')
-			return navigate("/");
-	}, [Auth.token])
+		Auth.setAuthToken('');
+	}, [])
 
   // Prevents routing from the URL
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faArchive, faCog, faThLarge, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sb_Container from '../../components/Sb_Container/Sb_Container';
@@ -18,6 +18,18 @@ export default function Dashboard () {
   let location = useLocation();
   let navBack = useNavigate();
   const {notif} = useContext(NotifContext) as NotifContextInterface;
+  
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navBack("/404");
+    }
+  },[location.state]);
+  
+  // LMAO trying to stop navigating to the login page by back button
+  window.onpopstate = () => {
+    navBack("/");
+  }
   
   function capitalizeFirst (str:string):string {
     return str.match("^[a-z]") ? str.charAt(0).toUpperCase() + str.substring(1) : str;
