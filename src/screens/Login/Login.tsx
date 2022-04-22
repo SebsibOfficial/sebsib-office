@@ -42,8 +42,9 @@ export default function Login() {
 		.then((result:any) => {
 			if (result.code == 200) {
 				// Set token to state
+				localStorage.setItem('token', result.data.token as string);
 				Auth.setAuthToken(result.data.token as string);
-				// Navigate
+				// Navigate	
 				navigate('/dashboard', { state:true });
 			} else {
 				setErrnotice(result.data.message);

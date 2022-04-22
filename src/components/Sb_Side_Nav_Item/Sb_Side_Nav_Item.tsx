@@ -30,6 +30,7 @@ const Sb_Side_Nav_Item: React.FC<Props> = (props:Props) => {
 
   function logoutHandler () {
     Auth.setAuthToken('');
+    localStorage.clear();
     navigate(props.navItemData.path, { state: true });
   }
 

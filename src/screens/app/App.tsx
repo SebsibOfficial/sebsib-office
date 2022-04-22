@@ -16,6 +16,7 @@ import { useContext } from 'react';
 
 function App() {
   const Auth = useContext(AuthContext);  
+  Auth.setAuthToken(localStorage.getItem('token') ?? '');
   axios.defaults.headers.common['auth-token'] = Auth.token; 
   return (
     <div className='parent-screen'>
