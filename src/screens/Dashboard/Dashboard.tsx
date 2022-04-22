@@ -1,24 +1,28 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faArchive, faCog, faThLarge, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sb_Container from '../../components/Sb_Container/Sb_Container';
 import Sb_Header from '../../components/Sb_Header/Sb_Header';
 import Sb_List from '../../components/Sb_List/Sb_List';
+import Sb_Loader from '../../components/Sb_Loader';
 import Sb_Main_Items from '../../components/Sb_Main_Items/Sb_Main_Item';
 import Sb_Row from '../../components/Sb_Row/Sb_Row';
 import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
+import { AuthContext } from '../../states/AuthContext';
 import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
+import { GetMemberList } from '../../utils/api';
+import { decodeJWT } from '../../utils/helpers';
 import './Dashboard.css';
 
 export default function Dashboard () {
   let location = useLocation();
   let navBack = useNavigate();
   const {notif} = useContext(NotifContext) as NotifContextInterface;
-  
+  const Auth = useContext(AuthContext);
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -65,7 +69,7 @@ export default function Dashboard () {
   return (
     <Row className='dashboard-container g-0'>
       <Col md='2'>
-        <Sb_Side_Nav name='Abebe Beso'/>
+        <Sb_Side_Nav name={decodeJWT(Auth.token).org_name}/>
       </Col>
       <Col style={{'padding':'1em 4em', 'overflowX':'auto'}}>
         <Row className='g-0' style={{'marginBottom':'3em'}}>
@@ -88,8 +92,27 @@ export default function Dashboard () {
   )
 }
 
+type MemberItem = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" | "SELECTED"};
+
 export function Dashboard_Landing () {
   let navigate = useNavigate();
+  const Auth = useContext(AuthContext);
+  const [members, setMembers] = useState<MemberItem[]>([])
+  const [memberLoading, setMemberLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    GetMemberList(decodeJWT(Auth.token).org).then((res) => {
+      var mem_arr = res.data;
+      var arr:MemberItem[] = [];
+      mem_arr.forEach((member:any) => {
+        if (member.roleId != '623cc24a8b7ab06011bd1e60')
+          arr.push({_id: member._id, name: member.username})
+      })
+      setMembers(arr);
+      setMemberLoading(false);
+    }).catch((err) => console.log(err))
+  }, [])
+  
   return (
     <Col className='main-content'>
       <div >
@@ -174,8 +197,9 @@ export function Dashboard_Landing () {
               </Row>
               <Row>
                 <Sb_Container borderDir='HORIZONTAL' className='p-3'>
-                  <Sb_List items={[{_id:'1', name:'Kebede Debebe', }, {_id:'2', name:'Minamin Chala', }]} 
-                  listType="MEMBER" compType='DISPLAY' onAction={(id, ac) => console.log()}/>
+                {
+                  memberLoading ? <Sb_Loader/> : <Sb_List items={members} listType="MEMBER" compType='DISPLAY' onAction={(id, ac) => console.log()}/>
+                }
                 </Sb_Container>
               </Row>
             </div>

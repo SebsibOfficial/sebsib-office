@@ -22,6 +22,11 @@ export async function login(email: string, password: string):Promise<ResponseInt
 }
 
 export async function GetMemberList(orgId: string):Promise<ResponseInterface>{
-  await WAIT(3000);
-  return {code: 404, data: "GetMemberList"}
+  //await WAIT(3000);
+  try {
+    var result = await axios.get('get/memberlist/'+orgId);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
 }

@@ -16,11 +16,6 @@ export default function Login() {
   let navigate = useNavigate();
   const Auth = useContext(AuthContext);
 
-	// State clean up because of that one console error
-	useEffect(() => {
-		Auth.setAuthToken('');
-	}, [])
-
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -44,8 +39,8 @@ export default function Login() {
 				// Set token to state
 				localStorage.setItem('token', result.data.token as string);
 				Auth.setAuthToken(result.data.token as string);
-				// Navigate	
-				navigate('/dashboard', { state:true });
+				// Navigate
+				setTimeout(() => navigate('/dashboard', { state:true }), 50);				
 			} else {
 				setErrnotice(result.data.message);
 			}
