@@ -14,7 +14,7 @@ import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
-import { GetMemberList } from '../../utils/api';
+import { GetMemberList, GetProjectList } from '../../utils/api';
 import { decodeJWT } from '../../utils/helpers';
 import './Dashboard.css';
 
@@ -93,13 +93,15 @@ export default function Dashboard () {
 }
 
 type MemberItem = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" | "SELECTED"};
-
+type ProjectItem = {_id: string, name: string};
 export function Dashboard_Landing () {
   let navigate = useNavigate();
   const {token, setAuthToken} = useAuth();
   const [members, setMembers] = useState<MemberItem[]>([])
   const [memberLoading, setMemberLoading] = useState<boolean>(true);
-
+  // ## PROJECT RELATED STATES
+  const [projects, setProjects] = useState<ProjectItem[]>([])
+  const [projectLoading, setProjectLoading] = useState<boolean>(true);
   useEffect(() => {
     GetMemberList(decodeJWT(token as string).org).then((res) => {
       var mem_arr = res.data;
@@ -110,6 +112,17 @@ export function Dashboard_Landing () {
       })
       setMembers(arr);
       setMemberLoading(false);
+    }).catch((err) => console.log(err))
+    
+    // Populate the Projects
+    GetProjectList(decodeJWT(token as string).org).then((res) => {
+      var prj_arr = res.data;
+      var arr:ProjectItem[] = [];
+      prj_arr.forEach((project:any) => {
+        arr.push({_id: project._id, name: project.name})
+      })
+      setProjects(arr);
+      setProjectLoading(false);
     }).catch((err) => console.log(err))
   }, [])
   
@@ -132,8 +145,9 @@ export function Dashboard_Landing () {
                   <Row>
                     <Col>
                       <Sb_Container className='p-3'>
-                        <Sb_Main_Items id='1' text='Argiculture Studies in North Gondar' type='PROJECT' onClick={() => navigate('projects', { state:true })}/>
-                        <Sb_Main_Items id='2' text='Argiculture Studies in North Oromia' type='PROJECT' onClick={() => navigate('projects', { state:true })}/>
+                        {
+                          projectLoading ? <Sb_Loader/> : projects.map((project:ProjectItem, index:number) => <Sb_Main_Items key={project._id} id={project._id} text={project.name} type='PROJECT' onClick={() => navigate('projects', { state:true })}/>)
+                        }
                       </Sb_Container>
                     </Col>
                   </Row>
