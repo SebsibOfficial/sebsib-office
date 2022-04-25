@@ -12,7 +12,7 @@ import Sb_Main_Items from '../../components/Sb_Main_Items/Sb_Main_Item';
 import Sb_Row from '../../components/Sb_Row/Sb_Row';
 import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
-import { AuthContext } from '../../states/AuthContext';
+import { AuthContext, useAuth } from '../../states/AuthContext';
 import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
 import { GetMemberList } from '../../utils/api';
 import { decodeJWT } from '../../utils/helpers';
@@ -22,7 +22,7 @@ export default function Dashboard () {
   let location = useLocation();
   let navBack = useNavigate();
   const {notif} = useContext(NotifContext) as NotifContextInterface;
-  const Auth = useContext(AuthContext);
+  const {token, setAuthToken} = useAuth();
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -69,7 +69,7 @@ export default function Dashboard () {
   return (
     <Row className='dashboard-container g-0'>
       <Col md='2'>
-        <Sb_Side_Nav name={decodeJWT(Auth.token).org_name}/>
+        <Sb_Side_Nav name={decodeJWT(token as string).org_name}/>
       </Col>
       <Col style={{'padding':'1em 4em', 'overflowX':'auto'}}>
         <Row className='g-0' style={{'marginBottom':'3em'}}>
@@ -96,12 +96,12 @@ type MemberItem = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" | 
 
 export function Dashboard_Landing () {
   let navigate = useNavigate();
-  const Auth = useContext(AuthContext);
+  const {token, setAuthToken} = useAuth();
   const [members, setMembers] = useState<MemberItem[]>([])
   const [memberLoading, setMemberLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    GetMemberList(decodeJWT(Auth.token).org).then((res) => {
+    GetMemberList(decodeJWT(token as string).org).then((res) => {
       var mem_arr = res.data;
       var arr:MemberItem[] = [];
       mem_arr.forEach((member:any) => {

@@ -12,18 +12,20 @@ import { NotifProvider } from '../../states/NotifContext';
 import './App.css';
 import axios from 'axios';
 import {AuthContext} from '../../states/AuthContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import useLocalStorageState from 'use-local-storage-state';
 
 function App() {
-  const Auth = useContext(AuthContext);  
-  Auth.setAuthToken(localStorage.getItem('token') ?? '');
-  axios.defaults.headers.common['auth-token'] = Auth.token; 
+  const [token, setAuthToken] = useLocalStorageState<string>('token', );  
+  axios.defaults.headers.common['auth-token'] = token as string; 
+  
   return (
     <div className='parent-screen'>
+      <AuthContext.Provider value={{token, setAuthToken}}>
       <Routes>
         <Route path='/' element={<div><Outlet/></div>}>
           {/* WHAT YOU DID HERE DOES NOT LOOK SAFE....WATCH OUT */}
-          <Route index element={<div>Hello<br></br><Link to={Auth.token == '' ? "/login" : "/dashboard"} state={true}>Login</Link></div>}/>
+          <Route index element={<div>Hello<br></br><Link to={token == '' ? "/login" : "/dashboard"} state={true}>Login</Link></div>}/>
           
             <Route path="dashboard" element={<NotifProvider><Dashboard /></NotifProvider>}>
               <Route index element={<Dashboard_Landing/>}></Route>
@@ -44,6 +46,7 @@ function App() {
           <Route path="*" element={<main style={{ padding: "1rem" }}><p>404 innit</p></main>}/>
         </Route>
       </Routes>
+      </AuthContext.Provider>
     </div>
   );
 }

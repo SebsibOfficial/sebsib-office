@@ -7,14 +7,15 @@ import logo from '../../assets/officeLogoBlack.svg';
 import Sb_Card from '../../components/Sb_Card/Sb_Card';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import { login, ResponseInterface } from '../../utils/api';
-import { AuthContext } from '../../states/AuthContext';
+import { AuthContext, useAuth } from '../../states/AuthContext';
 import './Login.css';
 import Sb_Loader from '../../components/Sb_Loader';
 
 export default function Login() {
 	let location = useLocation();
   let navigate = useNavigate();
-  const Auth = useContext(AuthContext);
+
+	const {token, setAuthToken} = useAuth();
 
   // Prevents routing from the URL
   useEffect(() => {
@@ -37,8 +38,8 @@ export default function Login() {
 		.then((result:any) => {
 			if (result.code == 200) {
 				// Set token to state
-				localStorage.setItem('token', result.data.token as string);
-				Auth.setAuthToken(result.data.token as string);
+				//localStorage.setItem('token', result.data.token as string);
+				setAuthToken(result.data.token as string);				
 				// Navigate
 				setTimeout(() => navigate('/dashboard', { state:true }), 50);				
 			} else {

@@ -5,7 +5,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import Sb_Text from "../Sb_Text/Sb_Text";
 import "./Sb_Side_Nav_Item.css";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../states/AuthContext";
+import { AuthContext, useAuth } from "../../states/AuthContext";
 
 interface SideNavData {
   id: number;
@@ -26,11 +26,10 @@ const Sb_Side_Nav_Item: React.FC<Props> = (props:Props) => {
   let color = "";
   active ? (color = "sb-bg-dark") : (color = "bg-transparent");
   let navigate = useNavigate();
-  const Auth = useContext(AuthContext);
+  const {token, setAuthToken} = useAuth();
 
   function logoutHandler () {
-    Auth.setAuthToken('');
-    localStorage.clear();
+    setAuthToken('');
     navigate(props.navItemData.path, { state: true });
   }
 
