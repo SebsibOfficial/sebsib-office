@@ -1,6 +1,7 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faArchive, faCog, faThLarge, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnySrvRecord } from 'dns';
 import { useContext, useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -14,7 +15,7 @@ import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
-import { GetMemberList, GetProjectList } from '../../utils/api';
+import { GetMemberList, GetProjectList, GetSurveyListByOrg } from '../../utils/api';
 import { decodeJWT } from '../../utils/helpers';
 import './Dashboard.css';
 
@@ -94,36 +95,66 @@ export default function Dashboard () {
 
 type MemberItem = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" | "SELECTED"};
 type ProjectItem = {_id: string, name: string};
+
 export function Dashboard_Landing () {
   let navigate = useNavigate();
   const {token, setAuthToken} = useAuth();
+  
+  // ## MEMBER RELATED STATES
   const [members, setMembers] = useState<MemberItem[]>([])
   const [memberLoading, setMemberLoading] = useState<boolean>(true);
   // ## PROJECT RELATED STATES
   const [projects, setProjects] = useState<ProjectItem[]>([])
   const [projectLoading, setProjectLoading] = useState<boolean>(true);
+  // ## SURVEY RELATED STATES
+  const [surveys, setSurveys] = useState<ProjectItem[]>([])
+  const [surveyLoading, setSurveyLoading] = useState<boolean>(true);
+  
   useEffect(() => {
     GetMemberList(decodeJWT(token as string).org).then((res) => {
-      var mem_arr = res.data;
-      var arr:MemberItem[] = [];
-      mem_arr.forEach((member:any) => {
-        if (member.roleId != '623cc24a8b7ab06011bd1e60')
-          arr.push({_id: member._id, name: member.username})
-      })
-      setMembers(arr);
-      setMemberLoading(false);
+      if (res.code == 200){
+        var mem_arr = res.data;
+        var arr:MemberItem[] = [];
+        mem_arr.forEach((member:any) => {
+          if (member.roleId != '623cc24a8b7ab06011bd1e60')
+            arr.push({_id: member._id, name: member.username})
+        })
+        setMembers(arr);
+        setMemberLoading(false);
+      } else {
+        console.info(res)
+      }
     }).catch((err) => console.log(err))
     
     // Populate the Projects
     GetProjectList(decodeJWT(token as string).org).then((res) => {
-      var prj_arr = res.data;
-      var arr:ProjectItem[] = [];
-      prj_arr.forEach((project:any) => {
-        arr.push({_id: project._id, name: project.name})
-      })
-      setProjects(arr);
-      setProjectLoading(false);
+      if (res.code == 200){
+        var prj_arr = res.data;
+        var arr:ProjectItem[] = [];
+        prj_arr.forEach((project:any) => {
+          arr.push({_id: project._id, name: project.name})
+        })
+        setProjects(arr);
+        setProjectLoading(false);
+      } else {
+        console.info(res)
+      }
     }).catch((err) => console.log(err))
+    
+    // Populate the Surveys
+    GetSurveyListByOrg(decodeJWT(token as string).org).then((res:any) => {
+      if (res.code == 200){
+        var srv_arr = res.data;
+        var arr:ProjectItem[] = [];
+        srv_arr.forEach((survey:any) => {
+          arr.push({_id: survey._id, name: survey.name})
+        })
+        setSurveys(arr);
+        setSurveyLoading(false);
+      } else {
+        console.info(res)
+      }
+    }).catch((err) => console.log(err));
   }, [])
   
   return (
@@ -168,8 +199,9 @@ export function Dashboard_Landing () {
                   <Row>
                     <Col>
                       <Sb_Container className='p-3'>
-                        <Sb_Main_Items id='1' text='Argiculture Studies in North Gondar' type='SURVEY' onClick={(id) => navigate(`projects/view-survey/${id}`, { state:true })}/>
-                        <Sb_Main_Items id='2' text='Argiculture Studies in North Oromia' type='SURVEY' onClick={(id) => navigate(`projects/view-survey/${id}`, { state:true })}/>
+                      {
+                        surveyLoading ? <Sb_Loader/> : surveys.map((survey) => <Sb_Main_Items key={survey._id} id={survey._id} text={survey.name} type='SURVEY' onClick={(id) => navigate(`projects/view-survey/${survey._id}`, { state:true })}/>) 
+                      }
                       </Sb_Container>
                     </Col>
                   </Row>

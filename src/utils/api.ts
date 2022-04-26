@@ -38,3 +38,21 @@ export async function GetProjectList(orgId: string):Promise<ResponseInterface>{
     return {code: error.response.status, data: error.response.data}
   }
 }
+
+export async function GetSurveyListByOrg(orgId: string): Promise<ResponseInterface>{
+  var res_survey:any[] = [];
+  var res_code:number = 200;
+  try {
+    var result = await GetProjectList(orgId);
+    let survey_arr:any = [];
+    for (let index = 0; index < result.data.length; index++) {
+      const element = result.data[index];
+      var survey_result = await axios.get('get/surveylist/'+element._id);
+      if (survey_result.data.code != 200) res_code = result.code;
+      survey_arr = survey_arr.concat(survey_result.data);
+    }
+    return {code: res_code, data: survey_arr}
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
