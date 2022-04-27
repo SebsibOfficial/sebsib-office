@@ -1,8 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Member_Card from "../../components/Sb_Member_Card/Sb_Member_Card";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
+import { useAuth } from "../../states/AuthContext";
+import { GetMemberList } from "../../utils/api";
+import { decodeJWT } from "../../utils/helpers";
 import './Members.css';
 
 export default function Members () {
@@ -23,10 +27,34 @@ export default function Members () {
   )
 }
 
+type MemberItem = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" | "SELECTED"};
+
 export function Members_Landing () {
   let navigate = useNavigate();
-  
+  const {token, setAuthToken} = useAuth();
+  const [members, setMembers] = useState<MemberItem[]>();
+  const [pageLoading, setPageLoading] = useState(true);
+
+  useEffect(() => {
+    // Populate Members
+    GetMemberList(decodeJWT(token as string).org).then((res) => {
+      if (res.code == 200){
+        var mem_arr = res.data;
+        var arr:MemberItem[] = [];
+        mem_arr.forEach((member:any) => {
+          if (member.roleId != '623cc24a8b7ab06011bd1e60')
+            arr.push({_id: member._id, name: member.username})
+        })
+        setMembers(arr);
+        setPageLoading(false);
+      } else {
+        console.info(res)
+      }
+    }).catch((err) => console.log(err))
+  },[])
+
   return (
+  pageLoading ? <Sb_Loader full/> :  
   <Col className="">
     <Row className="mb-4">
       <Col>
@@ -34,9 +62,12 @@ export function Members_Landing () {
       </Col>
     </Row>
     <Row>
-      <Col md="3">
-        <Sb_Member_Card id="12" name="Abebe" onDelete={(id) => console.log(id)} onClick={(id) => navigate('edit-member/234', { state:true })}/>
-      </Col>
+      {
+        members?.map((member:MemberItem) => 
+        <Col md="3" key={member._id}>
+          <Sb_Member_Card id={member._id} name={member.name} onDelete={(id) => console.log(id)} onClick={(id) => navigate('edit-member/'+id, { state:true })}/>
+        </Col>)
+      }
     </Row>
   </Col>
   )

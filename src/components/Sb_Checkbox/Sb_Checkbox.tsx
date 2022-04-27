@@ -1,6 +1,6 @@
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 /* eslint-disable */
 // @ts-ignore
 import Checkbox from 'react-custom-checkbox';
@@ -13,8 +13,13 @@ interface Props {
 }
 
 export default function Sb_Checkbox (props:Props) {
-    const [checkState, setCheckState] = useState(props.default === 'UNSELECTED' ? false : true)
+    const [checkState, setCheckState] = useState<boolean>();
     var { disabled = false } = props;
+
+    useEffect(() => {
+        setCheckState(props.default === 'UNSELECTED' ? false : true)
+    },[props.default])
+
     return (
         <Checkbox name="my-input" 
             checked={checkState} 
