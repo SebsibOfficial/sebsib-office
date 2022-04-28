@@ -1,13 +1,22 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Member_Card from "../../components/Sb_Member_Card/Sb_Member_Card";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { useAuth } from "../../states/AuthContext";
+import { NotifContext, NotifInterface } from "../../states/NotifContext";
 import { GetMemberList } from "../../utils/api";
 import { decodeJWT } from "../../utils/helpers";
 import './Members.css';
+
+interface StateInterface {
+  hash: string,
+  key: string,
+  pathname: string,
+  search: string,
+  state: NotifInterface,
+}
 
 export default function Members () {
   let location = useLocation();
@@ -31,9 +40,20 @@ type MemberItem = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" | 
 
 export function Members_Landing () {
   let navigate = useNavigate();
+  let location = useLocation();
   const {token, setAuthToken} = useAuth();
   const [members, setMembers] = useState<MemberItem[]>();
   const [pageLoading, setPageLoading] = useState(true);
+  const Notif = useContext(NotifContext);
+  const state = useLocation() as StateInterface;
+
+  // Prevents routing from the URL
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+    else Notif?.setNotification({code: state.state.code, type: state.state.type, message: state.state.message, id:1})
+  },[location.state]);
 
   useEffect(() => {
     // Populate Members

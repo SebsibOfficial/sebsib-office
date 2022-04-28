@@ -46,6 +46,7 @@ export default function Add_Modify_Member(props:Props) {
   const [projectsInvolved, setProjectsInvolved] = useState<string[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [pageLoading, setPageLoading] = useState(true);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [projIn, setProj] = useState(false);
 
   useEffect(() => {
@@ -119,6 +120,7 @@ export default function Add_Modify_Member(props:Props) {
   }
 
   function saveAddButtonHandler () {
+    setBtnLoading(true);
     if (props.pageType === 'ADD'){
       // Gather data
       var payload = new AddMemberPayload(memberName, memberEmail, memberUsername, memberPassword, projectsInvolved);
@@ -130,9 +132,11 @@ export default function Add_Modify_Member(props:Props) {
       var payload = new AddMemberPayload(memberName, memberEmail, memberUsername, memberPassword, projectsInvolved);
       EditMember(params.id as string, payload).then(res => {
         if (res.code == 200) {
-          Notif?.setNotification({code: res.code, type: "OK", message: "Member Edited", id:1})
+          setBtnLoading(false);
+          navigate('/dashboard/members', {state: {code: res.code, type: "OK", message: "Member Edited", id:1}})
         } else {
           console.log(res.data);
+          setBtnLoading(false);
           Notif?.setNotification({code: res.code, type: "ERROR", message: res.data, id:1})
         }
       })
@@ -168,7 +172,9 @@ export default function Add_Modify_Member(props:Props) {
 					listType="PROJECT" compType='SELECT' onAction={(id, name, ac) => projectSelectHandler(id, ac)}/>
           <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
             <Sb_Text font={12} color="--lightGrey">
-              {props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}
+              {
+                btnLoading ? <Sb_Loader/> :<span>{props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}</span>
+              }
             </Sb_Text>
           </Button>
         </Col>
