@@ -7,7 +7,7 @@ import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { useAuth } from "../../states/AuthContext";
 import { NotifContext } from "../../states/NotifContext";
-import { EditMember, GetMember, GetMemberList, GetProjectList } from "../../utils/api";
+import { AddMember, EditMember, GetMember, GetMemberList, GetProjectList } from "../../utils/api";
 import { decodeJWT } from "../../utils/helpers";
 
 interface Props {
@@ -96,6 +96,7 @@ export default function Add_Modify_Member(props:Props) {
     })
   }
   }
+  else setPageLoading(false);
   }, [projIn]);
 
   // Prevents routing from the URL
@@ -122,11 +123,17 @@ export default function Add_Modify_Member(props:Props) {
   function saveAddButtonHandler () {
     setBtnLoading(true);
     if (props.pageType === 'ADD'){
-      // Gather data
       var payload = new AddMemberPayload(memberName, memberEmail, memberUsername, memberPassword, projectsInvolved);
-      console.log(payload);
-      // Send to API -> If successful
-        //navigate('/dashboard/members', {state: true})
+      AddMember(payload).then(res => {
+        if (res.code == 200) {
+          setBtnLoading(false);
+          navigate('/dashboard/members', {state: {code: res.code, type: "OK", message: "Member Added", id:1}})
+        } else {
+          console.log(res.data);
+          setBtnLoading(false);
+          Notif?.setNotification({code: res.code, type: "ERROR", message: res.data, id:1})
+        }
+      })
     }
     else if (props.pageType === 'EDIT') {
       var payload = new AddMemberPayload(memberName, memberEmail, memberUsername, memberPassword, projectsInvolved);
