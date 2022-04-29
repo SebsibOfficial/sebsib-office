@@ -1,8 +1,11 @@
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Member_Card from "../../components/Sb_Member_Card/Sb_Member_Card";
+import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { useAuth } from "../../states/AuthContext";
 import { NotifContext, NotifInterface } from "../../states/NotifContext";
@@ -44,6 +47,8 @@ export function Members_Landing () {
   const {token, setAuthToken} = useAuth();
   const [members, setMembers] = useState<MemberItem[]>();
   const [pageLoading, setPageLoading] = useState(true);
+  const [modalState, setModalState] = useState(false);
+  const [idtoDel, setIdtoDel] = useState<string | null>(null);
   const Notif = useContext(NotifContext);
   const state = useLocation() as StateInterface;
 
@@ -81,17 +86,20 @@ export function Members_Landing () {
     }).catch((err) => console.log(err))
   },[])
 
-  function deleteHandler(id: string) {
-    DeleteMember(id).then(res => {
-      if (res.code == 200){
-        var _members = members?.filter((member) => member._id != id);
-        setMembers(_members);
-        Notif?.setNotification({type: "OK", message: "Member Deleted", id:1})
-      } else {
-        console.log(res.data.message);
-        Notif?.setNotification({type: "ERROR", message: res.data.message, id:1})
-      }
-    })
+  function deleteHandler(id: string | null) {
+    if (id != null) {
+      DeleteMember(id as string).then(res => {
+        if (res.code == 200){
+          var _members = members?.filter((member) => member._id != id);
+          setMembers(_members);
+          Notif?.setNotification({type: "OK", message: "Member Deleted", id:1})
+        } else {
+          console.log(res.data.message);
+          Notif?.setNotification({type: "ERROR", message: res.data.message, id:1})
+        }
+      })
+    }
+    setModalState(false);
   }
 
   return (
@@ -106,10 +114,31 @@ export function Members_Landing () {
       {
         members?.map((member:MemberItem) => 
         <Col md="3" key={member._id}>
-          <Sb_Member_Card id={member._id} name={member.name} onDelete={(id) => deleteHandler(id)} onClick={(id) => navigate('edit-member/'+id, { state:true })}/>
+          <Sb_Member_Card id={member._id} name={member.name} onDelete={(id) => {setModalState(true); setIdtoDel(id)}} onClick={(id) => navigate('edit-member/'+id, { state:true })}/>
         </Col>)
       }
     </Row>
+
+    {/* ---------------------------------The Modal------------------------------------------------------ */}
+    <Sb_Modal show={modalState} onHide={() => setModalState(false)} 
+      header="Delete Member" width={30}>
+        <>          
+            <div className="d-block text-center" style={{'fontSize':'4em'}}>
+              <FontAwesomeIcon icon={faTrash}/>
+              <Sb_Text font={20} weight={500} align="center">Are you sure you want to delete this member?
+              </Sb_Text>
+            </div>
+            <div>
+              <Button variant="danger" size="sm" className="mt-3 float-start" onClick={() => deleteHandler(idtoDel)}>
+                <Sb_Text font={16} color="--lightGrey">Continue</Sb_Text>
+              </Button>
+              <Button variant="secondary" size="sm" className="mt-3 float-end"  onClick={() => setModalState(false)}>
+                <Sb_Text font={16} color="--lightGrey">Cancel</Sb_Text>
+              </Button>
+            </div>
+        </>
+        
+      </Sb_Modal>
   </Col>
   )
 }
