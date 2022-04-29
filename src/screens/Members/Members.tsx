@@ -52,7 +52,7 @@ export function Members_Landing () {
     if (!location.state){
        return navigate("/404");
     }
-    else Notif?.setNotification({code: state.state.code, type: state.state.type, message: state.state.message, id:1})
+    else state.state.message != undefined ? Notif?.setNotification({code: state.state.code, type: state.state.type, message: state.state.message, id:1}) : '';
   },[location.state]);
 
   useEffect(() => {

@@ -38,7 +38,7 @@ export default function Login() {
 		.then((result:any) => {
 			if (result.code == 200) {
 				// Set token to state
-				//localStorage.setItem('token', result.data.token as string);
+				localStorage.setItem('rm', '0');
 				setAuthToken(result.data.token as string);				
 				// Navigate
 				setTimeout(() => navigate('/dashboard', { state:true }), 50);				
