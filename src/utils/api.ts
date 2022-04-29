@@ -92,3 +92,13 @@ export async function AddMember(body: AddEditMemberInterface):Promise<ResponseIn
     return {code: error.response.status, data: error.response.data.message}
   }
 }
+
+export async function DeleteMember(id: string):Promise<ResponseInterface>{
+  await WAIT(1000);
+  try {
+    var result = await axios.delete('delete/member/'+id);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}

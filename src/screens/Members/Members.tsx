@@ -6,7 +6,7 @@ import Sb_Member_Card from "../../components/Sb_Member_Card/Sb_Member_Card";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { useAuth } from "../../states/AuthContext";
 import { NotifContext, NotifInterface } from "../../states/NotifContext";
-import { GetMemberList } from "../../utils/api";
+import { DeleteMember, GetMemberList } from "../../utils/api";
 import { decodeJWT } from "../../utils/helpers";
 import './Members.css';
 
@@ -52,8 +52,16 @@ export function Members_Landing () {
     if (!location.state){
        return navigate("/404");
     }
-    else state.state.message != undefined ? Notif?.setNotification({code: state.state.code, type: state.state.type, message: state.state.message, id:1}) : '';
+    else {
+      state.state.message != undefined && state.state.message != '' 
+      ? Notif?.setNotification({code: state.state.code, type: state.state.type, message: state.state.message, id:1}) 
+      : '';
+    }
   },[location.state]);
+
+  useEffect(() => {
+    state.state = {type: undefined, message: '', id: 0};
+  },[])
 
   useEffect(() => {
     // Populate Members
@@ -73,6 +81,19 @@ export function Members_Landing () {
     }).catch((err) => console.log(err))
   },[])
 
+  function deleteHandler(id: string) {
+    DeleteMember(id).then(res => {
+      if (res.code == 200){
+        var _members = members?.filter((member) => member._id != id);
+        setMembers(_members);
+        Notif?.setNotification({type: "OK", message: "Member Deleted", id:1})
+      } else {
+        console.log(res.data.message);
+        Notif?.setNotification({type: "ERROR", message: res.data.message, id:1})
+      }
+    })
+  }
+
   return (
   pageLoading ? <Sb_Loader full/> :  
   <Col className="">
@@ -85,7 +106,7 @@ export function Members_Landing () {
       {
         members?.map((member:MemberItem) => 
         <Col md="3" key={member._id}>
-          <Sb_Member_Card id={member._id} name={member.name} onDelete={(id) => console.log(id)} onClick={(id) => navigate('edit-member/'+id, { state:true })}/>
+          <Sb_Member_Card id={member._id} name={member.name} onDelete={(id) => deleteHandler(id)} onClick={(id) => navigate('edit-member/'+id, { state:true })}/>
         </Col>)
       }
     </Row>
