@@ -5,18 +5,20 @@ import Sb_Text from "../Sb_Text/Sb_Text";
 interface Props {
   show: boolean,
   onHide: Function,
+  onShow?: Function,
   width?: number,
   header?: string | boolean,
   children: ReactChild | ReactChildren | ReactChild [] | ReactChildren [] | boolean | boolean[]
 }
 
 export default function Sb_Modal (props:Props) {
-  var {header = false, width = 50} = props;
+  var {header = false, width = 50, onShow = () => null} = props;
   return (
     <div style={{'maxWidth':`${width}vw`}}>
     <Modal
         show={props.show}
         onHide={() => props.onHide()}
+        onShow={() => onShow()}
         dialogClassName={`modal-90w`}
         aria-labelledby="example-custom-modal-styling-title"
         centered

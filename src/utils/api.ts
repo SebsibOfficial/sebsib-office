@@ -66,6 +66,15 @@ export async function GetSurveyListByOrg(orgId: string): Promise<ResponseInterfa
   }
 }
 
+export async function GetSurveyListByProject(projId: string): Promise<ResponseInterface>{
+  try {
+    var result = await axios.get('get/surveylist/'+projId);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
 // ######################################
 export interface AddEditMemberInterface {
   name?: string;
@@ -97,6 +106,36 @@ export async function DeleteMember(id: string):Promise<ResponseInterface>{
   await WAIT(1000);
   try {
     var result = await axios.delete('delete/member/'+id);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+export async function RemoveMemberFromProject(id: string, projId: string):Promise<ResponseInterface>{
+  await WAIT(1000);
+  try {
+    var result = await axios.patch('patch/removemember/'+projId+'/'+id);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+export async function AddMemberToProject(projId: string, body: string[]):Promise<ResponseInterface>{
+  await WAIT(1000);
+  try {
+    var result = await axios.patch('patch/addmembers/'+projId, {members: body});
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+export async function DeleteProject(id: string):Promise<ResponseInterface>{
+  await WAIT(1000);
+  try {
+    var result = await axios.delete('delete/project/'+id);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}

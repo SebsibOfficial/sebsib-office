@@ -1,24 +1,37 @@
 import { faArchive, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Sb_Container from "../../components/Sb_Container/Sb_Container";
 import Sb_List from "../../components/Sb_List/Sb_List";
 import { actionType } from "../../components/Sb_List_Item/Sb_List_Item";
+import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Main_Items from "../../components/Sb_Main_Items/Sb_Main_Item";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
-import { generateId } from "../../utils/helpers";
+import { useAuth } from "../../states/AuthContext";
+import { NotifContext } from "../../states/NotifContext";
+import { AddMemberToProject, DeleteProject, GetMemberList, GetProjectList, GetSurveyListByProject, RemoveMemberFromProject } from "../../utils/api";
+import { decodeJWT, generateId } from "../../utils/helpers";
 import "./Projects.css";
 
 interface Project {
   projectID: string,
   projectName: string,
-  surveys: {_id: string, name: string}[],
-  members: {_id: string, name: string}[],
+  surveys: SurveyMember[],
+  members: SurveyMember[]
 }
 
+interface SurveyMember {
+  _id: string,
+  name: string
+}
+
+interface EnumLoading {
+  pid: string | null,
+  show: boolean
+}
 class AddMemberUpdatePayload {
   constructor (pid: string, nmid: string[]) {
     this.projectID = pid;
@@ -28,14 +41,6 @@ class AddMemberUpdatePayload {
   newMembersID: string[];
 }
 
-class RemoveMemberUpdatePayload {
-  constructor (pid: string, mid: string) {
-    this.projectID = pid;
-    this.memberID = mid;  
-  }
-  projectID: string;
-  memberID: string;
-}
 
 export default function Projects () {
   let location = useLocation();
@@ -57,48 +62,104 @@ export default function Projects () {
 
 export function Projects_Landing () {
   let navigate = useNavigate();
+  const {token, setAuthToken} = useAuth();
+  const Notif = useContext(NotifContext);
   
+  async function init() {
+    var arr:Project[] = [];
+    // Populate the Projects
+    var proj_res = await GetProjectList(decodeJWT(token as string).org);
+    var prj_arr = proj_res.data;
+    for (let index = 0; index < prj_arr.length; index++) {
+      const prj_id = prj_arr[index]._id;
+      // Get the surveys in the project
+      var surv_res = await GetSurveyListByProject(prj_id);
+      var srv_arr_resp = surv_res.data;
+      var srv_arr:SurveyMember[] = [];
+      for (let j = 0; j < srv_arr_resp.length; j++) {
+        const survey_obj = srv_arr_resp[j];
+        srv_arr.push({_id: survey_obj._id, name: survey_obj.name})
+      }
+
+      // Get the members involved in the project
+      var mem_res = await GetMemberList(decodeJWT(token as string).org);
+      var mem_arr_resp = mem_res.data;
+      var mem_arr:SurveyMember[] = [];
+      for (let k = 0; k < mem_arr_resp.length; k++) {
+        const member_obj = mem_arr_resp[k];
+        if (mem_arr_resp[k].projectsId.includes(prj_id))
+          mem_arr.push({_id: member_obj._id, name: member_obj.username});
+      }
+
+      arr.push({
+        projectID: prj_id,
+        projectName: prj_arr[index].name,
+        surveys: srv_arr,
+        members: mem_arr
+      })
+
+      console.log(arr);
+      if (arr.length == prj_arr.length){
+        setProjects(arr); 
+        setPageLoading(false);
+      }
+    }    
+  }
+
+  useEffect(() => {
+    init();
+  },[])
+
   /*############# STATES ############### */
   const [modalState, setModalState] = useState(false);
   const [modalType, setModalType] = useState<"SELECTION" | "DELETION">("DELETION");
   const [currentModalID, setCurrentModalID] = useState<string>("");
-  const [projects, setProjects] = useState<Project[]>([
-    {
-      projectID: generateId(), projectName: 'Agriculture Project', 
-      surveys: [
-        // {id: generateId(), text: 'Agricultural Studies in North Ethiopia'},
-        // {id: generateId(), text: 'Agricultural Studies in South Ethiopia'}
-      ], 
-      members: [
-        {_id: generateId(), name: 'Abebe Beklel'},
-        {_id: generateId(), name: 'lela Sew Demo'},
-        {_id: generateId(), name: 'Ahunim lela'},
-        {_id: generateId(), name: 'Beso abebe'}
-      ]
-    }
-  ]);
+  const [pageLoading, setPageLoading] = useState(true);
+  const [enumLoading, setEnumLoading] = useState<EnumLoading>({pid: null, show: false});
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [membersToAdd, setMembersToAdd] = useState<SurveyMember[]>([]);
 
   let selectedMembers: {_id: string, name: string}[] = [];
   /*------------- METHODS -------------- */
-  function deleteProjectHandler () {
-    // Logic Here
-    setModalState(false)
+  async function deleteProjectHandler () {
+    setModalState(false);
+    setPageLoading(true);
+    var res = await DeleteProject(currentModalID);
+    if (res.code == 200) {
+      var prjs = [...projects];
+      prjs = prjs.filter((project) => project.projectID != currentModalID);
+      setProjects(prjs);
+      Notif?.setNotification({type:"OK", message:"Project deleted", id:1})
+    } else {
+      console.log(res.data.message);
+      Notif?.setNotification({type:"ERROR", message:res.data.message, id:1})
+    }
+    setPageLoading(false);
   } 
 
   function memberRemoveHandler (id: string, projectID: string) {
+    setEnumLoading({pid: projectID, show: true});
     // Gather the removed members ID and project ID
-    var payload = new RemoveMemberUpdatePayload(projectID, id);
-    // Send to API -> If success 
-      // Remove from project Arr
-      var prjs = [...projects];
-      var prj = prjs.filter((project) => project.projectID === projectID)[0];
-      var mmbrs = prj?.members.filter(member => member._id != id);
-      prj.members = mmbrs;
-      for(var i = 0; i < prjs.length; i++){
-        if (prjs[i].projectID == projectID)
-          prjs[i].members = mmbrs;
+    RemoveMemberFromProject(id, projectID).then(res => {
+      if (res.code == 200) {
+        // Remove from project Arr
+        var prjs = [...projects];
+        var prj = prjs.filter((project) => project.projectID === projectID)[0];
+        var mmbrs = prj?.members.filter(member => member._id != id);
+        prj.members = mmbrs;
+        for(var i = 0; i < prjs.length; i++){
+          if (prjs[i].projectID == projectID)
+            prjs[i].members = mmbrs;
+        }
+        setProjects(prjs);
+        Notif?.setNotification({type:"OK", message:"Member Removed from Project", id:1})
       }
-      setProjects(prjs);    
+      else {
+        console.log(res.data.message);
+        Notif?.setNotification({type:"ERROR", message:res.data.message, id:1})
+      }
+      setEnumLoading({pid: projectID, show: false});
+    })     
   }
 
   function memberSelectHandler (_id: string, name: string, actionType: actionType | undefined) {
@@ -117,18 +178,39 @@ export function Projects_Landing () {
         memArr.push(member._id);
       })
       // Gather the new members
-      var payload = new AddMemberUpdatePayload(currentModalID, memArr);
-      // Send to API -> If success
-        // Add members to the project
-        selectedMembers.forEach(member => {
+      AddMemberToProject(currentModalID, memArr).then(res => {
+        if (res.code == 200) {
+          // Add members to the project
+          selectedMembers.forEach(member => {
           prj.filter(project => project.projectID === currentModalID)[0]?.members.push(member)
         })
         setProjects(prj);
+        Notif?.setNotification({type:"OK", message:"Member added to project", id:1})
+        AddmemberListRefresh(currentModalID);
+        }
+        else {
+          console.log(res.data);
+          Notif?.setNotification({code:res.code, type:"ERROR", message:res.data.message, id:1})
+        }
+      })     
     }
     setModalState(false);
   }
+
+  async function AddmemberListRefresh  (projectID: string) {
+    var mta:SurveyMember[] = [];
+    // Get the members involved in the project
+    var mem_res = await GetMemberList(decodeJWT(token as string).org);
+    var mem_arr_resp = mem_res.data;
+    mem_arr_resp.forEach((mem:any) => {
+      if (!mem.projectsId.includes(projectID) && mem.roleId != '623cc24a8b7ab06011bd1e60')
+        mta.push({_id: mem._id, name: mem.username});
+    })
+    setMembersToAdd(mta);
+  }
   
   return (
+    pageLoading ? <Sb_Loader full/> :
     <Col md="10">
       <Row className="mb-4">
         <Col>
@@ -191,7 +273,10 @@ export function Projects_Landing () {
                         </Row>
                         <Row>
                           <Col className={project.members.length < 1 ? 'd-none' : ''}>
-                            <Sb_List items={project.members} listType="MEMBER" compType='REMOVE' onAction={(id) => memberRemoveHandler(id, project.projectID)}/>
+                            {
+                              enumLoading.pid == project.projectID && enumLoading.show ? <Sb_Loader/> :
+                              <Sb_List items={project.members} listType="MEMBER" compType='REMOVE' onAction={(id) => memberRemoveHandler(id, project.projectID)}/>
+                            }
                           </Col>
                           {
                             project.members.length < 1 && 
@@ -223,18 +308,23 @@ export function Projects_Landing () {
 
 
       {/* ---------------------------------The Modal------------------------------------------------------ */}
-      <Sb_Modal show={modalState} onHide={() => setModalState(false)} 
+      <Sb_Modal show={modalState} onHide={() => setModalState(false)} onShow={() => AddmemberListRefresh(currentModalID)} 
       header={ modalType == "SELECTION" ? "Add Enumrator" : false } width={30}>
         <>
-        {modalType === "SELECTION" &&
+        {modalType === "SELECTION" && membersToAdd.length != 0 &&
           <>
             <Sb_List 
-            items={[{_id:'1', name:'Kebede Debebe', }, {_id:'2', name:'Minamin Chala', }, 
-            {_id:'3', name:'Minamin Chala', }, {_id:'4', name:'Minamin Chala', }]} 
+            items={membersToAdd} 
             listType="MEMBER" compType='SELECT' onAction={(id, text, actionType) => memberSelectHandler(id, text, actionType)}/>
             <Button size="sm" className="mt-3" onClick={() => addMemberHandler()}>
               <Sb_Text font={16} color="--lightGrey">Add</Sb_Text>
             </Button>
+          </>
+        }
+        {
+          modalType === "SELECTION" && membersToAdd.length == 0 &&
+          <>
+            <Sb_Text font={24} weight={900}>No more members</Sb_Text>
           </>
         }
         {modalType === "DELETION" && 
