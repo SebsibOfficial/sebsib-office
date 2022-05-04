@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { actionType } from "../../components/Sb_List_Item/Sb_List_Item";
 import Sb_List from "../../components/Sb_List/Sb_List";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
-import { generateId } from "../../utils/helpers";
+import { decodeJWT, generateId } from "../../utils/helpers";
+import { CreateProject, GetMemberList } from "../../utils/api";
+import { NotifContext } from "../../states/NotifContext";
+import { useAuth } from "../../states/AuthContext";
+import Sb_Loader from "../../components/Sb_Loader";
 
 class CreateProjectPayload {
 	constructor (id: string, pn: string, en: string[]) {
@@ -17,10 +21,16 @@ class CreateProjectPayload {
 	enums: string[];
 }
 
+interface Member {
+  _id: string,
+  name: string
+}
+
 export default function Create_Project () {
 	let location = useLocation();
   let navigate = useNavigate();
-  
+  const Notif = useContext(NotifContext);
+	const {token, setAuthToken} = useAuth();
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -28,9 +38,32 @@ export default function Create_Project () {
     }
   },[location.state]);
   
+	async function loadMembers() {
+		// Get the members involved in the project
+		var res = await GetMemberList(decodeJWT(token as string).org);
+		if (res.code == 200) {
+			var mem_arr_resp = res.data;
+			var mem_arr:Member[] = [];
+			mem_arr_resp.forEach((member:any) => {
+				if (member.roleId != '623cc24a8b7ab06011bd1e60')
+					mem_arr.push({_id: member._id, name: member.username});
+			})
+			setMembers(mem_arr);
+			setPageLoading(false);
+		} else {
+			console.log(res.data.message)
+		}
+	}
+
+	useEffect(() => {
+		loadMembers();
+	}, [])
+
 	/*############# STATES ############### */
 	const [projectname, setProjectname] = useState("");
-	const [members, setMembers] = useState([{_id:'1', name:'Kebede Debebe', }, {_id:'2', name:'Minamin Chala', }, {_id:'3', name:'Minamin Chala', }, {_id:'4', name:'Minamin Chala', }]);
+	const [members, setMembers] = useState<Member[]>([]);
+	const [btnLoading, setBtnLoading] = useState(false);
+	const [pageLoading, setPageLoading] = useState(true);
 
 	let selectedMembers: string[] = [];
 	/*------------- METHODS -------------- */
@@ -41,13 +74,22 @@ export default function Create_Project () {
       selectedMembers = selectedMembers.filter(memberID => memberID != id);
   }
 
-	function createProjectHandler () {
-		var payload = new CreateProjectPayload (generateId(), projectname, selectedMembers);
-		// Send to API -> If success
+	async function createProjectHandler () {
+		setBtnLoading(true);
+		console.log(selectedMembers);
+		var res = await CreateProject(projectname, selectedMembers);
+		if (res.code == 200){
 			navigate('/dashboard/projects', {state: true});
+		}
+		else {
+			setBtnLoading(false);
+			console.log(res.data);
+			Notif?.setNotification({code:res.code, type: "ERROR", message: res.data, id:1})
+		}
 	}
 
 	return (
+		pageLoading ? <Sb_Loader full/> :
 		<Col>
 			<Row className="mb-4" style={{'width':'30%'}}>
         <Col>
@@ -64,8 +106,10 @@ export default function Create_Project () {
 					<Sb_List 
 					items={members} 
 					listType="MEMBER" compType='SELECT' onAction={(id, text, actionType) => memberSelectHandler(id, actionType)}/>
-					<Button size="sm" className="mt-3" onClick={() => createProjectHandler()}>
-						<Sb_Text font={16} color="--lightGrey">Create Project</Sb_Text>
+					<Button size="sm" className="mt-3" onClick={() => createProjectHandler()} disabled={btnLoading}>
+						{
+							btnLoading ? <Sb_Loader/> : <Sb_Text font={16} color="--lightGrey">Create Project</Sb_Text>
+						}
 					</Button>
 				</Col>
 			</Row>
