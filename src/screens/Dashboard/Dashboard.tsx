@@ -16,7 +16,7 @@ import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
 import { GetMemberList, GetProjectList, GetSurveyListByOrg } from '../../utils/api';
-import { decodeJWT } from '../../utils/helpers';
+import { decodeJWT, validRoutes } from '../../utils/helpers';
 import './Dashboard.css';
 
 export default function Dashboard () {
@@ -29,12 +29,15 @@ export default function Dashboard () {
     if (!location.state){
        return navBack("/404");
     }
+    if (token == "") {
+      return navBack("/login", {state: true});
+    }
   },[location.state]);
   
-  // LMAO trying to stop navigating to the login page by back button
-  window.onpopstate = () => {
-    navBack("/");
-  }
+  // // LMAO trying to stop navigating to the login page by back button
+  // window.onpopstate = () => {
+  //   navBack("/");
+  // }
   
   function capitalizeFirst (str:string):string {
     return str.match("^[a-z]") ? str.charAt(0).toUpperCase() + str.substring(1) : str;
@@ -67,6 +70,25 @@ export default function Dashboard () {
     }
   }
 
+  function goBack () {
+    let route = location.pathname;
+    let routeArray = route.split('/');
+    routeArray.forEach(rt => rt.length == 24 || rt.match('[0-9]') ? rt = "*" : null);
+    for (let index = 0; index < routeArray.length; index++) {
+      const element = routeArray[index];
+      if (element.length == 24 || element.match('[0-9]'))
+        routeArray[index] = "*";
+    }
+    var filteredRoutes = routeArray.join('/');
+    let prevRoute = filteredRoutes.slice(0, filteredRoutes.lastIndexOf('/'));
+    if (validRoutes.includes(prevRoute)) {
+      navBack(prevRoute, {state: true});
+    }
+    else {
+      navBack(prevRoute.slice(0, prevRoute.lastIndexOf('/')), {state: true});
+    }
+  }
+
   return (
     <Row className='dashboard-container g-0'>
       <Col md='2'>
@@ -77,7 +99,7 @@ export default function Dashboard () {
           <Col>
             <Sb_Header 
               header = {capitalizeFirst(getPageTitle().split("-").join(" "))} 
-              onBackClick = { () => navBack(-1)}
+              onBackClick = { () => goBack()}
               hideBackButton = { getPageTitle() === 'dashboard' ? true : false}
               notif = {notif}
             >

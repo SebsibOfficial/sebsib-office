@@ -22,6 +22,9 @@ export default function Login() {
     if (!location.state){
        return navigate("/404");
     }
+		if (token != "") {
+      return navigate("/", {state: true});
+    }
   },[location.state]);
   
 	/*############# STATES ############### */

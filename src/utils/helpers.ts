@@ -23,6 +23,19 @@ var def:Token = {
   iat: 0
 }
 
+export const validRoutes = [
+  '/dashboard/',
+  '/dashboard/projects',
+  '/dashboard/projects/create-project',
+  '/dashboard/projects/create-survey/*',
+  '/dashboard/projects/view-survey/*',
+  '/dashboard/members',
+  '/dashboard/members/add-member',
+  '/dashboard/members/edit-member/*',
+  '/dashboard/settings',
+  'login/',
+]
+
 export function generateId () {
   return createObjectID();
 }
