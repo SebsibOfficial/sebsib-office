@@ -36,7 +36,7 @@ const Sb_Header = (props:Props) => {
                 <Col className="d-flex align-items-center">
                     {props.children}
                     <Sb_Text font={48} weight={600}>{props.header}</Sb_Text>
-                    <div style={{'position': 'absolute', 'right': '6em'}}>
+                    <div style={{'position': 'fixed', 'right': '6em'}}>
                         {
                             notif != null ? <Sb_Notice id={notif.id} message={notif.message} clickClose={() => setNotification(null)} code={notif.code} type={notif.type}/> : ''
                         }
