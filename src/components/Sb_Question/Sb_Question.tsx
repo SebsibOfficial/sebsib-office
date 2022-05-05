@@ -12,7 +12,7 @@ export type ActionType = "ADD" | "EDIT";
 export type InputType = "CHOICE" | "TEXT" | "SELECT";
 export interface Choice {
   id: string,
-  choice: string
+  text: string
 }
 
 export interface ShowPattern {
@@ -49,14 +49,14 @@ export class Payload {
 
 export default function Sb_Question (props:Props) {
   const [question, setQuestion] = useState("");
-  const [choices, setChoices] = useState<Choice[]>([{id:generateId(), choice:""}]);
+  const [choices, setChoices] = useState<Choice[]>([{id:generateId(), text:""}]);
   const [inputType, setInputType] = useState<InputType>("CHOICE");
   const [showPattern, setShowPattern] = useState<ShowPattern>({hasShow: false, showIfQues: "", ansIs: ""})
   const [lastExport, setLastExport] = useState<Payload | null>()
 
   function addChoiceHandler() {
     var arr = [...choices];
-    arr.push({id:generateId(), choice:""});
+    arr.push({id:generateId(), text:""});
     setChoices(arr); 
   }
 
@@ -64,7 +64,7 @@ export default function Sb_Question (props:Props) {
     var arr = [...choices];
     arr.forEach((choice) => {
       if (choice.id == id)
-        choice.choice = value;
+        choice.text = value;
     })
     setChoices(arr);
   }
@@ -130,7 +130,6 @@ export default function Sb_Question (props:Props) {
 
   return (
     <Col className="mb-4">
-      {console.log(lastExport)}
       <Row>
         <Col className="d-flex align-items-center">
           <Sb_Text font={32} weight={900} color="--primary">#{props.number}</Sb_Text>
@@ -161,7 +160,7 @@ export default function Sb_Question (props:Props) {
                           style={{'fontSize':'16px'}} onClick={() => choiceRemoveHandler(choice.id)}/>        
                         </div>
                         <Form.Control size="sm" type="text" placeholder="Choice" 
-                        value={choice.choice} onChange={(e) => choiceChangeHandler(choice.id, e.target.value)}/>
+                        value={choice.text} onChange={(e) => choiceChangeHandler(choice.id, e.target.value)}/>
                       </Form.Group>
                     ))
                   }   
