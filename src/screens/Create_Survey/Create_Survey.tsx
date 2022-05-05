@@ -1,23 +1,36 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Question, { ActionType, Payload } from "../../components/Sb_Question/Sb_Question";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
+import { NotifContext } from "../../states/NotifContext";
+import { CreateSurvey } from "../../utils/api";
 import { generateId } from "../../utils/helpers";
 
-class FinalPayload {
+export class FinalPayload {
   constructor (sn: string, pl: Payload[]) {
     this.surveyName = sn;
-    this.payload = pl;
+    this.questions = pl;
   }
   surveyName: string;
-  payload: Payload[];
+  questions: Payload[];
+}
+
+interface StateInterface {
+  hash: string,
+  key: string,
+  pathname: string,
+  search: string,
+  state: {name: string},
 }
 
 export default function Create_Survey () {
   let params = useParams();
   let location = useLocation();
   let navigate = useNavigate();
+  const state = useLocation() as StateInterface;
+  const Notif = useContext(NotifContext);
   
   // Prevents routing from the URL
   useEffect(() => {
@@ -30,6 +43,7 @@ export default function Create_Survey () {
   const [questions, setQuestion] = useState([{id: generateId()}]);
   const [questionsData, setQuestionsData] = useState<Payload[]>([]);
   const [surveyName, setSurveyName] = useState("");
+  const [btnLoading, setBtnLoading] = useState(false);
 
   /*------------- METHODS -------------- */
   function addEditHandler (payload: Payload, actionType: ActionType) {
@@ -62,8 +76,16 @@ export default function Create_Survey () {
     setQuestionsData(qdArr); setQuestion(qArr);
   }
   
-  function createSurveyHandler () {
-    // Final Data here
+  async function createSurveyHandler (projId: string) {
+    setBtnLoading(true);
+    var res = await CreateSurvey(projId, new FinalPayload(surveyName, questionsData));
+    if (res.code == 200) {
+      navigate('/dashboard/projects', {state: true});
+    } else {
+      console.log(res.data);
+      setBtnLoading(false);
+      Notif?.setNotification({code:res.code, type: "ERROR", message: res.data, id:1})
+    }
     //console.log(new FinalPayload(surveyName, questionsData));
   }
 
@@ -86,7 +108,7 @@ export default function Create_Survey () {
           <Form.Group className="mb-3" controlId="LoginEmail">
               <Form.Label><Sb_Text font={16}>Project Name</Sb_Text></Form.Label>
               <Form.Select size="sm" placeholder="Name" disabled>
-                <option value="">{params.pid}</option>
+                <option value="">{state.state.name}</option>
               </Form.Select>
 					</Form.Group>
         </Col>
@@ -117,8 +139,10 @@ export default function Create_Survey () {
           <Button size="sm" variant="secondary" className="mt-3 float-start" onClick={() => newQuestionHandler()}>
             <Sb_Text font={12} color="--lightGrey">New Question</Sb_Text>
           </Button>
-          <Button variant="primary" className="mt-3 float-end" onClick={() => createSurveyHandler()}>
-            <Sb_Text font={16} color="--lightGrey">Create Survey</Sb_Text>
+          <Button variant="primary" className="mt-3 float-end" onClick={() => createSurveyHandler(params.pid as string)} disabled={btnLoading}>
+            {
+              btnLoading ? <Sb_Loader/> : <Sb_Text font={16} color="--lightGrey">Create Survey</Sb_Text>
+            }
           </Button>
         </Col>
       </Row>

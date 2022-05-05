@@ -1,4 +1,5 @@
 import axios from "axios";
+import { FinalPayload } from "../screens/Create_Survey/Create_Survey";
 export class ResponseInterface {
   constructor(code: number, data: any) {
     this.code = code;
@@ -146,6 +147,16 @@ export async function DeleteProject(id: string):Promise<ResponseInterface>{
 export async function CreateProject(name: string, enums: string[]):Promise<ResponseInterface>{
   try {
     var result = await axios.post('post/createproject', {projectName: name, enumrators: enums});
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data.message}
+  }
+}
+
+export async function CreateSurvey(pid: string, body: FinalPayload):Promise<ResponseInterface>{
+  try {
+    console.log(body);
+    var result = await axios.post('post/createsurvey/'+pid, body);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data.message}
