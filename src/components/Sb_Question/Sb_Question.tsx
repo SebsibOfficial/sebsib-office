@@ -11,7 +11,7 @@ import './Sb_Question.css';
 export type ActionType = "ADD" | "EDIT";
 export type InputType = "CHOICE" | "TEXT" | "SELECT";
 export interface Choice {
-  id: string,
+  _id: string,
   text: string
 }
 
@@ -49,21 +49,21 @@ export class Payload {
 
 export default function Sb_Question (props:Props) {
   const [question, setQuestion] = useState("");
-  const [choices, setChoices] = useState<Choice[]>([{id:generateId(), text:""}]);
+  const [choices, setChoices] = useState<Choice[]>([{_id:generateId(), text:""}]);
   const [inputType, setInputType] = useState<InputType>("CHOICE");
   const [showPattern, setShowPattern] = useState<ShowPattern>({hasShow: false, showIfQues: "", ansIs: ""})
   const [lastExport, setLastExport] = useState<Payload | null>()
 
   function addChoiceHandler() {
     var arr = [...choices];
-    arr.push({id:generateId(), text:""});
+    arr.push({_id:generateId(), text:""});
     setChoices(arr); 
   }
 
   function choiceChangeHandler(id:string, value: string) {
     var arr = [...choices];
     arr.forEach((choice) => {
-      if (choice.id == id)
+      if (choice._id == id)
         choice.text = value;
     })
     setChoices(arr);
@@ -72,7 +72,7 @@ export default function Sb_Question (props:Props) {
   function choiceRemoveHandler(id: string) {
     if (choices.length > 1) {
       var arr = [...choices];
-      setChoices(arr.filter((choice) => choice.id != id));
+      setChoices(arr.filter((choice) => choice._id != id));
     }
   }
 
@@ -157,10 +157,10 @@ export default function Sb_Question (props:Props) {
                             <Sb_Text font={12}>Choice Option #{index + 1}</Sb_Text>                  
                           </Form.Label>
                           <FontAwesomeIcon icon={faMinusSquare} className="question-trash-icon" 
-                          style={{'fontSize':'16px'}} onClick={() => choiceRemoveHandler(choice.id)}/>        
+                          style={{'fontSize':'16px'}} onClick={() => choiceRemoveHandler(choice._id)}/>        
                         </div>
                         <Form.Control size="sm" type="text" placeholder="Choice" 
-                        value={choice.text} onChange={(e) => choiceChangeHandler(choice.id, e.target.value)}/>
+                        value={choice.text} onChange={(e) => choiceChangeHandler(choice._id, e.target.value)}/>
                       </Form.Group>
                     ))
                   }   
@@ -208,7 +208,7 @@ export default function Sb_Question (props:Props) {
                       <option>Choose...</option>
                       {
                         getQuestion(showPattern.showIfQues)?.choices.map((choice, index) => (
-                          <option key={index} value={choice.id}>Choice #{index + 1}</option>
+                          <option key={index} value={choice._id}>Choice #{index + 1}</option>
                         ))
                       }
                     </Form.Select>
