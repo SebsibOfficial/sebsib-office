@@ -162,3 +162,13 @@ export async function CreateSurvey(pid: string, body: FinalPayload):Promise<Resp
     return {code: error.response.status, data: error.response.data.message}
   }
 }
+
+export async function DeleteSurvey(pid: string, sid: string):Promise<ResponseInterface>{
+  await WAIT(1000);
+  try {
+    var result = await axios.delete('delete/survey/'+pid+'/'+sid);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}

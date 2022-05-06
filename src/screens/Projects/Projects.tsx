@@ -248,7 +248,7 @@ export function Projects_Landing () {
                             {
                               project.surveys.map((survey, index) => (
                                 <Sb_Main_Items key={index} id={survey._id} text={survey.name} type='SURVEY' 
-                                onClick={(id:string) => navigate(`view-survey/${id}`, { state:true })}/>
+                                onClick={(id:string) => navigate(`view-survey/${id}`, { state:{name: survey.name, projectId: project.projectID} })}/>
                               ))
                             }
                           </Col>

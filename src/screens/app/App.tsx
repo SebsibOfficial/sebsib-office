@@ -18,22 +18,37 @@ import { decodeJWT } from '../../utils/helpers';
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>('token', );  
-  axios.defaults.headers.common['auth-token'] = token as string; 
+  axios.defaults.headers.common['auth-token'] = token as string;
+
+  function toWhere () {
+    if (token == "")
+      return "/login";
+    else if (decodeJWT(token as string).exp < new Date().getTime() / 1000) {
+      setAuthToken(""); return "/login";
+    }
+    else {
+      return "/dashboard";
+    }
+  }
+
   return (
     <div className='parent-screen'>
       <AuthContext.Provider value={{token, setAuthToken}}>
       <Routes>
         <Route path='/' element={<div><Outlet/></div>}>
           {/* WHAT YOU DID HERE DOES NOT LOOK SAFE....WATCH OUT */}
-          <Route index element={<div>Hello<br></br><Link to={token == undefined || decodeJWT(token).exp < new Date().getTime() / 1000 ?  "/login" : "/dashboard"} state={true}>Login</Link></div>}/>
-          
+          <Route index element={<div>Hello<br></br>
+          {/* <Link to={
+            token == "" || decodeJWT(token as string).exp < new Date().getTime() / 1000 ?  "/login" : "/dashboard"
+            } state={true}>Login</Link></div>}/> */}
+          <Link to={toWhere()} state={true}>Login</Link></div>}/>
             <Route path="dashboard" element={<NotifProvider><Dashboard /></NotifProvider>}>
               <Route index element={<Dashboard_Landing/>}></Route>
               <Route path="projects" element={<Projects />}>
                 <Route index element = {<Projects_Landing/>}/>
                 <Route path='create-project' element = {<Create_Project/>}/>
                 <Route path='create-survey/:pid' element = {<Create_Survey/>}/>
-                <Route path='view-survey/:pid' element = {<View_Survey/>}/>
+                <Route path='view-survey/:sid' element = {<View_Survey/>}/>
               </Route>
               <Route path="members" element={<Members />}>
                 <Route index element = {<Members_Landing/>}/>

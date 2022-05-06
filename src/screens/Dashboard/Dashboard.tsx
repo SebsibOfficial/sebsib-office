@@ -126,7 +126,8 @@ export function Dashboard_Landing () {
   const [members, setMembers] = useState<MemberItem[]>([])
   const [memberLoading, setMemberLoading] = useState<boolean>(true);
   // ## PROJECT RELATED STATES
-  const [projects, setProjects] = useState<ProjectItem[]>([])
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [fullProjects, setFullProjects] = useState([]);
   const [projectLoading, setProjectLoading] = useState<boolean>(true);
   // ## SURVEY RELATED STATES
   const [surveys, setSurveys] = useState<ProjectItem[]>([])
@@ -152,10 +153,12 @@ export function Dashboard_Landing () {
     GetProjectList(decodeJWT(token as string).org).then((res) => {
       if (res.code == 200){
         var prj_arr = res.data;
+        setFullProjects(prj_arr);
         var arr:ProjectItem[] = [];
         prj_arr.forEach((project:any) => {
           arr.push({_id: project._id, name: project.name})
         })
+        arr.length = 6;
         setProjects(arr);
         setProjectLoading(false);
       } else {
@@ -171,6 +174,7 @@ export function Dashboard_Landing () {
         srv_arr.forEach((survey:any) => {
           arr.push({_id: survey._id, name: survey.name})
         })
+        arr.length = 6;
         setSurveys(arr);
         setSurveyLoading(false);
       } else {
@@ -178,6 +182,16 @@ export function Dashboard_Landing () {
       }
     }).catch((err) => console.log(err));
   }, [])
+
+  function getProjectId (surveyId: string):string {
+    var id:string = "";
+    fullProjects.forEach((project:any) => {
+      if (project.surveysId.includes(surveyId)){
+        id = project._id;
+      }
+    })
+    return id;
+  }
   
   return (
     <Col className='main-content'>
@@ -222,7 +236,11 @@ export function Dashboard_Landing () {
                     <Col>
                       <Sb_Container className='p-3'>
                       {
-                        surveyLoading ? <Sb_Loader/> : surveys.map((survey) => <Sb_Main_Items key={survey._id} id={survey._id} text={survey.name} type='SURVEY' onClick={(id) => navigate(`projects/view-survey/${survey._id}`, { state:true })}/>) 
+                        surveyLoading ? <Sb_Loader/> : 
+                        surveys.map((survey) => 
+                          <Sb_Main_Items key={survey._id} id={survey._id} text={survey.name} 
+                          type='SURVEY' 
+                          onClick={(id) => navigate(`projects/view-survey/${survey._id}`, { state:{name: survey.name, projectId: getProjectId(survey._id)}})}/>) 
                       }
                       </Sb_Container>
                     </Col>
