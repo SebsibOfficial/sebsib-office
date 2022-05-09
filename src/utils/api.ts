@@ -50,6 +50,15 @@ export async function GetProjectList(orgId: string):Promise<ResponseInterface>{
   }
 }
 
+export async function GetResponseList(surveyId: string):Promise<ResponseInterface>{
+  try {
+    var result = await axios.get('get/responselist/'+surveyId);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
 export async function GetSurveyListByOrg(orgId: string): Promise<ResponseInterface>{
   var res_survey:any[] = [];
   var res_code:number = 200;

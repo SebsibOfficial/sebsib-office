@@ -6,8 +6,9 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
-import { DeleteSurvey } from "../../utils/api";
+import { DeleteSurvey, GetMember, GetResponseList } from "../../utils/api";
 import './View_Survey.css';
+import { translateIds } from "../../utils/helpers";
 
 interface StateInterface {
   hash: string,
@@ -15,6 +16,34 @@ interface StateInterface {
   pathname: string,
   search: string,
   state: {name: string, projectId: string},
+}
+
+interface Answer {
+  _id: string,
+  inputType: string,
+  questionId: string,
+  answer: any
+}
+
+interface Response {
+  _id: string,
+  surveyId: string,
+  enumratorId: string,
+  enumratorName: string | null,
+  sentDate: Date,
+  name: string,
+  answers: Answer[]
+}
+
+interface Question {
+  id: string;
+  questionText: string;
+  options: {
+    _id: string,
+    text: string
+  }[];
+  inputType: string;
+  hasShowPattern: boolean;
 }
 
 export default function View_Survey () {
@@ -25,6 +54,8 @@ export default function View_Survey () {
   const state = useLocation() as StateInterface;
   const [modalState, setModalState] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [responses, setResponses] = useState<Response[]>([]);
 
   // Prevents routing from the URL
   useEffect(() => {
@@ -33,6 +64,43 @@ export default function View_Survey () {
     }
   },[location.state]);
   
+  async function loadResponses () {
+    var res = await GetResponseList(params.sid as string);
+    if (res.code == 200) {
+      console.log(res.data.questions);
+      setQuestions(res.data.questions);
+      await filterResponses(res.data.responses);
+      setPageLoading(false);
+    } else {
+      console.log(res.data);
+    }
+  }
+
+  async function filterResponses (responses:Response[]) {
+    var enumr:string[] = [];
+    var resp:string[] = [];
+    var modifiedResp:Response[] = responses;
+    for (let index = 0; index < responses.length; index++) {
+      if (resp.includes(responses[index]._id)) {
+        modifiedResp[index].enumratorName = enumr[resp.findIndex((rsp) => rsp == responses[index]._id)];
+      }
+      else {
+        var res = await GetMember(responses[index].enumratorId);
+        if (res.code == 200) {
+          resp.push(responses[index]._id);
+          enumr.push(res.data.username);
+          modifiedResp[index].enumratorName = res.data.username;
+        }
+      }      
+    }
+    //console.log(modifiedResp);
+    setResponses(modifiedResp);
+  }
+
+  useEffect(() => {
+    loadResponses()
+  }, [])
+
   async function deleteSurveyHandler () {
     setPageLoading(true);
     setModalState(false);
@@ -44,6 +112,10 @@ export default function View_Survey () {
       Notif?.setNotification({type:"ERROR", message:res.data.message, id:1})
     }
     setPageLoading(false);
+  }
+
+  function getAnswer (id: string):string {
+    return "Choice";
   }
 
   return (
@@ -64,19 +136,36 @@ export default function View_Survey () {
             <thead>
               <tr>
                 <th>#</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
-                <th>Username</th>
-                <th>Username</th>
-                <th>Username</th>
-                <th>Username</th>
-                <th>Username</th>
-                <th>Username</th>
+                <th>Enumrator</th>
+                <th>Date</th>
+                {
+                  questions.map(((question, index) => (
+                    <th key={index}>{question.questionText}</th>
+                  )))
+                }
               </tr>
             </thead>
             <tbody>
-              <tr>
+              {
+                responses.map(((response, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{response.enumratorName}</td>
+                    <td>{response.sentDate.toString().substring(0, 10)}</td>
+                    {
+                      response.answers.map((answer => (
+                        <td key={answer._id}>
+                          {
+                            translateIds('ID', answer.inputType) === "CHOICE" || translateIds('ID', answer.inputType) === "MULTI-SELECT"
+                            ? getAnswer(translateIds('ID', answer.inputType) as string) : answer.answer
+                          }
+                        </td>
+                      )))
+                    }
+                  </tr>
+                )))
+              }
+              {/* <tr>
                 <td>1</td>
                 <td>Mark</td>
                 <td>Otto</td>
@@ -98,7 +187,7 @@ export default function View_Survey () {
                 <td>3</td>
                 <td colSpan={2}>Larry the Bird</td>
                 <td colSpan={3}>@twitter</td>
-              </tr>
+              </tr> */}
             </tbody>
           </Table>
         </Col>
