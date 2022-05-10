@@ -1,28 +1,34 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import Sb_Container from "../../components/Sb_Container/Sb_Container";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
+import { useAuth } from "../../states/AuthContext";
+import { NotifContext } from "../../states/NotifContext";
+import { EditSettings } from "../../utils/api";
+import { decodeJWT } from "../../utils/helpers";
 
 class SaveSettingsPayload {
   constructor (on: string, em: string, op: string, np: string, l: string) {
-    this.orgName = on;
+    this.name = on;
     this.email = em;
-    this.oldPass = op;
-    this.newPass = np;
+    this.Opassword = op;
+    this.Npassword = np;
     this.lang = l;
   }
-  orgName: string;
+  name: string;
   email: string;
-  oldPass: string;
-  newPass: string;
+  Opassword: string;
+  Npassword: string;
   lang: string;
 }
 
 export default function Settings () {
   let location = useLocation();
   let navigate = useNavigate();
-  
+  const {token, setAuthToken} = useAuth();
+  const Notif = useContext(NotifContext);
+
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -30,17 +36,29 @@ export default function Settings () {
     }
   },[location.state]);
   
+
   /*############# STATES ############### */
-  const [orgName, setOrgName] = useState("");
-  const [email, setEmail] = useState("");
+  const [orgName, setOrgName] = useState(decodeJWT(token as string).org_name);
+  const [email, setEmail] = useState(decodeJWT(token as string).email ?? "");
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [lang, setLang] = useState("ENGLISH");
+  const [btnLoading, setBtnLoading] = useState(false);
 
   /*------------- METHODS -------------- */
-  function saveChanges () {
+  async function saveChanges () {
+    setBtnLoading(true);
     var payload = new SaveSettingsPayload(orgName, email, oldPass, newPass, lang);
-    // Send to API
+    var res = await EditSettings(decodeJWT(token as string).org, payload);
+    if (res.code == 200) {
+      setAuthToken(res.data.token);
+      Notif?.setNotification({type: "OK", message: "Settings Updated", id:1});
+      setBtnLoading(false);
+    } else {
+      console.log(res.data);
+      Notif?.setNotification({code: res.code, type: "ERROR", message: res.data.message, id:1});
+      setBtnLoading(false);
+    }
   }
 
   return (

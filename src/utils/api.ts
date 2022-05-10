@@ -95,9 +95,25 @@ export interface AddEditMemberInterface {
   projectsId: string[];
 }
 
+export interface EditSettingInterface {
+  name: string,
+  email: string,
+  Opassword: string,
+  Npassword: string
+}
+
 export async function EditMember(id: string, body: AddEditMemberInterface):Promise<ResponseInterface>{
   try {
     var result = await axios.patch('patch/editmember/'+id, body);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+export async function EditSettings(id: string, body: EditSettingInterface):Promise<ResponseInterface>{
+  try {
+    var result = await axios.patch('patch/editsettings/'+id, body);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}

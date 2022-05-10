@@ -11,7 +11,8 @@ interface Token {
   org_name: string,
   role: string,
   exp: number,
-  iat: number
+  iat: number,
+  email?: string,
 }
 
 var def:Token = {
