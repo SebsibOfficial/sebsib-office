@@ -69,7 +69,7 @@ export default function Sb_Row (props:Props) {
         </Col>
         <Col>
           <Sb_Container color={props.color} thin className='justify-content-center p-2'>
-            <Sb_Text>{props.enumrator}</Sb_Text>
+            <Sb_Text>{props.date}</Sb_Text>
           </Sb_Container>
         </Col>
         <Col>
