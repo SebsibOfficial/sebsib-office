@@ -86,6 +86,15 @@ export async function GetSurveyListByProject(projId: string): Promise<ResponseIn
   }
 }
 
+export async function GetRecentResponseList(orgId: string):Promise<ResponseInterface>{
+  try {
+    var result = await axios.get('get/recentresponse/'+orgId);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
 // ######################################
 export interface AddEditMemberInterface {
   name?: string;

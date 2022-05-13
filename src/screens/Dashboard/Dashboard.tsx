@@ -15,7 +15,7 @@ import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
-import { GetMemberList, GetProjectList, GetSurveyListByOrg } from '../../utils/api';
+import { GetMemberList, GetProjectList, GetRecentResponseList, GetSurveyListByOrg } from '../../utils/api';
 import { decodeJWT, validRoutes } from '../../utils/helpers';
 import './Dashboard.css';
 
@@ -33,11 +33,6 @@ export default function Dashboard () {
       return navBack("/login", {state: true});
     }
   },[location.state]);
-  
-  // // LMAO trying to stop navigating to the login page by back button
-  // window.onpopstate = () => {
-  //   navBack("/");
-  // }
   
   function capitalizeFirst (str:string):string {
     return str.match("^[a-z]") ? str.charAt(0).toUpperCase() + str.substring(1) : str;
@@ -117,6 +112,7 @@ export default function Dashboard () {
 
 type MemberItem = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" | "SELECTED"};
 type ProjectItem = {_id: string, name: string};
+type SurveyRow = {_id: string, project: string, survey: string, enumrator: string, date: string};
 
 export function Dashboard_Landing () {
   let navigate = useNavigate();
@@ -132,9 +128,12 @@ export function Dashboard_Landing () {
   // ## SURVEY RELATED STATES
   const [surveys, setSurveys] = useState<ProjectItem[]>([])
   const [surveyLoading, setSurveyLoading] = useState<boolean>(true);
+  // ## RECENT SURVEY RELATED STATES
+  const [recentSurveys, setRecentSurveys] = useState<SurveyRow[]>([]);
+  const [recentLoading, setRecentLoading] = useState<boolean>(true);
   
   useEffect(() => {
-    GetMemberList(decodeJWT(token as string).org).then((res) => {
+    GetMemberList(decodeJWT(token as string).org).then(async (res) => {
       if (res.code == 200){
         var mem_arr = res.data;
         var arr:MemberItem[] = [];
@@ -144,10 +143,12 @@ export function Dashboard_Landing () {
         })
         setMembers(arr);
         setMemberLoading(false);
+        setRecentLoading(false);
       } else {
         console.info(res)
       }
-    }).catch((err) => console.log(err))
+    })
+    .catch((err) => console.log(err))
     
     // Populate the Projects
     GetProjectList(decodeJWT(token as string).org).then((res) => {
@@ -183,6 +184,10 @@ export function Dashboard_Landing () {
     }).catch((err) => console.log(err));
   }, [])
 
+  useEffect(() => {
+    getRecentResp();
+  }, [members, surveys])
+
   function getProjectId (surveyId: string):string {
     var id:string = "";
     fullProjects.forEach((project:any) => {
@@ -193,6 +198,56 @@ export function Dashboard_Landing () {
     return id;
   }
   
+  function getName(type:"S"|"M"|"P", firstArg: string, projectArr?: Array<any>):string {
+    var ret = "";
+    switch (type) {
+      case "M":
+        members.length != 0 ? members.forEach(mem => {
+          if (mem._id == firstArg) {
+            ret = mem.name;
+          }
+        }) : null;
+        break;
+      case "S":
+        surveys.length != 0 ? surveys.forEach(srv => {
+          if (srv._id == firstArg) {
+            ret = srv.name;
+          }
+        }) : null
+        break;
+      case "P":
+        projectArr?.forEach((proj:any) => {
+          if (proj.surveysId.includes(firstArg)) ret = proj.name;
+        })
+        break;
+    
+      default:
+        break;
+    }
+    return ret;
+  }
+
+  async function getRecentResp() {
+    try {
+      var res = await GetRecentResponseList(decodeJWT(token as string).org);
+      if (res.code == 200){
+        var resp_arr = [];
+        var rows:SurveyRow[] = [];
+        resp_arr = res.data.resp;
+        resp_arr.forEach((resp:any) => {
+          rows.push({_id: resp._id, survey: getName('S', resp.surveyId), 
+          enumrator: getName('M', resp.enumratorId), date: resp.sentDate.toString().substring(0, 10), 
+          project: getName('P', resp.surveyId, res.data.proj)});
+        })
+        setRecentSurveys(rows);
+      } else {
+        console.log(res.data);
+      } 
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Col className='main-content'>
       <div >
@@ -258,13 +313,20 @@ export function Dashboard_Landing () {
                   </Row>
                   <Row>
                     <Col>
-                      <div className='recent-table'>
-                        <Sb_Row id='12' header color='DARK'/>
-                        <Sb_Row id='14' color='PURPLE' project='Some Proj' survey='Some Surv' enumrator='Chala' date='12/02/2022'
-                        onView={(id) => navigate(`projects/view-survey/${id}`, { state:true })}/>
-                        <Sb_Row id='15' color='PURPLE' project='Some Proj' survey='Some Surv' enumrator='Chala' date='12/02/2022'
-                        onView={(id) => navigate(`projects/view-survey/${id}`, { state:true })}/>
-                      </div>
+                      {
+                        recentLoading ? <Sb_Loader/> : 
+                        <div className='recent-table'>
+                          <Sb_Row id='12' header color='DARK'/>
+                          {
+                            recentSurveys.map(surv => (
+                              <Sb_Row key={surv._id} id={surv._id} color='PURPLE' project={surv.project} 
+                              survey={surv.survey} enumrator={surv.enumrator} date={surv.date}
+                              onView={(id) => navigate(`projects/view-survey/${id}`, { state:true })}/>
+                            )
+                            )
+                          }
+                        </div>
+                      }
                     </Col>
                   </Row>
                 </div>
