@@ -80,7 +80,7 @@ export function Projects_Landing () {
         const survey_obj = srv_arr_resp[j];
         srv_arr.push({_id: survey_obj._id, name: survey_obj.name})
       }
-
+      console.log("Hey");
       // Get the members involved in the project
       var mem_res = await GetMemberList(decodeJWT(token as string).org);
       var mem_arr_resp = mem_res.data;
@@ -90,7 +90,7 @@ export function Projects_Landing () {
         if (mem_arr_resp[k].projectsId.includes(prj_id))
           mem_arr.push({_id: member_obj._id, name: member_obj.username});
       }
-
+     
       arr.push({
         projectID: prj_id,
         projectName: prj_arr[index].name,
@@ -103,7 +103,9 @@ export function Projects_Landing () {
         setProjects(arr); 
         setPageLoading(false);
       }
-    }    
+    }
+    
+    if (prj_arr.length == 0) setPageLoading(false);
   }
 
   useEffect(() => {

@@ -9,7 +9,7 @@ import Sb_Text from "../Sb_Text/Sb_Text";
 import './Sb_Question.css';
 
 export type ActionType = "ADD" | "EDIT";
-export type InputType = "CHOICE" | "TEXT" | "SELECT";
+export type InputType = "CHOICE" | "TEXT" | "MULTI-SELECT";
 export interface Choice {
   _id: string,
   text: string
@@ -174,7 +174,7 @@ export default function Sb_Question (props:Props) {
                   <Form.Select size="sm" id="Select" onChange={(e) => selectChangeHandler(e.target.value)}>
                     <option value={"CHOICE"}>Choice</option>
                     <option value={"TEXT"}>Text</option>
-                    <option value={"SELECT"}>Multi Select</option>
+                    <option value={"MULTI-SELECT"}>Multi Select</option>
                   </Form.Select>
                 </Form.Group>
                 <div className="show-pattern">
