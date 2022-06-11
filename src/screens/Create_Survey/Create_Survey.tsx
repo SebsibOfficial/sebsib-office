@@ -126,6 +126,7 @@ export default function Create_Survey () {
           questions.map((question, index) => (
             <Col md="6" key={index}>
               <Sb_Question key={index + 1} id={question.id} number={index + 1} 
+              isLast={questions.length == 1 || questions[0].id == question.id ? true : false}
               state={ questionExists(question.id) ? 'EDIT' : 'ADD'} otherQuestions={questionsData}
               onAddEdit={(id: string, actionType: ActionType, payload: any) => addEditHandler(payload, actionType)} 
               onRemove={(id: string) => removeHandler(id)}/>

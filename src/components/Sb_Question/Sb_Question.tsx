@@ -26,6 +26,7 @@ interface Props {
   number: number,
   state: ActionType,
   otherQuestions: Payload[],
+  isLast?: boolean,
   onRemove: (id: string) => void,
   onAddEdit: (id: string, type: ActionType, payload:any) => void
 }
@@ -53,6 +54,8 @@ export default function Sb_Question (props:Props) {
   const [inputType, setInputType] = useState<InputType>("CHOICE");
   const [showPattern, setShowPattern] = useState<ShowPattern>({hasShow: false, showIfQues: "", ansIs: ""})
   const [lastExport, setLastExport] = useState<Payload | null>()
+
+  var {isLast = false} = props;
 
   function addChoiceHandler() {
     var arr = [...choices];
@@ -124,6 +127,13 @@ export default function Sb_Question (props:Props) {
     }
   }
   
+  function hasChoices() {
+    if (inputType === 'CHOICE' || inputType === 'MULTI-SELECT')
+      return choices[0].text != "" ? true : false 
+    else
+      return true
+  }
+
   function getQuestion(id: string) {
     return props.otherQuestions.filter((question) => question.id === id)[0];
   }
@@ -182,7 +192,7 @@ export default function Sb_Question (props:Props) {
                   <Form.Group className="mb-3">
                     <div className="d-flex justify-content-between">
                       <Sb_Text font={12}>Show Pattern</Sb_Text>
-                      <Sb_Checkbox default={`${showPattern.hasShow ? 'SELECTED' : 'UNSELECTED'}`}
+                      <Sb_Checkbox disabled={isLast} default={`${showPattern.hasShow ? 'SELECTED' : 'UNSELECTED'}`}
                       onChange={(state:boolean) => {showPatternChangeHandler("STATUS", state)}}/>
                     </div>
                   </Form.Group>
@@ -215,7 +225,8 @@ export default function Sb_Question (props:Props) {
                   </Form.Group>
                 </div>
                 <div>
-                  <Button size="sm" className="mt-3 float-end" onClick={() => addButtonClickHandler()} disabled = { !hasDifference() }>
+                  <Button size="sm" className="mt-3 float-end" onClick={() => addButtonClickHandler()} 
+                  disabled = { !hasDifference() || (props.state == 'ADD' ? !hasChoices() : false) }>
                     <Sb_Text font={12} color="--lightGrey">{props.state === 'ADD' ? 'Add' : 'Update'}</Sb_Text>
                   </Button>
                 </div>
