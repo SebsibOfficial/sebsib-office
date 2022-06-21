@@ -18,6 +18,7 @@ import { decodeJWT } from '../../utils/helpers';
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>('token', );  
+  // TODO change the common header to Auth, and it should have an ecrypted token
   axios.defaults.headers.common['auth-token'] = token as string;
 
   function toWhere () {
