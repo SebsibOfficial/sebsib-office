@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="440" viewBox="0 0 440 440">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #505075;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #fffcfc;
+      }
+
+      .cls-3 {
+        font-size: 58px;
+        font-family: HelveticaNeue-CondensedBold, Helvetica Neue;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+      }
+    </style>
+  </defs>
+  <g id="Group_15" data-name="Group 15" transform="translate(-1240 -240)">
+    <rect id="Rectangle_5" data-name="Rectangle 5" class="cls-1" width="440" height="440" rx="20" transform="translate(1240 240)"/>
+    <g id="Layer_2" data-name="Layer 2" transform="translate(1372 332)">
+      <g id="Layer_5" data-name="Layer 5" transform="translate(0 0)">
+        <path id="Path_4" data-name="Path 4" class="cls-2" d="M57.366,97.06H78.638a13.09,13.09,0,0,1,13.09,13.09v112.9a1.636,1.636,0,0,1-1.636,1.636H68.82a13.09,13.09,0,0,1-13.09-13.09V98.7A1.636,1.636,0,0,1,57.366,97.06Z" transform="translate(-28.274 -49.243)"/>
+        <path id="Path_5" data-name="Path 5" class="cls-2" d="M228.746,97.06h21.268a13.09,13.09,0,0,1,13.09,13.09v112.9a1.636,1.636,0,0,1-1.636,1.636H240.2a13.09,13.09,0,0,1-13.09-13.09V98.7A1.636,1.636,0,0,1,228.746,97.06Z" transform="translate(-115.223 -49.243)"/>
+        <path id="Path_6" data-name="Path 6" class="cls-2" d="M134.416,0h29.451a13.09,13.09,0,0,1,13.09,13.09V41.876a1.636,1.636,0,0,1-1.636,1.636H145.87a13.09,13.09,0,0,1-13.09-13.09V1.636A1.636,1.636,0,0,1,134.416,0Z" transform="translate(-67.365 0)"/>
+        <text id="SEBSIB" class="cls-3" transform="translate(0 244)"><tspan x="0" y="0">SEBSIB</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

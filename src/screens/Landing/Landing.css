@@ -1,0 +1,287 @@
+
+section {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    background-color: white !important;
+}
+body {
+    scroll-behavior: smooth;
+}
+/* ########################################################### */
+nav {
+    position: fixed;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    padding: 2em;
+    background-color: white;
+    z-index: 9;
+}
+nav a {
+    text-decoration: none;
+}
+.logo_land {
+    width: 100px;
+    height: 85px;
+}
+.logo_land img {
+    width: 100%;
+}
+.list_cont {
+    display: flex;
+    width: 80%;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.list_item {
+    font-weight: 900;
+    font-size: 1.2em;
+    color: var(--primary);
+    cursor: pointer;
+}
+.list_item:hover{
+    color: var(--secondary);
+    background-color: hsla(240, 19%, 39%, 0.033);
+    padding: 0.5em;
+}
+#reg_but {
+    padding: 0.4em 1em;
+    background-color: var(--primary);
+    color: white;
+}
+.lang {
+    display: flex;
+    align-items: center;
+    padding-right: 1em;
+    font-weight: 900;
+}
+#amh {
+    padding: 0.5em;
+    border-right: 1px solid var(--primary);
+}
+#eng {
+    padding: 0.5em;
+    opacity: 0.3;
+}
+.netela {
+    font-size: 1.5em;
+    cursor: default !important;
+}
+.netela:hover {
+    color: initial;
+    background-color: initial;
+    padding: 0;
+}
+/* ############################################################################ */
+.content {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+.illust {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.illust img {
+    transform: scale(0.7);
+    margin-top: 15em;
+}
+#first_page_illust img{
+    margin-top: 5em;
+}
+.headline {
+    height: 50%;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+.header-text {
+    background-color: #ffffff;
+    background: repeating-linear-gradient( -45deg, #50507510, #50507510 2px, #ffffff 2px, #ffffff 10px );
+    color: #505075;
+    font-size: 6em;
+    border: 2px solid #50507538;
+    border-radius: 20px;
+    font-weight: 900;
+    padding: 0.3em;
+    width: 100%;
+    line-height: 1em;
+}
+#first_page_headline {
+    height: 125%;
+}
+.subtext {
+    height: 40%;
+    width: 80%;
+    padding: 2em;
+    font-weight: 900;
+    font-size: 1.2em;
+}
+#first_page_subtext {
+    height: 50%;
+}
+
+footer {
+    height: 30vh;
+}
+
+/* ########################################################### */
+.price_section {
+    padding-top: 10em;
+    flex-direction: column;
+    justify-content:unset;
+    align-items: center;
+}
+.title {
+    width: 20%;
+}
+.title_box {
+    font-size: 2.5em;
+    font-weight: 900;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    padding: 0.2em 1em;
+    border-radius: 20px;
+    background-color: rgb(80 80 117 / 5%);
+    letter-spacing: 2px;
+    text-align: center;
+}
+.toggle_price {
+    margin: 1em;
+    font-size: 1.2em;
+    font-weight: 900;
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: center;
+}
+#mth {
+    padding: 0em 1em;
+    opacity: 0.4;
+}
+#yr {
+    padding: 0em 1em;
+    opacity: 0.4;
+}
+.active_toggle_mth {
+    opacity: 1 !important;
+    border-right: 2px solid var(--primary);
+}
+.active_toggle_yr {
+    opacity: 1 !important; 
+    border-left: 2px solid var(--primary);
+}
+.white {
+    background-color: #F8F8F8;
+    color: var(--secondary);
+}
+.black {
+    background-color: var(--secondary);
+    color: #F8F8F8;
+}
+.purple {
+    background-color: var(--primary);
+    color: #F8F8F8;
+}
+.yellow {
+    background-color: var(--yellow);
+    color: var(--secondary);
+}
+.cards_prices {
+    width: 100%;
+    padding: 1em 5em;
+    display: flex;
+    justify-content: space-evenly;
+}
+.price_card {
+    width: 20%;
+    padding: 1em;
+    box-shadow: 0px 3px 6px rgb(0 0 0 / 16%);
+    border-radius: 10px;
+}
+.price_card span {
+    height: 20px;
+    width: 20px;
+    display: block;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: inset 0px 3px 6px rgb(0 0 0 / 16%);
+}
+.card_content {
+    text-align: center;
+    font-family: 'HelveticaNeue';
+    margin: 0.5em 0;
+}
+.card_title {
+    font-size: 1.7em;
+    font-weight: 900;
+}
+/* ################################################################################### */
+.reg_sec {
+    justify-content: flex-end;
+    padding-top: 10em;
+    display: flex;
+    padding-right: 15em;
+    background: url('../../assets/Ill-contact.svg') no-repeat;
+    background-size: 77% 140%;
+    background-position-x: -55%;
+}
+.reg_form {
+    width: 40%;
+}
+.reg_header_text {
+    font-size: 2.5em;
+    font-weight: 900;
+    text-align: center;
+    padding: 0.5em;
+    color: var(--primary);
+    letter-spacing: 1px;
+}
+form button {
+    background-color: var(--primary);
+    color: white;
+    border: 0;
+    font-size: 1.5em;
+    font-weight: 900;
+    letter-spacing: 2px;
+    padding: 0.3em;
+}
+.input_form {
+    display: grid;
+    font-size: 1.2em;
+    font-weight: 900;
+    letter-spacing: 1px;
+    width: 100%;
+}
+.fill_form {
+    display: flex;
+    flex-wrap: wrap;
+    font-family: 'HelveticaNeue';
+}
+input {
+    width: 100%;
+    border: 1px solid rgb(80 80 117 / 50%);
+}
+input:focus-visible {
+    border: 2px solid var(--primary) !important;
+}
+#fn,#nm {
+    width: 45%;
+}
+.overlay {
+    width: 80%;
+    backdrop-filter: blur(5px);
+    background-color: hsl(0deg 0% 100% / 30%);
+}
+.confirm {
+    background-color: #1a7b1a;
+    padding: 0.5em;
+    text-align: center;
+    color: white;
+    font-weight: 800;
+    letter-spacing: 1px;
+}

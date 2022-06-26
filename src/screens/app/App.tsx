@@ -15,6 +15,9 @@ import {AuthContext} from '../../states/AuthContext';
 import { useContext, useState } from 'react';
 import useLocalStorageState from 'use-local-storage-state';
 import { decodeJWT } from '../../utils/helpers';
+import Landing from '../Landing/Landing';
+import Pricing from '../Landing/Pricing/Pricing';
+import Register from '../Landing/Register/Register';
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>('token', );  
@@ -36,12 +39,11 @@ function App() {
       <AuthContext.Provider value={{token, setAuthToken}}>
       <Routes>
         <Route path='/' element={<div><Outlet/></div>}>
-          {/* WHAT YOU DID HERE DOES NOT LOOK SAFE....WATCH OUT */}
-          <Route index element={<div>Hello<br></br>
-          {/* <Link to={
-            token == "" || decodeJWT(token as string).exp < new Date().getTime() / 1000 ?  "/login" : "/dashboard"
-            } state={true}>Login</Link></div>}/> */}
-          <Link to={toWhere()} state={true}>Login</Link></div>}/>
+          {/* <Route index element={<div>Hello<br></br><Link to={toWhere()} state={true}>Login</Link></div>}/> */}
+          <Route index element={<Landing/>}/>
+            <Route path='pricing' element={<Pricing/>}></Route>
+            <Route path='register' element={<Register/>}></Route>
+            <Route path='contact' element={<div>Contact</div>}></Route> 
             <Route path="dashboard" element={<NotifProvider><Dashboard /></NotifProvider>}>
               <Route index element={<Dashboard_Landing/>}></Route>
               <Route path="projects" element={<Projects />}>
