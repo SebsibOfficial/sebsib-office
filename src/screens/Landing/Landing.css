@@ -233,11 +233,11 @@ footer {
     display: flex;
     padding-right: 15em;
     background: url('../../assets/Ill-contact.svg') no-repeat;
-    background-size: 77% 140%;
-    background-position-x: -55%;
+    background-size: 75%;
 }
 .reg_form {
     width: 40%;
+    z-index: 2;
 }
 .reg_header_text {
     font-size: 2.5em;
@@ -279,9 +279,10 @@ input:focus-visible {
     width: 45%;
 }
 .overlay {
-    width: 80%;
+    width: 100%;
     backdrop-filter: blur(5px);
-    background-color: hsl(0deg 0% 100% / 30%);
+    position: absolute;
+    height: 77.7vh;
 }
 .confirm {
     background-color: #1a7b1a;
@@ -291,15 +292,21 @@ input:focus-visible {
     font-weight: 800;
     letter-spacing: 1px;
 }
+.confirm span {
+    float: right;
+    margin-right: 0.5em;
+    cursor: pointer;
+}
 /* ############################################################################################################## */
 footer {
     position: relative;
     font-family: 'HelveticaNeue';
+    text-align: center;
 }
 footer::before {
     background-image: url('../../assets/officeLogoBlack.svg');
     opacity: 0.05;
-    background-size: 20% 41%;
+    background-size: 20% 40%;
     top: 0;
     bottom: 0;
     left: 0;
@@ -308,15 +315,9 @@ footer::before {
     content: "";
 }
 footer h1 {
-    text-align: center;
     font-weight: 900;
     padding: 0.2em;
 }
-footer ul {
-    list-style: none;
-    text-align: center;
-    font-weight: 500;
-}
-.copy_foot {
-    text-align: center;
+footer h6 {
+    font-weight: 400;
 }

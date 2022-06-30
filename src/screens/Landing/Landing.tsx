@@ -5,6 +5,7 @@ import LandingData from './landing_content';
 import { Link } from 'react-router-dom';
 import { decodeJWT } from '../../utils/helpers';
 import { useAuth } from '../../states/AuthContext';
+import Nav from './Nav/Nav';
 
 export default function Landing () {
     const {token, setAuthToken} = useAuth();
@@ -24,26 +25,7 @@ export default function Landing () {
       };
     return (
         <div>
-            <nav>
-                <div className="logo_land">
-                <Link to={'/'} onClick={() => scrollTo('#start')}><img src={Logo} alt=""/></Link>
-                </div>
-                <div className="list_cont">
-                <Link to={'/'}><div className="list_item">ስለ እኛ</div></Link>
-                    <div className="list_item netela">፣</div>
-                    <Link to={'/pricing'}><div className="list_item">ዋጋችን</div></Link>
-                    <div className="list_item netela">፣</div>
-                    <Link to={'/'} onClick={() => scrollTo('#contact-us')}><div className="list_item">አግኙን</div></Link>
-                    <div className="list_item netela">፣</div>
-                    <Link to={toWhere()} state={true}><div className="list_item">ይግቡ</div></Link>
-                    <div className="list_item netela">፣</div>
-                    <Link to={'/register'}><div className="list_item" id='reg_but'>ይመዝገቡ</div></Link>
-                </div>
-                <div className="lang">
-                    <span id='amh'>አም</span>
-                    <span id='eng'>EN</span>
-                </div>
-            </nav>
+            <Nav/>
             <section id='start'>
                 <div className='content'>
                     <div className='headline' id='first_page_headline'>
@@ -81,14 +63,11 @@ export default function Landing () {
             <footer id='contact-us'>
                 <div className="contact_foot">
                     <h1>አግኙን</h1>
-                    <ul>
-                        <li>+251920642556</li>
-                        <li>info@sebib.com</li>
-                        <li>yoseph@sebib.com</li>
-                        <li>yohaness@sebib.com</li>
-                    </ul>
+                    <h6>+251920642556</h6>
+                    <h6>info@sebib.com</h6>
+                    <h6>yoseph@sebib.com</h6>
+                    <h6>yohaness@sebib.com</h6>
                 </div>
-                <div className="copy_foot">Copyright Sebsib 2022</div>
             </footer>
         </div>
     )

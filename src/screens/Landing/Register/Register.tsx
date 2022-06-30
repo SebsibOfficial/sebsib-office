@@ -1,13 +1,9 @@
 import '../Landing.css';
-import Logo from '../../../assets/logo.png';
-import { Link } from 'react-router-dom';
-import { decodeJWT } from '../../../utils/helpers';
-import { useAuth } from '../../../states/AuthContext';
 import { useState } from 'react';
 import Sb_Loader from '../../../components/Sb_Loader';
+import Nav from '../Nav/Nav';
 
 export default function Register () {
-    const {token, setAuthToken} = useAuth();
     const [name, setName] = useState('');
     const [Fname, setFName] = useState('');
     const [email, setEmail] = useState('');
@@ -17,20 +13,6 @@ export default function Register () {
     const [btnLoading, setBtnLoading] = useState(false);
     const [confirm, setConfirm] = useState(false);
 
-    function toWhere () {
-      if (token == "")
-        return "/login";
-      else if (decodeJWT(token as string).exp < new Date().getTime() / 1000) {
-        setAuthToken(""); return "/login";
-      }
-      else {
-        return "/dashboard";
-      }
-    }
-    function scrollTo (to:string) {
-      const section = document.querySelector(to);
-      section?.scrollIntoView( { behavior: 'smooth', block: 'start' } );
-    };
     function clearForm () {
       setEmail('');
       setFName('');
@@ -40,8 +22,8 @@ export default function Register () {
       setPhone('');
     }
     async function registerRequest () {
+      setBtnLoading(true)
       if (name !== '' && Fname !== '' && email !== '' && phone !== '' && org !== '' && pkg !== ''){
-        setBtnLoading(true)
         var data = {
           service_id: process.env.REACT_APP_SERVICE_ID,
           template_id: 'template_jy47etj',
@@ -55,8 +37,6 @@ export default function Register () {
               'package': pkg
             }
         };
-        console.log(pkg);
-        setBtnLoading(false);
         var resp = await fetch('https://api.emailjs.com/api/v1.0/email/send', 
           {method:'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify(data)});
           if (resp.status == 200){
@@ -70,26 +50,7 @@ export default function Register () {
     }
     return (
         <div>
-            <nav>
-                <div className="logo_land">
-                    <img src={Logo} alt=""/>
-                </div>
-                <div className="list_cont">
-                    <Link to={'/'}><div className="list_item">ስለ እኛ</div></Link>
-                    <div className="list_item netela">፣</div>
-                    <Link to={'/pricing'}><div className="list_item">ዋጋችን</div></Link>
-                    <div className="list_item netela">፣</div>
-                    <Link to={'/register'} onClick={() => scrollTo('#contact-us')}><div className="list_item">አግኙን</div></Link>
-                    <div className="list_item netela">፣</div>
-                    <Link to={toWhere()} state={true}><div className="list_item">ይግቡ</div></Link>
-                    <div className="list_item netela">፣</div>
-                    <Link to={'/register'}><div className="list_item" id='reg_but'>ይመዝገቡ</div></Link>
-                </div>
-                <div className="lang">
-                    <span id='amh'>አም</span>
-                    <span id='eng'>EN</span>
-                </div>
-            </nav>
+            <Nav/>
             <section className='reg_sec'>
               <div className="overlay"></div>
               <form className="reg_form" onSubmit={(e) => e.preventDefault()}>
@@ -100,28 +61,28 @@ export default function Register () {
                   <div style={{'display': 'flex','justifyContent':'space-between','width':'100%'}}>
                     <div className="input_form" id='nm'>
                       <label htmlFor="name">ስም</label>
-                      <input type="text" name="name" onChange={(e) => setName(e.target.value)} required/>
+                      <input value={name} type="text" name="name" onChange={(e) => setName(e.target.value)} required/>
                     </div>
                     <div className="input_form" id='fn'>
                       <label htmlFor="father_name">የአባት ስም</label>
-                      <input type="text" name="father_name" onChange={(e) => setFName(e.target.value)} required/>
+                      <input value={Fname} type="text" name="father_name" onChange={(e) => setFName(e.target.value)} required/>
                     </div>
                   </div>
                   <div className="input_form">
                     <label htmlFor="email">ኢሜል አድራሻ</label>
-                    <input type="text" name="email" id="em" onChange={(e) => setEmail(e.target.value)} required/>
+                    <input value={email} type="text" name="email" id="em" onChange={(e) => setEmail(e.target.value)} required/>
                   </div>
                   <div className="input_form">
                     <label htmlFor="phone">ስልክ ቁጥር</label>
-                    <input type="tel" name="phone" id="em" onChange={(e) => setPhone(e.target.value)} required/>
+                    <input value={phone} type="tel" name="phone" id="em" onChange={(e) => setPhone(e.target.value)} required/>
                   </div>
                   <div className="input_form">
                     <label htmlFor="organization">የድርጅት ስም</label>
-                    <input type="text" name="organization" id="org_n" onChange={(e) => setOrg(e.target.value)} required/>
+                    <input value={org} type="text" name="organization" id="org_n" onChange={(e) => setOrg(e.target.value)} required/>
                   </div>
                   <div className="input_form">
                     <label htmlFor="package">የጥቅል ዓይነት</label>
-                    <select name="package" id="pk" onChange={(e) => setPackage(e.target.value)} required>
+                    <select value={pkg} name="package" id="pk" onChange={(e) => setPackage(e.target.value)} required>
                       <option value="">Choose Package</option>
                       <option value="free-trail">Free Trail</option>
                       <option value="standard" disabled>Standard</option>
@@ -136,22 +97,11 @@ export default function Register () {
                   </button>
                 </div>
                 <div className='confirm' style={{'display': confirm ? 'block' : 'none' }}>
-                  ስለተመዘገቡ እናመሰናለን፣ ኢሜል ይደርሶታል ስለትዛዞ።
+                  ስለተመዘገቡ እናመሰናለን፣ ኢሜል በቅርቡ ይደርሶታል።
+                  <span onClick={() => setConfirm(false)}>X</span>
                 </div>
               </form>
             </section>
-            <footer id='contact-us'>
-                <div className="contact_foot">
-                    <h1>አግኙን</h1>
-                    <ul>
-                        <li>+251920642556</li>
-                        <li>info@sebib.com</li>
-                        <li>yoseph@sebib.com</li>
-                        <li>yohaness@sebib.com</li>
-                    </ul>
-                </div>
-                <div className="copy_foot">Copyright Sebsib 2022</div>
-            </footer>
         </div>
     )
 }
