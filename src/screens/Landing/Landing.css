@@ -191,6 +191,9 @@ footer {
     background-color: var(--yellow);
     color: var(--secondary);
 }
+.op-3 {
+    opacity: 0.4;
+}
 .cards_prices {
     width: 100%;
     padding: 1em 5em;
@@ -198,7 +201,7 @@ footer {
     justify-content: space-evenly;
 }
 .price_card {
-    width: 20%;
+    width: 15%;
     padding: 1em;
     box-shadow: 0px 3px 6px rgb(0 0 0 / 16%);
     border-radius: 10px;
@@ -219,6 +222,9 @@ footer {
 .card_title {
     font-size: 1.7em;
     font-weight: 900;
+}
+.card_list {
+    text-align: left;
 }
 /* ################################################################################### */
 .reg_sec {
@@ -284,4 +290,33 @@ input:focus-visible {
     color: white;
     font-weight: 800;
     letter-spacing: 1px;
+}
+/* ############################################################################################################## */
+footer {
+    position: relative;
+    font-family: 'HelveticaNeue';
+}
+footer::before {
+    background-image: url('../../assets/officeLogoBlack.svg');
+    opacity: 0.05;
+    background-size: 20% 41%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    content: "";
+}
+footer h1 {
+    text-align: center;
+    font-weight: 900;
+    padding: 0.2em;
+}
+footer ul {
+    list-style: none;
+    text-align: center;
+    font-weight: 500;
+}
+.copy_foot {
+    text-align: center;
 }

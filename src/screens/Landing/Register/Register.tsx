@@ -18,23 +18,34 @@ export default function Register () {
     const [confirm, setConfirm] = useState(false);
 
     function toWhere () {
-        if (token == "")
-          return "/login";
-        else if (decodeJWT(token as string).exp < new Date().getTime() / 1000) {
-          setAuthToken(""); return "/login";
-        }
-        else {
-          return "/dashboard";
-        }
+      if (token == "")
+        return "/login";
+      else if (decodeJWT(token as string).exp < new Date().getTime() / 1000) {
+        setAuthToken(""); return "/login";
       }
-
+      else {
+        return "/dashboard";
+      }
+    }
+    function scrollTo (to:string) {
+      const section = document.querySelector(to);
+      section?.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+    };
+    function clearForm () {
+      setEmail('');
+      setFName('');
+      setName('');
+      setOrg('');
+      setPackage('');
+      setPhone('');
+    }
     async function registerRequest () {
       if (name !== '' && Fname !== '' && email !== '' && phone !== '' && org !== '' && pkg !== ''){
         setBtnLoading(true)
         var data = {
-          service_id: 'service_znrj7yk',
+          service_id: process.env.REACT_APP_SERVICE_ID,
           template_id: 'template_jy47etj',
-          user_id: 'z9PEqQcu_jo7Z_YVo',
+          user_id: process.env.REACT_APP_USER_ID,
           template_params: {
               'from_name': name,
               'name': name,
@@ -50,7 +61,8 @@ export default function Register () {
           {method:'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify(data)});
           if (resp.status == 200){
             setBtnLoading(false);
-            setConfirm(true)
+            clearForm();
+            setConfirm(true);
           }
           else
             console.log(resp.json());
@@ -67,7 +79,7 @@ export default function Register () {
                     <div className="list_item netela">፣</div>
                     <Link to={'/pricing'}><div className="list_item">ዋጋችን</div></Link>
                     <div className="list_item netela">፣</div>
-                    <div className="list_item">አግኙን</div>
+                    <Link to={'/register'} onClick={() => scrollTo('#contact-us')}><div className="list_item">አግኙን</div></Link>
                     <div className="list_item netela">፣</div>
                     <Link to={toWhere()} state={true}><div className="list_item">ይግቡ</div></Link>
                     <div className="list_item netela">፣</div>
@@ -112,9 +124,9 @@ export default function Register () {
                     <select name="package" id="pk" onChange={(e) => setPackage(e.target.value)} required>
                       <option value="">Choose Package</option>
                       <option value="free-trail">Free Trail</option>
-                      <option value="standard">Standard</option>
-                      <option value="premium">Premium</option>
-                      <option value="enterprise">Enterprise</option>
+                      <option value="standard" disabled>Standard</option>
+                      <option value="premium" disabled>Premium</option>
+                      <option value="enterprise" disabled>Enterprise</option>
                     </select>
                   </div>
                 </div>
@@ -124,10 +136,22 @@ export default function Register () {
                   </button>
                 </div>
                 <div className='confirm' style={{'display': confirm ? 'block' : 'none' }}>
-                  ተልኳል
+                  ስለተመዘገቡ እናመሰናለን፣ ኢሜል ይደርሶታል ስለትዛዞ።
                 </div>
               </form>
             </section>
+            <footer id='contact-us'>
+                <div className="contact_foot">
+                    <h1>አግኙን</h1>
+                    <ul>
+                        <li>+251920642556</li>
+                        <li>info@sebib.com</li>
+                        <li>yoseph@sebib.com</li>
+                        <li>yohaness@sebib.com</li>
+                    </ul>
+                </div>
+                <div className="copy_foot">Copyright Sebsib 2022</div>
+            </footer>
         </div>
     )
 }

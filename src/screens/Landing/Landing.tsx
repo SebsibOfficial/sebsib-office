@@ -18,18 +18,22 @@ export default function Landing () {
           return "/dashboard";
         }
       }
+      function scrollTo (to:string) {
+        const section = document.querySelector(to);
+        section?.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+      };
     return (
         <div>
             <nav>
                 <div className="logo_land">
-                    <img src={Logo} alt=""/>
+                <Link to={'/'} onClick={() => scrollTo('#start')}><img src={Logo} alt=""/></Link>
                 </div>
                 <div className="list_cont">
-                    <div className="list_item">ስለ እኛ</div>
+                <Link to={'/'}><div className="list_item">ስለ እኛ</div></Link>
                     <div className="list_item netela">፣</div>
                     <Link to={'/pricing'}><div className="list_item">ዋጋችን</div></Link>
                     <div className="list_item netela">፣</div>
-                    <div className="list_item">አግኙን</div>
+                    <Link to={'/'} onClick={() => scrollTo('#contact-us')}><div className="list_item">አግኙን</div></Link>
                     <div className="list_item netela">፣</div>
                     <Link to={toWhere()} state={true}><div className="list_item">ይግቡ</div></Link>
                     <div className="list_item netela">፣</div>
@@ -40,7 +44,7 @@ export default function Landing () {
                     <span id='eng'>EN</span>
                 </div>
             </nav>
-            <section>
+            <section id='start'>
                 <div className='content'>
                     <div className='headline' id='first_page_headline'>
                         <div className="header-text" id='first_page_header_text'>
@@ -74,8 +78,17 @@ export default function Landing () {
                     </section>
                 ))
             }
-            <footer>
-                
+            <footer id='contact-us'>
+                <div className="contact_foot">
+                    <h1>አግኙን</h1>
+                    <ul>
+                        <li>+251920642556</li>
+                        <li>info@sebib.com</li>
+                        <li>yoseph@sebib.com</li>
+                        <li>yohaness@sebib.com</li>
+                    </ul>
+                </div>
+                <div className="copy_foot">Copyright Sebsib 2022</div>
             </footer>
         </div>
     )
