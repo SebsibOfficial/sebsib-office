@@ -33,6 +33,7 @@ export default function Register () {
               'name': name,
               'father_name': Fname,
               'email': email,
+              'org': org,
               'phone': phone,
               'package': pkg
             }
@@ -77,13 +78,13 @@ export default function Register () {
                     <input value={phone} type="tel" name="phone" id="em" onChange={(e) => setPhone(e.target.value)} required/>
                   </div>
                   <div className="input_form">
-                    <label htmlFor="organization">የድርጅት ስም</label>
+                    <label htmlFor="organization">የድርጅት ወይም የተጠቃሚው ስም</label>
                     <input value={org} type="text" name="organization" id="org_n" onChange={(e) => setOrg(e.target.value)} required/>
                   </div>
                   <div className="input_form">
                     <label htmlFor="package">የጥቅል ዓይነት</label>
                     <select value={pkg} name="package" id="pk" onChange={(e) => setPackage(e.target.value)} required>
-                      <option value="">Choose Package</option>
+                      <option value="">ጥቅል ይምረጡ</option>
                       <option value="free-trail">Free Trail</option>
                       <option value="standard" disabled>Standard</option>
                       <option value="premium" disabled>Premium</option>

@@ -1,28 +1,9 @@
 import './Landing.css';
-import Logo from '../../assets/logo.png';
 import ILU1 from '../../assets/ill1.svg';
 import LandingData from './landing_content';
-import { Link } from 'react-router-dom';
-import { decodeJWT } from '../../utils/helpers';
-import { useAuth } from '../../states/AuthContext';
 import Nav from './Nav/Nav';
 
 export default function Landing () {
-    const {token, setAuthToken} = useAuth();
-    function toWhere () {
-        if (token == "")
-          return "/login";
-        else if (decodeJWT(token as string).exp < new Date().getTime() / 1000) {
-          setAuthToken(""); return "/login";
-        }
-        else {
-          return "/dashboard";
-        }
-      }
-      function scrollTo (to:string) {
-        const section = document.querySelector(to);
-        section?.scrollIntoView( { behavior: 'smooth', block: 'start' } );
-      };
     return (
         <div>
             <Nav/>
