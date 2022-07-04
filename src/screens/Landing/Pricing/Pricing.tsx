@@ -1,11 +1,19 @@
+import { useEffect } from 'react';
 import '../Landing.css';
 import Nav from '../Nav/Nav';
 
 export default function Pricing () {
+    function scrollTo(to: string) {
+		const section = document.querySelector(to);
+		section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	};
+    useEffect(() => {
+        scrollTo('#price-top');
+    },[])
     return (
-        <div>
+        <>
             <Nav/>
-            <section className='price_section'>
+            <section className='price_section' id='price-top'>
                 <div className='title'>
                     <div className='title_box'>
                         ጥቅሎች
@@ -88,18 +96,6 @@ export default function Pricing () {
                     </div>
                 </div>
             </section>
-            <footer id='contact-us'>
-                <div className="contact_foot">
-                    <h1>አግኙን</h1>
-                    <ul>
-                        <li>+251920642556</li>
-                        <li>info@sebib.com</li>
-                        <li>yoseph@sebib.com</li>
-                        <li>yohaness@sebib.com</li>
-                    </ul>
-                </div>
-                <div className="copy_foot">Copyright Sebsib 2022</div>
-            </footer>
-        </div>
+        </>
     )
 }

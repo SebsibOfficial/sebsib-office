@@ -2,8 +2,20 @@ import './Landing.css';
 import ILU1 from '../../assets/ill1.svg';
 import LandingData from './landing_content';
 import Nav from './Nav/Nav';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function Landing () {
+    let location = useLocation();
+    
+    function scrollTo(to: string) {
+		const section = document.querySelector(to);
+		section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	};
+    useEffect(() => {
+        if (location.state)
+            scrollTo('#contact-us')
+    },[])
     return (
         <div>
             <Nav/>
@@ -47,6 +59,7 @@ export default function Landing () {
                     <h6>+251920642556</h6>
                     <h6>info@sebib.com</h6>
                     <h6>yoseph@sebib.com</h6>
+                    <h6>kirubel@sebib.com</h6>
                     <h6>yohaness@sebib.com</h6>
                 </div>
             </footer>
