@@ -9,6 +9,7 @@ import { NotifContext } from "../../states/NotifContext";
 import { DeleteSurvey, GetMember, GetResponseList } from "../../utils/api";
 import './View_Survey.css';
 import { translateIds } from "../../utils/helpers";
+import * as XLSX from "xlsx";
 
 interface StateInterface {
   hash: string,
@@ -64,6 +65,12 @@ export default function View_Survey () {
     }
   },[location.state]);
   
+  const exportToXLSX = (Jdata:any, fileName:string) => {
+    const ws = XLSX.utils.aoa_to_sheet(Jdata);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    XLSX.writeFile(wb, `${fileName}.xlsx`);
+  }
+
   async function loadResponses () {
     var res = await GetResponseList(params.sid as string);
     if (res.code == 200) {
@@ -118,6 +125,29 @@ export default function View_Survey () {
     return "Choice";
   }
 
+  function formatData (questions: Question[], responses: Response[]) {
+    var rows:any[][] = [[]];
+    var queses:string[] = [];
+    rows.push([state.state.name + ' Generated Report'])
+    rows.push([" "]);
+    queses.push("Enumrator Name");
+    queses.push("Sent Date");
+    questions.forEach((question:Question) => {
+      queses.push(question.questionText)
+    });
+    rows.push(queses);
+    responses.forEach((response:Response) => {
+      let anses:any[] = [];
+      anses.push(response.enumratorName);
+      anses.push(response.sentDate);
+      response.answers.forEach((answer:Answer) => {
+        anses.push(answer.answer);
+      })
+      rows.push(anses);
+    })
+    return rows;
+  }
+
   return (
     <Col className="veiw-survey">
       <Row className="g-0 mb-3" style={{'margin': 'auto'}}>
@@ -125,6 +155,10 @@ export default function View_Survey () {
           <Sb_Text font={32} weight={600}>{state.state.name}</Sb_Text>
         </Col>
         <Col className='text-end'>
+          <Button style={{'marginRight': '2em'}} variant="primary" size="sm" 
+          onClick={() => exportToXLSX(formatData(questions, responses), state.state.name)}>
+            <Sb_Text font={12} color="--lightGrey">Download Excel</Sb_Text>
+          </Button>
           <Button variant="danger" size="sm" onClick={() => setModalState(true)}>
             <Sb_Text font={12} color="--lightGrey">Delete Survey</Sb_Text>
           </Button>
@@ -165,29 +199,6 @@ export default function View_Survey () {
                   </tr>
                 )))
               }
-              {/* <tr>
-                <td>1</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td colSpan={2}>Larry the Bird</td>
-                <td colSpan={3}>@twitter</td>
-              </tr> */}
             </tbody>
           </Table>
         </Col>
