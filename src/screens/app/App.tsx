@@ -15,11 +15,12 @@ import {AuthContext} from '../../states/AuthContext';
 import { useContext, useState } from 'react';
 import useLocalStorageState from 'use-local-storage-state';
 import { decodeJWT } from '../../utils/helpers';
+import CryptoJS from 'crypto-es';
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>('token', );  
-  // TODO change the common header to Auth, and it should have an ecrypted token
-  axios.defaults.headers.common['auth-token'] = token as string;
+  var cipher = CryptoJS.AES.encrypt(JSON.stringify({"PLATFORM_ID" : 'SEBSIB_OFFICE_1', "JWT" : token as string}),process.env.REACT_APP_PRIVATE_KEY as string)
+  axios.defaults.headers.common['Authorization'] = cipher as any;
 
   function toWhere () {
     if (token == "")
