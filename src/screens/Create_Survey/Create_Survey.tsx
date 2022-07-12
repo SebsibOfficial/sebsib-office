@@ -5,6 +5,7 @@ import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Question, { ActionType, Payload } from "../../components/Sb_Question/Sb_Question";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
+import { CriticalContext, useCritical } from '../../states/CriticalContext';
 import { CreateSurvey } from "../../utils/api";
 import { generateId } from "../../utils/helpers";
 
@@ -44,6 +45,13 @@ export default function Create_Survey () {
   const [questionsData, setQuestionsData] = useState<Payload[]>([]);
   const [surveyName, setSurveyName] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
+  const {page, setCriticalpage} = useCritical();
+
+  useEffect(() => {
+    if (surveyName != "") {
+      setCriticalpage("CREATE_SURVEY");
+    }
+  },[surveyName])
 
   /*------------- METHODS -------------- */
   function addEditHandler (payload: Payload, actionType: ActionType) {

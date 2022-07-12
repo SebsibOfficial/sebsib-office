@@ -22,7 +22,7 @@ export default function Sb_List_Item (props:Props) {
     if (props.compType === 'REMOVE') {
         return (
             <div className='d-flex sb-list-item list-remove'>
-                <div className='d-inline-flex align-items-center' style={{'overflowWrap':'break-word'}}>
+                <div className='d-inline-flex align-items-center' style={{'overflowWrap':'anywhere'}}>
                     <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 
                     style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>
                     <Sb_Text font={16}>{props.text}</Sb_Text>
@@ -35,7 +35,7 @@ export default function Sb_List_Item (props:Props) {
     else if (props.compType === 'SELECT' ) {
         return (
             <div className='d-flex sb-list-item list-select'>
-                <div className='d-inline-flex align-items-center' style={{'overflowWrap':'break-word'}}>
+                <div className='d-inline-flex align-items-center' style={{'overflowWrap':'anywhere'}}>
                     {/* There is something confusing in this component, it is returning the opposite. So i adapted. */}
                     <Sb_Checkbox default={defaultSelectValue} 
                     onChange={(checkState:boolean) => props.onAction(props._id, checkState ? 'UNSELECTED' : 'SELECTED', props.text)}/> 
@@ -48,7 +48,7 @@ export default function Sb_List_Item (props:Props) {
     }
     else if (props.compType === 'DISPLAY' ) {
         return (
-            <div className='d-flex sb-list-item list-display' style={{'overflowWrap':'break-word'}}
+            <div className='d-flex sb-list-item list-display' style={{'overflowWrap':'anywhere'}}
              onClick={() => props.onAction(props._id, "CLICK", props.text)}>
                 <div className='d-inline-flex align-items-center'>
                     <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 

@@ -12,15 +12,18 @@ import { NotifProvider } from '../../states/NotifContext';
 import './App.css';
 import axios from 'axios';
 import {AuthContext} from '../../states/AuthContext';
-import { useContext, useState } from 'react';
+import { CriticalContext } from '../../states/CriticalContext';
 import useLocalStorageState from 'use-local-storage-state';
 import { decodeJWT } from '../../utils/helpers';
 import Landing from '../Landing/Landing';
 import Pricing from '../Landing/Pricing/Pricing';
 import Register from '../Landing/Register/Register';
+import { useState } from 'react';
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>('token', );  
+  const [page, setCriticalpage] = useState<string>('');
+
   axios.defaults.headers.common['auth-token'] = token as string;
 
   function toWhere () {
@@ -37,6 +40,7 @@ function App() {
   return (
     <div className='parent-screen'>
       <AuthContext.Provider value={{token, setAuthToken}}>
+      <CriticalContext.Provider value={{page, setCriticalpage}}>
       <Routes>
         <Route path='/' element={<div><Outlet/></div>}>
           {/* <Route index element={<div>Hello<br></br><Link to={toWhere()} state={true}>Login</Link></div>}/> */}
@@ -63,6 +67,7 @@ function App() {
           <Route path="*" element={<main style={{ padding: "1rem" }}><p>404 innit</p></main>}/>
         </Route>
       </Routes>
+      </CriticalContext.Provider>
       </AuthContext.Provider>
     </div>
   );
