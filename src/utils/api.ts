@@ -23,7 +23,6 @@ export async function login(email: string, password: string):Promise<ResponseInt
 }
 
 export async function GetMemberList(orgId: string):Promise<ResponseInterface>{
-  await WAIT(1000);
   try {
     var result = await axios.get('get/memberlist/'+orgId);
     return {code: result.status, data: result.data};
@@ -139,7 +138,6 @@ export async function AddMember(body: AddEditMemberInterface):Promise<ResponseIn
 }
 
 export async function DeleteMember(id: string):Promise<ResponseInterface>{
-  await WAIT(1000);
   try {
     var result = await axios.delete('delete/member/'+id);
     return {code: result.status, data: result.data};
@@ -149,7 +147,6 @@ export async function DeleteMember(id: string):Promise<ResponseInterface>{
 }
 
 export async function RemoveMemberFromProject(id: string, projId: string):Promise<ResponseInterface>{
-  await WAIT(1000);
   try {
     var result = await axios.patch('patch/removemember/'+projId+'/'+id);
     return {code: result.status, data: result.data};
@@ -159,7 +156,6 @@ export async function RemoveMemberFromProject(id: string, projId: string):Promis
 }
 
 export async function AddMemberToProject(projId: string, body: string[]):Promise<ResponseInterface>{
-  await WAIT(1000);
   try {
     var result = await axios.patch('patch/addmembers/'+projId, {members: body});
     return {code: result.status, data: result.data};
@@ -169,7 +165,6 @@ export async function AddMemberToProject(projId: string, body: string[]):Promise
 }
 
 export async function DeleteProject(id: string):Promise<ResponseInterface>{
-  await WAIT(1000);
   try {
     var result = await axios.delete('delete/project/'+id);
     return {code: result.status, data: result.data};
@@ -198,7 +193,6 @@ export async function CreateSurvey(pid: string, body: FinalPayload):Promise<Resp
 }
 
 export async function DeleteSurvey(pid: string, sid: string):Promise<ResponseInterface>{
-  await WAIT(1000);
   try {
     var result = await axios.delete('delete/survey/'+pid+'/'+sid);
     return {code: result.status, data: result.data};
