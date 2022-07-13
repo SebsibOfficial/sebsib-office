@@ -15,7 +15,7 @@ export default function Sb_Alert (props:Props) {
     
     return (
         <>
-        {(parseInt(ac as string) + 1) < 5 && <Alert id={id} className='pe-4 p-3' style={{'fontSize':'12px','borderRadius':'0px'}} variant='dark' dismissible 
+        {(parseInt(ac as string) + 1) < 5 && <Alert id={id} className='sb-alert' style={{'fontSize':'12px','borderRadius':'0px'}} variant='dark' dismissible 
         onClick={() => dismiss(id)}>
             {props.children}
         </Alert>
