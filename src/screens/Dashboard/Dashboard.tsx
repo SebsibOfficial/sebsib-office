@@ -3,8 +3,9 @@ import { faArchive, faCog, faThLarge, faUsers } from '@fortawesome/free-solid-sv
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AnySrvRecord } from 'dns';
 import { useContext, useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Alert } from 'react-bootstrap';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import Sb_Alert from '../../components/Sb_ALert/Sb_Alert';
 import Sb_Container from '../../components/Sb_Container/Sb_Container';
 import Sb_Header from '../../components/Sb_Header/Sb_Header';
 import Sb_List from '../../components/Sb_List/Sb_List';
@@ -256,6 +257,7 @@ export function Dashboard_Landing () {
             <Row>
               <Col>
                 <div className='dash-cols dash-projects'>
+                <Sb_Alert>Welcome to Sebsib, this page shows your recently opened projects, surveys and recently added responses. Click the items to see what is inside. These tips will disappear after you get used to the system.</Sb_Alert>
                   <Row className='g-0 mb-2'>
                     <Col md="10">
                       <Sb_Text font={16}>Recently Opened Projects</Sb_Text>
@@ -344,6 +346,7 @@ export function Dashboard_Landing () {
                 </Col>
               </Row>
               <Row>
+              <Sb_Alert>This is the list of enumrators / collectors in your organization</Sb_Alert>
                 <Sb_Container borderDir='HORIZONTAL' className='p-3'>
                 {
                   memberLoading ? <Sb_Loader/> : <Sb_List items={members} listType="MEMBER" compType='DISPLAY' onAction={(id, ac) => console.log()}/>

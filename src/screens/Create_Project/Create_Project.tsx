@@ -9,6 +9,7 @@ import { CreateProject, GetMemberList } from "../../utils/api";
 import { NotifContext } from "../../states/NotifContext";
 import { useAuth } from "../../states/AuthContext";
 import Sb_Loader from "../../components/Sb_Loader";
+import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 
 class CreateProjectPayload {
 	constructor (id: string, pn: string, en: string[]) {
@@ -92,13 +93,14 @@ export default function Create_Project () {
 		pageLoading ? <Sb_Loader full/> :
 		<Col>
 			<Row className="mb-4" style={{'width':'30%'}}>
-        <Col>
+				<Sb_Alert>Enter the project name and select the enumrators to be involved.</Sb_Alert>
+        		<Col>
 					<Form.Group className="mb-3" controlId="LoginEmail">
 						<Form.Label><Sb_Text font={16}>Project Name</Sb_Text></Form.Label>
 						<Form.Control size="sm" type="text" placeholder="Name" onChange={(e) => setProjectname(e.target.value)}/>
 					</Form.Group>
-        </Col>
-      </Row>
+       			</Col>
+      		</Row>
 			<Row style={{'width':'30%'}}>
 				<Col className="d-block">
 					<Sb_Text font={16}>Enumerators</Sb_Text>

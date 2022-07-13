@@ -1,6 +1,7 @@
 import { useContext, useEffect, useReducer, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_List from "../../components/Sb_List/Sb_List";
 import { actionType } from "../../components/Sb_List_Item/Sb_List_Item";
 import Sb_Loader from "../../components/Sb_Loader";
@@ -154,6 +155,9 @@ export default function Add_Modify_Member(props:Props) {
     pageLoading ? <Sb_Loader full/> :
     <Col>
       <Row className="mb-4">
+      <Sb_Alert>Enter the enumrator name, email, username and the projects they will be involved in, then click 
+        {props.pageType === 'ADD' ? <><b> Add Member</b> to create a new member</> : <><b> Save Changes</b> to save the new changes</>}   
+      </Sb_Alert>
         <Col md="3" className="me-4">
 					<Form.Group className="mb-3" controlId="AddMemberName">
 						<Form.Label><Sb_Text font={16}>Member Name</Sb_Text></Form.Label>

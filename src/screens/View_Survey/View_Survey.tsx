@@ -10,6 +10,7 @@ import { DeleteSurvey, GetMember, GetResponseList } from "../../utils/api";
 import './View_Survey.css';
 import { translateIds } from "../../utils/helpers";
 import * as XLSX from "xlsx";
+import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 
 interface StateInterface {
   hash: string,
@@ -151,6 +152,7 @@ export default function View_Survey () {
   return (
     <Col className="veiw-survey">
       <Row className="g-0 mb-3" style={{'margin': 'auto'}}>
+        <Sb_Alert>Hey</Sb_Alert>
         <Col>
           <Sb_Text font={32} weight={600}>{state.state.name}</Sb_Text>
         </Col>

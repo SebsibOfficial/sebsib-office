@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Question, { ActionType, Payload } from "../../components/Sb_Question/Sb_Question";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
@@ -103,6 +104,10 @@ export default function Create_Survey () {
 
   return (
     <Col>
+      <Sb_Alert>To create a survey first enter the survey name, then fill out the questions, choices and the question type. 
+        After creating a question you must <b>Add</b> it. When you want to create more question click the <b>New Question</b> button below the questions.
+        When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
+        </Sb_Alert>
       <Row>
         <Col md="3">
           <Form.Group className="mb-3" controlId="LoginEmail">

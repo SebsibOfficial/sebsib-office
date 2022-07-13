@@ -41,7 +41,10 @@ export default function Login() {
 		.then((result:any) => {
 			if (result.code == 200) {
 				// Set token to state
-				localStorage.setItem('rm', '0');
+				var ac = localStorage.getItem('access_count');
+				localStorage.getItem('access_count') != null ? 
+				localStorage.setItem('access_count', (parseInt(ac as string) + 1).toString()) : 
+				localStorage.setItem('access_count', '1');
 				setAuthToken(result.data.token as string);				
 				// Navigate
 				setTimeout(() => navigate('/dashboard', { state:true }), 50);				
