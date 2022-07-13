@@ -24,3 +24,21 @@ td {
 ::-webkit-scrollbar-thumb {
   background-color: var(--primary);
 }
+
+.form {
+  background-color: white;
+  border: 1px solid #80808042;
+  font-family: 'HelveticaNeue';
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.answer-form {
+  flex-direction: column;
+}
+
+.text-answer {
+  border-bottom: 2px solid;
+  margin-top: 2em !important;
+  width: 70% !important;
+}

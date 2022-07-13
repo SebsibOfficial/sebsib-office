@@ -1,7 +1,7 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import { Button, Col, Collapse, Row, Table } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
@@ -58,6 +58,7 @@ export default function View_Survey () {
   const [pageLoading, setPageLoading] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [responses, setResponses] = useState<Response[]>([]);
+  const [collapse, setCollapse] = useState(false);
 
   // Prevents routing from the URL
   useEffect(() => {
@@ -152,11 +153,15 @@ export default function View_Survey () {
   return (
     <Col className="veiw-survey">
       <Row className="g-0 mb-3" style={{'margin': 'auto'}}>
-        <Sb_Alert>Hey</Sb_Alert>
+        <Sb_Alert>This where you can view the gathered data, not only view but <b>Export</b> it to Excel also. You can <b>Delete</b> the survey and also view the questions and choices of the survey by clicking the <b>View Questionnaire</b> button</Sb_Alert>
         <Col>
           <Sb_Text font={32} weight={600}>{state.state.name}</Sb_Text>
         </Col>
         <Col className='text-end'>
+          <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
+          onClick={() => setCollapse(!collapse)}>
+            <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Questionnaire" : "View Questionnaire"}</Sb_Text>
+          </Button>
           <Button style={{'marginRight': '2em'}} variant="primary" size="sm" 
           onClick={() => exportToXLSX(formatData(questions, responses), state.state.name)}>
             <Sb_Text font={12} color="--lightGrey">Download Excel</Sb_Text>
@@ -168,6 +173,32 @@ export default function View_Survey () {
       </Row>
       <Row>
         <Col>
+          <Collapse in={collapse}>
+          <Row className="form g-0 mb-4 p-4">
+            {
+              questions.map((question:Question, index:number) => (
+                <Col md="6" className="pe-4 mb-4">
+                  <Row className="question-form mb-2 pe-4">
+                    <Col>
+                      {(index + 1)+". "} <b style={{'color':'var(--primary)'}}>{(question.hasShowPattern ? "[Depends on a previous response]" : "")}</b> {question.questionText} 
+                    </Col>
+                  </Row>
+                  <Row className="answer-form g-0">
+                    {
+                      translateIds('ID', question.inputType) !== "TEXT" ?
+                      question.options.map((option:any, letter:number) => (
+                        <Col className="an-answer mb-1">
+                          { String.fromCharCode(letter + 65)+". "+option.text}
+                        </Col>
+                      )) :
+                      <Col className="an-answer mb-1 text-answer"></Col>
+                    }
+                  </Row>
+                </Col>
+              ))
+            }
+          </Row>
+        </Collapse>
           <Table bordered hover responsive>
             <thead>
               <tr>
