@@ -19,12 +19,13 @@ import Landing from '../Landing/Landing';
 import Pricing from '../Landing/Pricing/Pricing';
 import Register from '../Landing/Register/Register';
 import { useState } from 'react';
+import CryptoJS from 'crypto-es';
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>('token', );  
-  const [page, setCriticalpage] = useState<string>('');
-
-  axios.defaults.headers.common['auth-token'] = token as string;
+  const [page, setCriticalpage] = useState<string>(''); 
+  var cipher = CryptoJS.AES.encrypt(JSON.stringify({"PLATFORM_ID" : 'SEBSIB_OFFICE_1', "JWT" : token as string}),process.env.REACT_APP_PRIVATE_KEY as string)
+  axios.defaults.headers.common['Authorization'] = cipher as any;
 
   function toWhere () {
     if (token == "")
