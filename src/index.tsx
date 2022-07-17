@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";
 import './index.css';
-import App from './screens/App/App';
+import App from './screens/app/App';
 import './custom.scss';
 import axios from 'axios';
 import {AuthContext} from './states/AuthContext';
