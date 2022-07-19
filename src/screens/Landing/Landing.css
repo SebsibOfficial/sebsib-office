@@ -54,6 +54,7 @@ nav a {
     align-items: center;
     padding-right: 1em;
     font-weight: 900;
+    cursor: pointer;
 }
 #amh {
     padding: 0.5em;
@@ -61,7 +62,7 @@ nav a {
 }
 #eng {
     padding: 0.5em;
-    opacity: 0.3;
+    /* opacity: 0.3; */
 }
 .netela {
     font-size: 1.5em;
