@@ -32,5 +32,20 @@
   "seventh_page": {
     "headline": "Available",
     "subtext": "We are always available to provide training on how to use Sebsib and answer all of your inquiries."
+  },
+  "pricing": {
+    "packages": "Packages",
+    "monthly": "Monthly",
+    "yearly": "Yearly"
+  },
+  "register": {
+    "name": "Name",
+    "father's_name": "Father's Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "org": "Company or Service User Name",
+    "package_type": "Package Type",
+    "choose_package": "Choose Package",
+    "thankyou_msg": "Thank you for registering. We will reachout by email shortly."
   }
 }

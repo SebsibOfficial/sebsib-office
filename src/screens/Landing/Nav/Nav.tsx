@@ -113,6 +113,7 @@ export default function Nav() {
           state={true}
           onClick={() => {
             menubar(false);
+            scrollTo("#contact-us");
           }}
         >
           <div className="list_item">{t("nav_items.contact_us")}</div>
