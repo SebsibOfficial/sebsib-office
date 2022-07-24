@@ -341,6 +341,12 @@ footer h1 {
 footer h6 {
   font-weight: 400;
 }
+footer a {
+  color: var(--primary);
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+}
 
 /* ################################################################################## */
 

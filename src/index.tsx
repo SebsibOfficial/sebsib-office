@@ -17,7 +17,7 @@ axios.defaults.baseURL =
 
 ReactDOM.render(
   <React.StrictMode>
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
