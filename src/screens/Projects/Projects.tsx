@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Container from "../../components/Sb_Container/Sb_Container";
 import Sb_List from "../../components/Sb_List/Sb_List";
 import { actionType } from "../../components/Sb_List_Item/Sb_List_Item";
@@ -216,6 +217,7 @@ export function Projects_Landing () {
     <Col md="10">
       <Row className="mb-4">
         <Col>
+        <Sb_Alert>This page is where you see your projects. You can see the enumrators involved and the surveys that are a part of the project. You can delete and create projects also add enumrators in a project. You can also create multiple surveys, and projects but it is according to you package.</Sb_Alert>
           <Button onClick={() => navigate('create-project', { state:true })}><Sb_Text font={16} color='--lightGrey'>Create Project</Sb_Text></Button>
         </Col>
       </Row>

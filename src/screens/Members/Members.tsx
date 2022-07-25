@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Member_Card from "../../components/Sb_Member_Card/Sb_Member_Card";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
@@ -107,6 +108,7 @@ export function Members_Landing () {
   <Col className="">
     <Row className="mb-4">
       <Col>
+      <Sb_Alert>On this page you can view each member / enumrator in your organization. You can <b>Remove</b> them by clicking on the red trash button or you can <b>View and Edit</b> them by clicking on their name. You can click <b>Create Member</b> to create a new member.</Sb_Alert>
         <Button onClick={() => navigate('add-member', { state:true })}><Sb_Text font={16} color='--lightGrey'>Add Member</Sb_Text></Button>
       </Col>
     </Row>

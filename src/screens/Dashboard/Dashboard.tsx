@@ -1,10 +1,11 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faArchive, faCog, faThLarge, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faArchive, faCog, faInfoCircle, faThLarge, faTrash, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AnySrvRecord } from 'dns';
 import { useContext, useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Button, Col, Row, Alert } from 'react-bootstrap';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import Sb_Alert from '../../components/Sb_ALert/Sb_Alert';
 import Sb_Container from '../../components/Sb_Container/Sb_Container';
 import Sb_Header from '../../components/Sb_Header/Sb_Header';
 import Sb_List from '../../components/Sb_List/Sb_List';
@@ -15,15 +16,20 @@ import Sb_Side_Nav from '../../components/Sb_Side_Nav/Sb_Side_Nav';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
+import { CriticalContext, useCritical } from '../../states/CriticalContext';
 import { GetMemberList, GetProjectList, GetRecentResponseList, GetSurveyListByOrg } from '../../utils/api';
 import { decodeJWT, validRoutes } from '../../utils/helpers';
 import './Dashboard.css';
+import Sb_Modal from '../../components/Sb_Modal/Sb_Modal';
 
 export default function Dashboard () {
   let location = useLocation();
   let navBack = useNavigate();
   const {notif} = useContext(NotifContext) as NotifContextInterface;
   const {token, setAuthToken} = useAuth();
+  const {page, setCriticalpage} = useCritical();
+  const [modalState, setModalState] = useState(false);
+
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -84,7 +90,17 @@ export default function Dashboard () {
     }
   }
 
+  function checkCritcal () {
+    if (page != ''){
+      setModalState(true);
+      return 0;
+    }
+    console.log("HERE")
+    goBack();
+  }
+
   return (
+    <>
     <Row className='dashboard-container g-0'>
       <Col md='2'>
         <Sb_Side_Nav name={decodeJWT(token as string).org_name}/>
@@ -92,9 +108,10 @@ export default function Dashboard () {
       <Col style={{'padding':'1em 4em', 'overflowX':'auto'}}>
         <Row className='g-0' style={{'marginBottom':'3em'}}>
           <Col>
+          {console.log(page)}
             <Sb_Header 
               header = {capitalizeFirst(getPageTitle().split("-").join(" "))} 
-              onBackClick = { () => goBack()}
+              onBackClick = { () => {checkCritcal()}}
               hideBackButton = { getPageTitle() === 'dashboard' ? true : false}
               notif = {notif}
             >
@@ -107,6 +124,27 @@ export default function Dashboard () {
         </Row>
       </Col>
     </Row>
+    {/* --------------------- Modal ---------------------------------------------------- */}
+    <Sb_Modal show={modalState} onHide={() => setModalState(false)} 
+     width={30}>
+      <>          
+          <div className="d-block text-center" style={{'fontSize':'4em'}}>
+            <FontAwesomeIcon icon={faInfoCircle}/>
+            {page == 'CREATE_SURVEY' && <Sb_Text font={20} weight={500} align="center">Are you sure you want to leave this page? Your survey will be lost.</Sb_Text>}
+          </div>
+          <div>
+            <Button variant="primary" size="sm" className="mt-3 float-start" 
+            onClick={() => {setModalState(false); goBack();setCriticalpage('');}}>
+              <Sb_Text font={16} color="--lightGrey">Leave</Sb_Text>
+            </Button>
+            <Button variant="secondary" size="sm" className="mt-3 float-end"  onClick={() => setModalState(false)}>
+              <Sb_Text font={16} color="--lightGrey">Cancel</Sb_Text>
+            </Button>
+          </div>
+      </>
+      
+    </Sb_Modal>
+    </>
   )
 }
 
@@ -256,6 +294,7 @@ export function Dashboard_Landing () {
             <Row>
               <Col>
                 <div className='dash-cols dash-projects'>
+                <Sb_Alert>Welcome to Sebsib, this page shows your recently opened projects, surveys and recently added responses. Click the items to see what is inside. These tips will disappear after you get used to the system.</Sb_Alert>
                   <Row className='g-0 mb-2'>
                     <Col md="10">
                       <Sb_Text font={16}>Recently Opened Projects</Sb_Text>
@@ -344,6 +383,7 @@ export function Dashboard_Landing () {
                 </Col>
               </Row>
               <Row>
+              <Sb_Alert>This is the list of enumrators / collectors in your organization</Sb_Alert>
                 <Sb_Container borderDir='HORIZONTAL' className='p-3'>
                 {
                   memberLoading ? <Sb_Loader/> : <Sb_List items={members} listType="MEMBER" compType='DISPLAY' onAction={(id, ac) => console.log()}/>

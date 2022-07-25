@@ -2,7 +2,7 @@ import { faIdBadge, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useContext, useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import logo from '../../assets/officeLogoBlack.svg';
 import Sb_Card from '../../components/Sb_Card/Sb_Card';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
@@ -41,7 +41,10 @@ export default function Login() {
 		.then((result:any) => {
 			if (result.code == 200) {
 				// Set token to state
-				localStorage.setItem('rm', '0');
+				var ac = localStorage.getItem('access_count');
+				localStorage.getItem('access_count') != null ? 
+				localStorage.setItem('access_count', (parseInt(ac as string) + 1).toString()) : 
+				localStorage.setItem('access_count', '1');
 				setAuthToken(result.data.token as string);				
 				// Navigate
 				setTimeout(() => navigate('/dashboard', { state:true }), 50);				
@@ -60,7 +63,7 @@ export default function Login() {
 		<div className='login-screen'>
 			<Row>
 				<Col>
-						<img src={logo} alt="Logo" />
+					<Link to={'/'}><img src={logo} alt="Logo" /></Link>
 				</Col>
 			</Row>
 			<Row style={{ 'justifyContent': 'center', 'minHeight': '80vh', 'alignContent': 'center' }}>
