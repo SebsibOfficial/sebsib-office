@@ -46,6 +46,8 @@
     "org": "Company or Service User Name",
     "package_type": "Package Type",
     "choose_package": "Choose Package",
-    "thankyou_msg": "Thank you for registering. We will reachout by email shortly."
-  }
+    "thankyou_msg": "Thank you for registering. We will reachout by email shortly.",
+    "regis": "Register"
+  },
+  "css_sub_text": "light_weight"
 }

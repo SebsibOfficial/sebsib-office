@@ -154,7 +154,7 @@ export default function Register() {
           </div>
           <div style={{ textAlign: "center", padding: "1.5em" }}>
             <button onClick={() => registerRequest()} disabled={btnLoading}>
-              {btnLoading ? <Sb_Loader /> : "ተመዝገቡ"}
+              {btnLoading ? <Sb_Loader /> : t('register.regis')}
             </button>
           </div>
           <div

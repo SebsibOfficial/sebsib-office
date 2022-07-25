@@ -55,23 +55,23 @@ export default function Nav() {
       <div className="options">
         <div className="list_cont">
           <Link to={"/"}>
-            <div className="list_item">{t("nav_items.about_us")}</div>
+            <div className={"list_item "+t("css_sub_text")}>{t("nav_items.about_us")}</div>
           </Link>
           <div className="list_item netela">፣</div>
           <Link to={"/pricing"}>
-            <div className="list_item">{t("nav_items.pricing")}</div>
+            <div className={"list_item "+t("css_sub_text")}>{t("nav_items.pricing")}</div>
           </Link>
           <div className="list_item netela">፣</div>
           <Link to={"/"} state={true} onClick={() => scrollTo("#contact-us")}>
-            <div className="list_item">{t("nav_items.contact_us")}</div>
+            <div className={"list_item "+t("css_sub_text")}>{t("nav_items.contact_us")}</div>
           </Link>
           <div className="list_item netela">፣</div>
           <Link to={toWhere()} state={true}>
-            <div className="list_item">{t("nav_items.login")}</div>
+            <div className={"list_item "+t("css_sub_text")}>{t("nav_items.login")}</div>
           </Link>
           <div className="list_item netela">፣</div>
           <Link to={"/register"}>
-            <div className="list_item" id="reg_but">
+            <div className={"list_item "+t("css_sub_text")} id="reg_but">
               {t("nav_items.register")}
             </div>
           </Link>

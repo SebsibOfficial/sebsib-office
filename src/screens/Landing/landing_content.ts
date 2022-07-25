@@ -19,8 +19,8 @@ const data = [
     illustration: I3,
   },
   {
-    headline: "fourth_page.headline",
-    subtext: "fourth_page.subtext",
+    headline: "sixth_page.headline",
+    subtext: "sixth_page.subtext",
     illustration: I5,
   },
   {
@@ -29,8 +29,8 @@ const data = [
     illustration: I1,
   },
   {
-    headline: "sixth_page.headline",
-    subtext: "sixth_page.subtext",
+    headline: "fourth_page.headline",
+    subtext: "fourth_page.subtext",
     illustration: I7,
   },
   {

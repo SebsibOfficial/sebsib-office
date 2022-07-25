@@ -29,7 +29,7 @@ export default function Landing() {
               {t("first_page_header")}
             </div>
           </div>
-          <div className="subtext" id="first_page_subtext">
+          <div className={"subtext "+t("css_sub_text")} id="first_page_subtext">
             {t("first_page_subtext")}
           </div>
         </div>
@@ -45,7 +45,7 @@ export default function Landing() {
                 {t(data.headline)}
               </div>
             </div>
-            <div className="subtext" id="first_page_subtext">
+            <div className={"subtext "+t("css_sub_text")} id="first_page_subtext">
               {t(data.subtext)}
             </div>
           </div>
@@ -57,13 +57,13 @@ export default function Landing() {
       <footer id="contact-us">
         <div className="contact_foot">
           <h1>{t("nav_items.contact_us")}</h1>
-          <h6>+251920642556</h6>
+          <h6>+251920642556 | +251973506446 | +251920747084</h6>
           <h6>info@sebib.com</h6>
           <h6>yoseph@sebib.com</h6>
           <h6>kirubel@sebib.com</h6>
           <h6>yohannes@sebib.com</h6>
           <a href="http://t.me/Blac_Milq" target="_blank">
-            <h5>Illustrations by Milq is Blaq</h5>
+            <h6>Illustrations by Milq is Blaq</h6>
           </a>
         </div>
       </footer>

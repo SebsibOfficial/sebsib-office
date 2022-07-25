@@ -3,9 +3,16 @@ section {
   height: 100vh;
   justify-content: center;
   background-color: white !important;
+  font-family: 'HelveticaNeue';
 }
 body {
   scroll-behavior: smooth;
+}
+.heavy_weight {
+  font-weight: 900 !important;
+}
+.light_weight {
+  font-weight: 400 !important;
 }
 /* ########################################################### */
 nav {
@@ -15,6 +22,7 @@ nav {
   padding: 2em;
   background-color: white;
   z-index: 9;
+  font-family: 'HelveticaNeue';
 }
 nav a {
   text-decoration: none;

@@ -46,6 +46,8 @@
     "org": "የድርጅት ወይም የተጠቃሚው ስም",
     "package_type": "የጥቅል ዓይነት",
     "choose_package":"ጥቅል ይምረጡ",
-    "thankyou_msg": "ስለተመዘገቡ እናመሰናለን፣ ኢሜል በቅርቡ ይደርሶታል።"
-  }
+    "thankyou_msg": "ስለተመዘገቡ እናመሰናለን፣ ኢሜል በቅርቡ ይደርሶታል።",
+    "regis":"ተመዝገቡ"
+  },
+  "css_sub_text": "heavy_weight"
 }
