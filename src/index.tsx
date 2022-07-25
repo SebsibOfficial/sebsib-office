@@ -8,6 +8,7 @@ import axios from "axios";
 import { AuthContext } from "./states/AuthContext";
 import './utils/i18n';
 
+
 axios.defaults.baseURL =
   process.env.NODE_ENV == "development"
     ? process.env.REACT_APP_DEV_API_URL
