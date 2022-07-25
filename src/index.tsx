@@ -15,6 +15,13 @@ axios.defaults.baseURL =
 //axios.defaults.baseURL = process.env.REACT_APP_PROD_API_URL;
 //axios.defaults.baseURL = "http://192.168.0.128:3000";
 
+// Removing the logs on build
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {}
+  console.error = () => {}
+  console.debug = () => {}
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Suspense fallback={<div></div>}>
