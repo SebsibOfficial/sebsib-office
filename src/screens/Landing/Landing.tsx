@@ -37,8 +37,8 @@ export default function Landing() {
           <img src={ILU1} />
         </div>
       </section>
-      {LandingData.map((data) => (
-        <section>
+      {LandingData.map((data, index) => (
+        <section key={index}>
           <div className="content">
             <div className="headline" id="first_page_headline">
               <div className="header-text" id="first_page_header_text">
