@@ -24,12 +24,18 @@ import { decodeJWT } from "../../utils/helpers";
 import Landing from "../Landing/Landing";
 import Pricing from "../Landing/Pricing/Pricing";
 import Register from "../Landing/Register/Register";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CryptoJS from "crypto-es";
+import { useTranslation } from "react-i18next";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
   const [page, setCriticalpage] = useState<string>("");
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    document.title = t("sebsib");
+  }, [t]);
 
   const header = JSON.stringify({
     PLATFORM_ID: "SEBSIB_OFFICE_1",
