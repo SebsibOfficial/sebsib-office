@@ -91,7 +91,7 @@ export default function Settings () {
         <div style={{'width':'70%'}}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="Select"><Sb_Text font={16}>Language</Sb_Text></Form.Label>
-            <Form.Select size="sm" id="Select" onChange={(e) => setLang(e.target.value)} value={lang}>
+            <Form.Select size="sm" id="Select" onChange={(e) => setLang(e.target.value)} value={lang} disabled={true}>
               <option value={"ENGLISH"}>English</option>
               <option value={"AMHARIC"}>አማርኛ</option>
             </Form.Select>
