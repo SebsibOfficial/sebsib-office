@@ -35,7 +35,7 @@ const Sb_Side_Nav_Item: React.FC<Props> = (props:Props) => {
   
   function logoutHandler () {
     setAuthToken('');
-    navigate(props.navItemData.path, { state: true });
+    navigate(props.navItemData.path, { state: {state: true, from: "main"} });
   }
 
   function checkCritcal () {

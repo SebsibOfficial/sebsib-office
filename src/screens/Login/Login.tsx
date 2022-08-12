@@ -1,7 +1,7 @@
 import { faIdBadge, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useContext, useEffect, useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import logo from '../../assets/officeLogoBlack.svg';
 import Sb_Card from '../../components/Sb_Card/Sb_Card';
@@ -10,6 +10,17 @@ import { login, ResponseInterface } from '../../utils/api';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import './Login.css';
 import Sb_Loader from '../../components/Sb_Loader';
+
+interface StateInterface {
+	hash: string,
+	key: string,
+	pathname: string,
+	search: string,
+	state: {
+		state: boolean,
+		from: string
+	}
+  }
 
 export default function Login() {
 	let location = useLocation();
@@ -32,6 +43,7 @@ export default function Login() {
 	const [password, setPassword] = useState("");
 	const [errNotice, setErrnotice] = useState(null);
 	const [btnloading, setBtnLoading] = useState(false);
+	const state = useLocation() as StateInterface;
 
 	/*------------- METHODS -------------- */
 	function loginHandler () {
@@ -69,11 +81,17 @@ export default function Login() {
 			<Row style={{ 'justifyContent': 'center', 'minHeight': '80vh', 'alignContent': 'center' }}>
 				<Col className='login-container' md="3">
 						<Row>
-								<Col className='login-tag'>
+								<Col className={state.state.from !== 'main' ? 'login-tag' : 'mb-2'}>
 									<FontAwesomeIcon icon={faIdBadge} style={{ 'fontSize': '2em', 'marginRight': '1rem', 'color': 'var(--primary)' }} />
 									<Sb_Text font={32} weight={500}>Log In</Sb_Text>
 								</Col>
 						</Row>
+						{
+							state.state.from === 'main' && 
+								<Alert variant='success'>
+									<Sb_Text>Successfully Logged Out</Sb_Text>
+								</Alert>
+						}
 						<Row>
 							<Col className='login-form-container'>
 								<Sb_Card className='w-100 p-4'>
