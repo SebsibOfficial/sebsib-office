@@ -124,7 +124,29 @@ export default function View_Survey () {
   }
 
   function getAnswer (id: string):string {
-    return "Choice";
+    var output:string[] = [];
+    if (typeof id === 'object') {
+      var ids:string[] = id;
+      questions.forEach((question) => {
+        question.options.forEach((option) => {
+          ids.forEach(ID => {
+            if (option._id == ID) output.push(option.text) 
+          })
+        })
+      })
+      return output.join(", ")
+    }
+    else if (typeof id === 'string') {
+      questions.forEach((question) => {
+        question.options.forEach((option) => {      
+          if (option._id == id){
+            output.push(option.text)
+          }
+        })
+      })
+      return output.join()
+    }
+    return 'Not found';
   }
 
   function formatData (questions: Question[], responses: Response[]) {
@@ -143,7 +165,7 @@ export default function View_Survey () {
       anses.push(response.enumratorName);
       anses.push(response.sentDate);
       response.answers.forEach((answer:Answer) => {
-        anses.push(answer.answer);
+        anses.push(getAnswer(answer.answer));
       })
       rows.push(anses);
     })
@@ -224,7 +246,7 @@ export default function View_Survey () {
                         <td key={answer._id}>
                           {
                             translateIds('ID', answer.inputType) === "CHOICE" || translateIds('ID', answer.inputType) === "MULTI-SELECT"
-                            ? getAnswer(translateIds('ID', answer.inputType) as string) : answer.answer
+                            ? getAnswer(answer.answer as string) : answer.answer
                           }
                         </td>
                       )))
