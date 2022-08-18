@@ -89,6 +89,7 @@ export default function Create_Survey () {
     setBtnLoading(true);
     var res = await CreateSurvey(projId, new FinalPayload(surveyName, questionsData));
     if (res.code == 200) {
+      setCriticalpage('');
       navigate('/dashboard/projects', {state: true});
     } else {
       console.log(res.data);
