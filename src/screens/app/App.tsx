@@ -27,6 +27,7 @@ import Register from "../Landing/Register/Register";
 import { useEffect, useState } from "react";
 import CryptoJS from "crypto-es";
 import { useTranslation } from "react-i18next";
+import NotFound from "../404/404";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
@@ -112,14 +113,7 @@ function App() {
                 <Route path="settings" element={<Settings />}></Route>
               </Route>
               <Route path="login" element={<Login />} />
-              <Route
-                path="*"
-                element={
-                  <main style={{ padding: "1rem" }}>
-                    <p>404 innit</p>
-                  </main>
-                }
-              />
+              <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
         </CriticalContext.Provider>
