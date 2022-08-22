@@ -135,7 +135,9 @@ export default function Sb_Question (props:Props) {
   }
 
   function getQuestion(id: string) {
-    return props.otherQuestions.filter((question) => question.id === id)[0];
+    if (props.otherQuestions.length < 1)
+      return {id: id, question: question, choices: choices, inputType: inputType, showPattern: showPattern}
+    return props.otherQuestions.filter((question) => question.id === id)[0] ?? {id: id, question: question, choices: choices, inputType: inputType, showPattern: showPattern};
   }
 
   return (
@@ -156,11 +158,11 @@ export default function Sb_Question (props:Props) {
                 <Form.Group>
                   <Form.Label><Sb_Text font={12}>Question</Sb_Text></Form.Label>
                   <textarea name="question" id="" cols={40} rows={5} className="question-text-area" style={{'fontSize':'12px', 'padding':'1em'}}
-                  onChange={(e) => setQuestion(e.target.value)}></textarea>
+                  onChange={(e) => setQuestion(e.target.value)} value={getQuestion(props.id).question}></textarea>
                 </Form.Group>
-                <div className={`mt-2 ${inputType === 'TEXT' ? 'd-none' : ''}`}>
+                <div className={`mt-2 ${getQuestion(props.id).inputType === 'TEXT' ? 'd-none' : ''}`}>
                   {
-                    choices.map((choice:Choice, index:number) => (
+                    getQuestion(props.id).choices.map((choice:Choice, index:number) => (
                       <Form.Group className="mb-3" controlId="ChoiceOption" key={index}>
                         <div className="d-flex justify-content-between align-items-center">
                           <Form.Label>                          
@@ -192,14 +194,14 @@ export default function Sb_Question (props:Props) {
                   <Form.Group className="mb-3">
                     <div className="d-flex justify-content-between">
                       <Sb_Text font={12}>Show Pattern</Sb_Text>
-                      <Sb_Checkbox disabled={isLast} default={`${showPattern.hasShow ? 'SELECTED' : 'UNSELECTED'}`}
+                      <Sb_Checkbox disabled={isLast} default={`${getQuestion(props.id).showPattern.hasShow ? 'SELECTED' : 'UNSELECTED'}`}
                       onChange={(state:boolean) => {showPatternChangeHandler("STATUS", state)}}/>
                     </div>
                   </Form.Group>
                   
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="QuesSelect"><Sb_Text font={12}>Show If Question...</Sb_Text></Form.Label>
-                    <Form.Select size="sm" id={"QuesSelect"+props.id} disabled = {!showPattern.hasShow}
+                    <Form.Select size="sm" id={"QuesSelect"+props.id} disabled = {!getQuestion(props.id).showPattern.hasShow}
                     onChange={(e) => showPatternChangeHandler("QUES", e.target.value)}>
                       <option>Choose...</option>
                       {
@@ -213,11 +215,11 @@ export default function Sb_Question (props:Props) {
                   
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="AnsSelect"><Sb_Text font={12}>Answer Is...</Sb_Text></Form.Label>
-                    <Form.Select size="sm" id={"AnsSelect"+props.id} disabled = {!showPattern.hasShow}
+                    <Form.Select size="sm" id={"AnsSelect"+props.id} disabled = {!getQuestion(props.id).showPattern.hasShow}
                     onChange={(e) => showPatternChangeHandler("ANS", e.target.value)}>
                       <option>Choose...</option>
                       {
-                        getQuestion(showPattern.showIfQues)?.choices.map((choice, index) => (
+                        getQuestion(getQuestion(props.id).showPattern.showIfQues)?.choices.map((choice, index) => (
                           <option key={index} value={choice._id}>Choice #{index + 1}</option>
                         ))
                       }
