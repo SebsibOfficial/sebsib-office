@@ -110,7 +110,9 @@ export default function Login() {
 											<Form.Group className="mb-3" controlId="LoginPassword">
 												<Form.Label><Sb_Text font={12}>Password</Sb_Text></Form.Label>
 												<Form.Control size="sm" type="password" placeholder="Password" 
-												autoComplete='new-password' value={password} onChange={(e) => setPassword(e.target.value)}/>
+												autoComplete='new-password' value={password} 
+												onKeyDown ={(e) => e.key == 'Enter' ? loginHandler() : null}
+												onChange={(e) => setPassword(e.target.value)}/>
 											</Form.Group>
 											{/* LOL autoComplete="off doesn't work anymore, this is a work around" */}
 											<input type="text" autoComplete='on' style={{'display':'none'}} /> 
