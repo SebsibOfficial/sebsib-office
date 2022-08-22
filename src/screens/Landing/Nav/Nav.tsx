@@ -43,6 +43,7 @@ export default function Nav() {
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+    localStorage.setItem("lng", lng);
   };
 
   return (
