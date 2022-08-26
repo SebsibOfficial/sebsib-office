@@ -1,0 +1,97 @@
+/* ########################################################### */
+.price_section {
+    padding-top: 2em;
+    flex-direction: column;
+    justify-content: unset;
+    align-items: center;
+  }
+  .title {
+    width: 20%;
+  }
+  .title_box {
+    font-size: 2.5em;
+    font-weight: 900;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    padding: 0.2em 1em;
+    border-radius: 20px;
+    background-color: rgb(80 80 117 / 5%);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+  .toggle_price {
+    font-size: 1.2em;
+    font-weight: 900;
+    display: flex;
+    justify-content: center;
+    margin-top: -2em;
+    margin-bottom: 1em;
+  }
+  #mth {
+    padding: 0em 1em;
+    opacity: 0.4;
+  }
+  #yr {
+    padding: 0em 1em;
+    opacity: 0.4;
+  }
+  .active_toggle_mth {
+    opacity: 1 !important;
+    border-right: 2px solid var(--primary);
+  }
+  .active_toggle_yr {
+    opacity: 1 !important;
+    border-left: 2px solid var(--primary);
+  }
+  .white {
+    background-color: #f8f8f8;
+    color: var(--secondary);
+  }
+  .black {
+    background-color: var(--secondary);
+    color: #f8f8f8;
+  }
+  .purple {
+    background-color: var(--primary);
+    color: #f8f8f8;
+  }
+  .yellow {
+    background-color: var(--yellow);
+    color: var(--secondary);
+  }
+  .op-3 {
+    opacity: 0.4;
+  }
+  .cards_prices {
+    width: 100%;
+    padding: 1em 5em;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .price_card {
+    width: 15%;
+    padding: 1em;
+    box-shadow: 0px 3px 6px rgb(0 0 0 / 16%);
+    border-radius: 10px;
+  }
+  .price_card span {
+    height: 20px;
+    width: 20px;
+    display: block;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: inset 0px 3px 6px rgb(0 0 0 / 16%);
+  }
+  .card_content {
+    text-align: center;
+    font-family: "HelveticaNeue";
+    margin: 0.5em 0;
+  }
+  .card_title {
+    font-size: 1.7em;
+    font-weight: 900;
+  }
+  .card_list {
+    text-align: left;
+  }
+  /* ################################################################################### */

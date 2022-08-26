@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "../Landing.css";
+import "./Pricing.css";
 import Nav from "../Nav/Nav";
 
 export default function Pricing() {
@@ -14,11 +15,13 @@ export default function Pricing() {
 
   const { t } = useTranslation();
   return (
-    <>
+    <div style={{'overflowX':'hidden'}}>
       <Nav />
       <section className="price_section" id="price-top">
         <div className="title">
-          <div className="title_box">{t("pricing.packages")}</div>
+          <div id="title" style={{'color':'var(--secondary)','textAlign':'center'}}>
+            <p>PACKAGES</p>
+          </div>
           <div className="toggle_price">
             <span id="mth" className="active_toggle_mth">
               {t("pricing.monthly")}
@@ -99,6 +102,6 @@ export default function Pricing() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

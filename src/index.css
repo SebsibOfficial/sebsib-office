@@ -52,3 +52,19 @@ code {
    url("./assets/fonts/HelveticaNeue-Medium.woff") format("opentype");
   font-weight:500
 }
+
+/* The Teko Fonts */
+
+@font-face {
+  font-family: "Teko";
+  src: local("Teko"),
+   url("./assets/fonts/Teko-Medium.woff") format("opentype");
+  font-weight:400
+}
+
+@font-face {
+  font-family: "Teko";
+  src: local("Teko"),
+   url("./assets/fonts/Teko-Bold.woff") format("opentype");
+  font-weight: 900;
+}
