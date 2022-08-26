@@ -77,7 +77,7 @@ export default function Nav() {
             </div>
           </Link>
           <div className="list_item netela">፣</div>
-          <a href="#">
+          <a href="/register">
             <div className={"list_item "+t("css_sub_text")} id="down_but">
               Download Sebsib
             </div>

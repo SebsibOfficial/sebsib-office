@@ -37,10 +37,13 @@ export default function Landing() {
           <p id="p_1">Quality Data</p>
           <p id="p_2">For All</p>
         </div>
-        <div id="download_app">
-          <FontAwesomeIcon icon={faGooglePlay as IconProp} style={{'marginRight':'0.5rem'}}/>
-          Download App
-        </div>
+        
+          <div id="download_app">
+          <Link to="/register" style={{'color':'var(--secondary)', 'textDecoration':'none'}}>
+            <FontAwesomeIcon icon={faGooglePlay as IconProp} style={{'marginRight':'0.5rem'}}/>
+            Download App
+            </Link>
+          </div>
       </section>
       <section id="second">
         <div className="main">
