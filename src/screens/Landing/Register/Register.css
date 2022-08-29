@@ -1,0 +1,73 @@
+.reg_sec {
+    justify-content: flex-end;
+    padding-top: 3em;
+    display: flex;
+    padding-right: 15em;
+    background-size: 75%;
+  }
+  .reg_form {
+    width: 40%;
+    z-index: 2;
+  }
+  .reg_header_text {
+    font-size: 2.5em;
+    font-weight: 900;
+    text-align: center;
+    padding: 0.5em;
+    color: var(--primary);
+    letter-spacing: 1px;
+  }
+  form button {
+    background-color: var(--primary);
+    color: white;
+    border: 0;
+    font-size: 1.2em;
+    font-weight: 400;
+    padding: 0.5em 1em;
+    border-radius: 3px;
+  }
+  .input_form {
+    display: grid;
+    font-size: 1em;
+    font-weight: 400;
+    width: 100%;
+  }
+  .fill_form {
+    display: flex;
+    flex-wrap: wrap;
+    font-family: "HelveticaNeue";
+  }
+  input {
+    width: 100%;
+    border: 1px solid rgb(80 80 117 / 50%);
+  }
+  input:focus-visible {
+    border: 2px solid var(--primary) !important;
+  }
+  #fn,
+  #nm {
+    width: 45%;
+  }
+  .side_text {
+    padding-left: 1em;
+    font-family: 'Teko';
+    font-weight: 900;
+    padding-top: 1em;
+    font-size: 7em;
+    max-width: 70%;
+    line-height: 0.8em;
+    padding-right: 1em;
+  }
+  .confirm {
+    background-color: #1a7b1a;
+    padding: 0.5em;
+    text-align: center;
+    color: white;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  .confirm span {
+    float: right;
+    margin-right: 0.5em;
+    cursor: pointer;
+  }

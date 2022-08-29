@@ -1,4 +1,5 @@
 import "../Landing.css";
+import "./Register.css";
 import { useState } from "react";
 import Sb_Loader from "../../../components/Sb_Loader";
 import Nav from "../Nav/Nav";
@@ -61,12 +62,16 @@ export default function Register() {
     }
   }
   return (
-    <div>
+    <div style={{'overflowX':'hidden'}}>
       <Nav />
       <section className="reg_sec">
-        <div className="overlay"></div>
+        <div className="side_text">
+          GET THE MOST FROM YOUR DATA
+        </div>
         <form className="reg_form" onSubmit={(e) => e.preventDefault()}>
-          <div className="reg_header_text">{t('nav_items.register')}</div>
+          <div id="title" style={{'color':'var(--secondary)','textAlign':'center'}}>
+            <p>{t('nav_items.register')}</p>
+          </div>
           <div className="fill_form">
             <div
               style={{

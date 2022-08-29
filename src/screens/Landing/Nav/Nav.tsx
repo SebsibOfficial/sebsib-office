@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../states/AuthContext";
 import { decodeJWT } from "../../../utils/helpers";
-import Logo from "../../../assets/logo.png";
+import Logo from "../../../assets/logo_2.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArchive,
@@ -76,6 +76,12 @@ export default function Nav() {
               {t("nav_items.register")}
             </div>
           </Link>
+          <div className="list_item netela">፣</div>
+          <a href="/register">
+            <div className={"list_item "+t("css_sub_text")} id="down_but">
+              Download Sebsib
+            </div>
+          </a>
         </div>
         <div className="lang">
           <span
@@ -142,6 +148,11 @@ export default function Nav() {
         <Link to={"/register"} onClick={() => menubar(false)}>
           <div className="list_item" id="reg_but">
             {t("nav_items.register")}
+          </div>
+        </Link>
+        <Link to={"/register"} onClick={() => menubar(false)}>
+          <div className="list_item" id="down_but" style={{'marginTop':'1em'}}>
+            Download
           </div>
         </Link>
       </div>
