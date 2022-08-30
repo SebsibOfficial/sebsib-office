@@ -55,7 +55,7 @@ export default function Landing() {
           </div>
           <div id="intro">
           Sebsib is your all in one data collection suite to help gather data efficiently and in an affordable way.
-           By using our website and mobile application you can easily start to collect anywhere and in any condition. 
+           By using our website and mobile application you can easily start to collect data anywhere and in any condition. 
            If you are a professional researcher or student trying to collect data with paper questionnaires or 
            if you are an organization going to the harshest remote sites to gather important 
           information with expensive foreign tools, Sebsib is here with an alternative to help you in your journey.
@@ -91,7 +91,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faClipboardList} className="ficon"/>
             <p className="sub_title">DESIGN</p>
-            <p className="desc">Then design you survey question on your liking. The platform supports various input types
+            <p className="desc">Then design your survey questions on your liking. The platform supports various input types
              and has complex skipping patterns for your conditional questions
             </p>
           </div>
@@ -101,7 +101,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faLayerGroup} className="ficon"/>
             <p className="sub_title">COLLECT</p>
-            <p className="desc">Finally the fun begins, Download the app and enter your enumerator credentials. After your in download the 
+            <p className="desc">Finally the fun begins, Download the app and enter your enumerator credentials. After your in, download the 
             survey and gather responses as much as you like and send it to the website
             </p>
           </div>
@@ -171,7 +171,9 @@ export default function Landing() {
         </div>
       </section>
       <footer id="contact-us">
-        <h1>{t("nav_items.contact_us")}</h1>
+        <div id="title">
+          <p style={{'color':'var(--secondary)', 'textDecorationLine':'inherit'}}>CONTACT US</p>
+        </div>
         <div className="contact_info">
           <div className="contact_phones">
             <h6>+251920642556</h6>

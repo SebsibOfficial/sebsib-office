@@ -217,7 +217,7 @@ export function Projects_Landing () {
     <Col md="10">
       <Row className="mb-4">
         <Col>
-        <Sb_Alert>This page is where you see your projects. You can see the enumrators involved and the surveys that are a part of the project. You can delete and create projects also add enumrators in a project. You can also create multiple surveys, and projects but it is according to you package.</Sb_Alert>
+        <Sb_Alert>This page is where you see your projects. You can see the enumrators involved and the surveys that are a part of the project. You can <b>Delete</b> and <b>Create Projects</b> also <b>Add Enumrators</b> in a project. These enumrators are the ones which will download the survey and collect the data. You can also create multiple surveys, and projects but it is according to you package.</Sb_Alert>
           <Button onClick={() => navigate('create-project', { state:true })}><Sb_Text font={16} color='--lightGrey'>Create Project</Sb_Text></Button>
         </Col>
       </Row>
@@ -328,7 +328,7 @@ export function Projects_Landing () {
         {
           modalType === "SELECTION" && membersToAdd.length == 0 &&
           <>
-            <Sb_Text font={24} weight={900}>No more members</Sb_Text>
+            <Sb_Text font={16} weight={300}>No more members</Sb_Text>
           </>
         }
         {modalType === "DELETION" && 
