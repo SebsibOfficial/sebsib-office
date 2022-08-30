@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Collapse, Form, Row } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Loader from "../../components/Sb_Loader";
@@ -8,7 +8,7 @@ import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
 import { CriticalContext, useCritical } from '../../states/CriticalContext';
 import { CreateSurvey } from "../../utils/api";
-import { generateId } from "../../utils/helpers";
+import { generateId, translateIds } from "../../utils/helpers";
 
 export class FinalPayload {
   constructor (sn: string, pl: Payload[]) {
@@ -47,6 +47,7 @@ export default function Create_Survey () {
   const [surveyName, setSurveyName] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
   const {page, setCriticalpage} = useCritical();
+  const [collapse, setCollapse] = useState(false);
 
   useEffect(() => {
     if (surveyName != "") {
@@ -114,8 +115,9 @@ export default function Create_Survey () {
   return (
     <Col>
       <Sb_Alert>To create a survey first enter the survey name, then fill out the questions, choices and the question type. 
-        After creating a question you must <b>Add</b> it. When you want to create more question click the <b>New Question</b> button below the questions.
-        When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
+        After creating a question you must <b>Confirm</b> it. When you want to create more question click the <b>New Question</b> button below the questions.
+        If you want to implement a Skip Pattern, tick the <b>Show Pattern</b> circle, select the question that this question depends on, then select what answer will show this question.
+        Click <b>Preview Survey</b> to see what your survey looks like. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
         </Sb_Alert>
       <Row>
         <Col md="3">
@@ -147,12 +149,46 @@ export default function Create_Survey () {
             </Col>
           ))
         }
+        <Row>
+        <Col>          
+          <Collapse in={collapse}>
+            <Row className="form g-0 mb-4 p-4">
+              {
+                questionsData.map((question:Payload, index:number) => (
+                  <Col md="6" className="pe-4 mb-4" key={index}>
+                    <Row className="question-form mb-2 pe-4">
+                      <Col>
+                        {(index + 1)+". "} <b style={{'color':'var(--primary)'}}>{(question.showPattern.hasShow ? "[Depends on a previous response]" : "")}</b> {question.question} 
+                      </Col>
+                    </Row>
+                    {console.log(question.inputType)}
+                    <Row className="answer-form g-0">
+                      {
+                        question.inputType !== "TEXT" ?
+                        question.choices.map((option:any, letter:number) => (
+                          <Col className="an-answer mb-1" key={letter}>
+                            { String.fromCharCode(letter + 65)+". "+option.text}
+                          </Col>
+                        )) :
+                        <Col className="an-answer mb-1 text-answer"></Col>
+                      }
+                    </Row>
+                  </Col>
+                ))
+              }
+            </Row>
+          </Collapse>
+        </Col>
+        </Row>
       </Row>
 
       <Row className="mt-3">
         <Col>
           <Button size="sm" variant="secondary" className="mt-3 float-start" onClick={() => newQuestionHandler()}>
             <Sb_Text font={12} color="--lightGrey">New Question</Sb_Text>
+          </Button>
+          <Button size="sm" variant="secondary" className="mt-3 float-start ms-4" onClick={() => setCollapse(!collapse)}>
+            <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Preview" : "Preview Survey"}</Sb_Text>
           </Button>
           <Button variant="primary" className="mt-3 float-end" onClick={() => createSurveyHandler(params.pid as string)} disabled={btnLoading}>
             {
