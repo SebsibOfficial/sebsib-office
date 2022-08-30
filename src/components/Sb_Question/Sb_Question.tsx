@@ -207,7 +207,7 @@ export default function Sb_Question (props:Props) {
                       {
                         props.otherQuestions.filter((question) => question.inputType !== 'TEXT')
                         .map((question, index) => (
-                          <option key={index} value={question.id}>Question #{index + 1}</option>
+                          <option key={index} value={question.id}>Question #{question.number}</option>
                         ))
                       }
                     </Form.Select>
@@ -229,7 +229,7 @@ export default function Sb_Question (props:Props) {
                 <div>
                   <Button size="sm" className="mt-3 float-end" onClick={() => addButtonClickHandler()} 
                   disabled = { !hasDifference() || (props.state == 'ADD' ? !hasChoices() : false) }>
-                    <Sb_Text font={12} color="--lightGrey">{props.state === 'ADD' ? 'Add' : 'Update'}</Sb_Text>
+                    <Sb_Text font={12} color="--lightGrey">{props.state === 'ADD' ? 'Confirm' : 'Update'}</Sb_Text>
                   </Button>
                 </div>
               </Col>
