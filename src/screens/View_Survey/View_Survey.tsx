@@ -155,7 +155,7 @@ export default function View_Survey () {
     rows.push([state.state.name + ' Generated Report'])
     rows.push([" "]);
     queses.push("Enumrator Name");
-    queses.push("Sent Date");
+    queses.push("Sent Date and Time");
     questions.forEach((question:Question) => {
       queses.push(question.questionText)
     });
@@ -163,9 +163,9 @@ export default function View_Survey () {
     responses.forEach((response:Response) => {
       let anses:any[] = [];
       anses.push(response.enumratorName);
-      anses.push(response.sentDate);
+      anses.push(response.sentDate.toString().replace('T',' ').slice(0,16));
       response.answers.forEach((answer:Answer) => {
-        anses.push(getAnswer(answer.answer));
+        anses.push(translateIds('ID', answer.inputType) == 'TEXT' ? answer.answer : getAnswer(answer.answer));
       })
       rows.push(anses);
     })

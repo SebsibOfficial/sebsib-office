@@ -357,7 +357,7 @@ export function Dashboard_Landing () {
                         <div className='recent-table'>
                           <Sb_Row id='12' header color='DARK'/>
                           {
-                            recentSurveys.map(surv => (
+                            recentSurveys.slice(0,3).map(surv => (
                               <Sb_Row key={surv._id} id={surv._id} color='PURPLE' project={surv.project} 
                               survey={surv.survey} enumrator={surv.enumrator} date={surv.date}
                               onView={(id) => navigate(`projects/view-survey/${id}`, { state:true })}/>
