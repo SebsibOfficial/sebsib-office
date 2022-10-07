@@ -3,6 +3,7 @@
   "nav_items": {
     "about_us": "About Us",
     "pricing": "Pricing",
+    "renew": "Renew Subscription",
     "contact_us": "Contact Us",
     "login": "Login",
     "register": "Register"
@@ -43,11 +44,18 @@
     "father's_name": "Father's Name",
     "email": "Email Address",
     "phone": "Phone Number",
-    "org": "Company or Service User Name",
+    "org": "Company or Service User",
     "package_type": "Package Type",
     "choose_package": "Choose Package",
     "thankyou_msg": "Thank you for registering. We will reachout by email shortly.",
-    "regis": "Register"
+    "regis": "Register",
+    "title": "REGISTER",
+    "transaction_ref": "Transaction Ref. Number",
+    "choose_bank": "Choose Bank"
+  },
+  "renew": {
+    "renew": "Renew",
+    "renewal": "RENEWAL"
   },
   "css_sub_text": "light_weight"
 }
