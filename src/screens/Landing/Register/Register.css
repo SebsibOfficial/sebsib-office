@@ -3,7 +3,9 @@
     padding-top: 3em;
     display: flex;
     padding-right: 15em;
+    height: 88vh !important;
     background-size: 75%;
+    transition: all 200ms ease;
   }
   .reg_form {
     width: 40%;
@@ -21,9 +23,9 @@
     background-color: var(--primary);
     color: white;
     border: 0;
-    font-size: 1.2em;
+    font-size: 1em;
     font-weight: 400;
-    padding: 0.5em 1em;
+    padding: 0.5em 0.75em;
     border-radius: 3px;
   }
   .input_form {
@@ -70,4 +72,33 @@
     float: right;
     margin-right: 0.5em;
     cursor: pointer;
+  }
+  .form-item {
+    width: 100%;
+    margin-right: 0.5em;
+  }
+  .bank_choice img{
+    width: 30px;
+    background-color: white;
+    width: 100%;
+    padding: 0.4em;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .bank_choice:hover {
+    border-radius: 5px;
+    background-color: var(--lightGrey);
+  }
+  .form-item .form-label {
+    margin-bottom: 0.2em;
+  }
+  .bank_selected {
+    border-radius: 5px;
+    outline: 2px solid;
+  }
+  .cbe {
+    outline-color: blueviolet;
+  }
+  .dashen {
+    outline-color: darkblue;
   }
