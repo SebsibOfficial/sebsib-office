@@ -28,6 +28,8 @@ import { useEffect, useState } from "react";
 import CryptoJS from "crypto-es";
 import { useTranslation } from "react-i18next";
 import NotFound from "../404/404";
+import Renew from "../Landing/Register/Renew";
+import Change from "../Login/Change";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
@@ -80,6 +82,7 @@ function App() {
               <Route index element={<Landing />} />
               <Route path="pricing" element={<Pricing />}></Route>
               <Route path="register" element={<Register />}></Route>
+              <Route path="renewal" element={<Renew />}></Route>
               <Route path="contact" element={<div>Contact</div>}></Route>
               <Route
                 path="dashboard"
@@ -113,6 +116,7 @@ function App() {
                 <Route path="settings" element={<Settings />}></Route>
               </Route>
               <Route path="login" element={<Login />} />
+              <Route path="changepassword" element={<Change />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
