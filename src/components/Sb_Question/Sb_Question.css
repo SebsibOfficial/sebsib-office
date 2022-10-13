@@ -40,3 +40,6 @@
 .form-select-sm {
   font-size: 12px !important;
 }
+.req_feild label {
+  transform: scale(0.8);
+}

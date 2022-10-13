@@ -32,19 +32,21 @@ interface Props {
 }
 
 export class Payload {
-  constructor(id: string, n: number, q: string, c: Choice[], i: InputType, s: ShowPattern) {
+  constructor(id: string, n: number, q: string, c: Choice[], i: InputType, s: ShowPattern, m: boolean) {
     this.id = id;
     this.number = n;
     this.question = q;
     this.choices = c;
     this.inputType = i;
     this.showPattern = s;
+    this.mandatory = m;
   }
   id: string;
   number: number;
   question: string;
   choices: Choice[];
   inputType: InputType;
+  mandatory: boolean;
   showPattern: ShowPattern;
 }
 
@@ -54,6 +56,7 @@ export default function Sb_Question (props:Props) {
   const [inputType, setInputType] = useState<InputType>("CHOICE");
   const [showPattern, setShowPattern] = useState<ShowPattern>({hasShow: false, showIfQues: "", ansIs: ""})
   const [lastExport, setLastExport] = useState<Payload | null>()
+  const [mandatory, setMandatory] = useState<boolean>(false)
 
   var {isLast = false} = props;
 
@@ -107,7 +110,7 @@ export default function Sb_Question (props:Props) {
   }
 
   function addButtonClickHandler() {
-    var payload = new Payload(props.id, props.number, question, choices, inputType, showPattern);
+    var payload = new Payload(props.id, props.number, question, choices, inputType, showPattern, mandatory);
     inputType === 'TEXT' ? payload.choices = [] : null
     props.onAddEdit(props.id, props.state, payload);
     setLastExport(payload);
@@ -189,6 +192,15 @@ export default function Sb_Question (props:Props) {
                     <option value={"MULTI-SELECT"}>Multi Select</option>
                   </Form.Select>
                 </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <div className="d-flex req_feild">
+                    <Sb_Checkbox default={mandatory ? "SELECTED" : "UNSELECTED"}
+                    onChange={(state:boolean) => setMandatory(!mandatory)}/>
+                    <Sb_Text font={12}>Required</Sb_Text>
+                  </div>
+                </Form.Group>
+
                 <div className="show-pattern">
                   
                   <Form.Group className="mb-3">

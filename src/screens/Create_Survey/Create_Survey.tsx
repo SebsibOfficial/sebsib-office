@@ -159,6 +159,7 @@ export default function Create_Survey () {
                     <Row className="question-form mb-2 pe-4">
                       <Col>
                         {(index + 1)+". "} <b style={{'color':'var(--primary)'}}>{(question.showPattern.hasShow ? "[Depends on a previous response]" : "")}</b> {question.question} 
+                        <b style={{'color':'var(--secondary)'}}>{(question.mandatory ? " [Required]" : "")}</b>
                       </Col>
                     </Row>
                     {console.log(question.inputType)}
