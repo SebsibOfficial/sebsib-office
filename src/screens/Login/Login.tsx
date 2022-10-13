@@ -113,6 +113,11 @@ export default function Login() {
 												autoComplete='new-password' value={password} 
 												onKeyDown ={(e) => e.key == 'Enter' ? loginHandler() : null}
 												onChange={(e) => setPassword(e.target.value)}/>
+                        <Sb_Text font={12} weight={300}>
+                          <div style={{'cursor':'pointer', 'color':'var(--primary)'}} onClick={() => navigate('/forgotpassword', { state:true })}>
+                            Forgot Password?
+                          </div>
+                        </Sb_Text>
 											</Form.Group>
 											{/* LOL autoComplete="off doesn't work anymore, this is a work around" */}
 											<input type="text" autoComplete='on' style={{'display':'none'}} /> 
