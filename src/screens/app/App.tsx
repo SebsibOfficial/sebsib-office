@@ -30,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import NotFound from "../404/404";
 import Renew from "../Landing/Register/Renew";
 import Change from "../Login/Change";
+import Forgot from "../Login/Forgot";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
@@ -117,6 +118,7 @@ function App() {
               </Route>
               <Route path="login" element={<Login />} />
               <Route path="changepassword" element={<Change />} />
+              <Route path="forgotpassword" element={<Forgot />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
