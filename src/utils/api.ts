@@ -98,7 +98,10 @@ export async function GetRecentResponseList(orgId: string):Promise<ResponseInter
 export interface AddEditMemberInterface {
   name?: string;
   email: string;
-  username: string;
+  username?: string;
+  firstname?: string;
+  lastname?: string;
+  phone?: string;
   password: string;
   projectsId: string[];
 }
@@ -195,6 +198,46 @@ export async function CreateSurvey(pid: string, body: FinalPayload):Promise<Resp
 export async function DeleteSurvey(pid: string, sid: string):Promise<ResponseInterface>{
   try {
     var result = await axios.delete('delete/survey/'+pid+'/'+sid);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+// NEW ENDPOINTS
+interface SendRequestI {pkg:string, firstname:string, lastname:string, email:string, phone:string, orgname:string, bank?:string | null, transno?:string | null, orgId?:string | null}
+export async function SendRequest(type: "REGISTER" | "RENEWAL", body: SendRequestI):Promise<ResponseInterface>{
+  try {
+    var result = await axios.post('noauth/sendrequest/'+type, body);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+export async function GetOrgStatus(shortOrgId:string):Promise<ResponseInterface>{
+  try {
+    var result = await axios.get('get/orgstatus/'+shortOrgId);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+interface ChangePassI {initpass:string, newpass:string, confirmpass:string}
+export async function ChangePass(body: ChangePassI):Promise<ResponseInterface>{
+  try {
+    var result = await axios.patch('patch/changepass', body);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+interface ResetPassI {email:string, shortOrgId:string}
+export async function ResetPass(body: ResetPassI):Promise<ResponseInterface>{
+  try {
+    var result = await axios.patch('noauth/resetpass', body);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}
