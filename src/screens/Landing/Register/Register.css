@@ -61,12 +61,13 @@
     padding-right: 1em;
   }
   .confirm {
-    background-color: #1a7b1a;
-    padding: 0.5em;
+    background-color: #ffc107;
+    padding: 0.7em;
     text-align: center;
-    color: white;
-    font-weight: 800;
-    letter-spacing: 1px;
+    color: #282829;
+    font-weight: 400;
+    border-radius: 5px;
+    box-shadow: 20px 19px 7px 2px #ffc10761;
   }
   .confirm span {
     float: right;

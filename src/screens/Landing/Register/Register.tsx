@@ -11,6 +11,7 @@ import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import dashen from "../../../assets/dashen.jpg";
 import cbe from "../../../assets/cbe.png";
 import Sb_Modal from "../../../components/Sb_Modal/Sb_Modal";
+import { SendRequest } from "../../../utils/api";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -36,7 +37,7 @@ export default function Register() {
     setPhone("");
   }
   async function registerRequest() {
-    if (pkg !== 'free-trail' && (tranNo == "" || bank == null)) {return alert("Enter Bank infomation!")}
+    if (pkg !== 'FREE TRIAL' && (tranNo == "" || bank == null)) {return alert("Enter Bank infomation!")}
     setBtnLoading(true);
     if (
       name !== "" &&
@@ -46,30 +47,15 @@ export default function Register() {
       org !== "" &&
       pkg !== ""
     ) {
-      var data = {
-        service_id: process.env.REACT_APP_SERVICE_ID,
-        template_id: "template_jy47etj",
-        user_id: process.env.REACT_APP_USER_ID,
-        template_params: {
-          from_name: name,
-          name: name,
-          father_name: Fname,
-          email: email,
-          org: org,
-          phone: phone,
-          package: pkg,
-        },
-      };
-      var resp = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (resp.status == 200) {
-        setBtnLoading(false);
-        clearForm();
-        setConfirm(true);
-      } else console.log(resp.json());
+      SendRequest("REGISTER", 
+      {firstname: name, lastname: Fname, email: email, phone: phone, orgname: org, pkg: pkg, bank: bank, transno: tranNo})
+      .then(result => {
+        if (result.code == 200){
+          clearForm();
+          setBtnLoading(false);
+          setConfirm(true);
+        } else console.info(result)
+      }).catch((err) => console.log(err))
     } else {
       setBtnLoading(false)
       return alert("Information not complete!")
@@ -171,8 +157,8 @@ export default function Register() {
               onChange={(e) => setPackage(e.target.value)}
               required>
                 <option value="">{t('register.package_type')}</option>
-                <option value="free-trail">Free Trial</option>
-                <option value="standard">
+                <option value="FREE TRIAL">Free Trial</option>
+                <option value="STANDARD">
                   Standard
                 </option>
                 <option value="premium" disabled>
@@ -184,7 +170,7 @@ export default function Register() {
               </Form.Select>
             </Form.Group>
             {
-              pkg == 'free-trail' || pkg == '' ? '' :
+              pkg == 'FREE TRIAL' || pkg == '' ? '' :
               <>
               <div>
                 <Row>
@@ -231,10 +217,10 @@ export default function Register() {
           </div>
           <div
             className="confirm"
-            style={{ display: confirm ? "block" : "none" }}
+            style={{display: confirm ? 'block' : 'none'}}
+            onClick={() => setConfirm(false)}
           >
-            {t('register.thankyou_msg')}
-            <span onClick={() => setConfirm(false)}>X</span>
+            <b>Thank you for registering</b><br></br> We will contact you shortly
           </div>
         </form>
       </section>

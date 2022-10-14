@@ -115,7 +115,7 @@ export default function Register() {
               onChange={(e) => setPackage(e.target.value)}
               required>
                 <option value="">{t('register.package_type')}</option>
-                <option value="free-trail">Free Trial</option>
+                <option value="FREE TRIALRIAL">Free Trial</option>
                 <option value="standard">
                   Standard
                 </option>
@@ -128,7 +128,7 @@ export default function Register() {
               </Form.Select>
             </Form.Group>
             {
-              pkg == 'free-trail' || pkg == '' ? '' :
+              pkg == 'FREE TRIALRIAL' || pkg == '' ? '' :
               <>
               <div>
                 <Row>
