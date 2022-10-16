@@ -57,9 +57,12 @@ export default function Login() {
 				localStorage.getItem('access_count') != null ? 
 				localStorage.setItem('access_count', (parseInt(ac as string) + 1).toString()) : 
 				localStorage.setItem('access_count', '1');
-				setAuthToken(result.data.token as string);				
-				// Navigate
-				setTimeout(() => navigate('/dashboard', { state:true }), 50);				
+				setAuthToken(result.data.token as string);
+        console.log(result.data.orgId.hasPassChange)
+        if (result.data.orgId.hasPassChange)
+				  setTimeout(() => navigate('/dashboard', { state:true }), 50);
+        else if	(result.data.orgId.hasPassChange === false)
+          setTimeout(() => navigate('/changepassword', { state:true }), 50);
 			} else {
 				setErrnotice(result.data.message);
 			}

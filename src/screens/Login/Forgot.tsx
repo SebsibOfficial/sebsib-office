@@ -58,9 +58,6 @@ export default function Forgot() {
       } else {console.log(result.data); setBtnLoading(false)}
     })
 	}
-  function replaceRange(s:string, start:number, end: number, substitute:string) {
-    return s.substring(0, start) + substitute + s.substring(end);
-  }
 
 	return (
 		<div className='login-screen'>
@@ -81,7 +78,7 @@ export default function Forgot() {
               {success ?
               (<div className='d-flex'>
                 <FontAwesomeIcon icon={faCheckCircle} style={{'color':'var(--primary)','marginRight':'0.5em'}}/>
-                <Sb_Text>Reset email sent to {replaceRange(email, 1, 6, '******')}</Sb_Text>
+                <Sb_Text>Reset email sent to your address</Sb_Text>
               </div>) : 
               <Sb_Text>Enter your organization ID and your email, then check your email for access.</Sb_Text>}
             </Alert>

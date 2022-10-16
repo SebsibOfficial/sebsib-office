@@ -224,7 +224,7 @@ export async function GetOrgStatus(shortOrgId:string):Promise<ResponseInterface>
   }
 }
 
-interface ChangePassI {initpass:string, newpass:string, confirmpass:string}
+interface ChangePassI {initialpass:string | null, newpass:string, confirmpass:string}
 export async function ChangePass(body: ChangePassI):Promise<ResponseInterface>{
   try {
     var result = await axios.patch('patch/changepass', body);

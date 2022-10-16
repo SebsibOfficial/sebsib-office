@@ -1,4 +1,4 @@
-import { faIdBadge, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faIdBadge, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useContext, useEffect, useState } from 'react';
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
@@ -6,7 +6,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import logo from '../../assets/officeLogoBlack.svg';
 import Sb_Card from '../../components/Sb_Card/Sb_Card';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
-import { login, ResponseInterface } from '../../utils/api';
+import { ChangePass, login, ResponseInterface } from '../../utils/api';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import './Login.css';
 import Sb_Loader from '../../components/Sb_Loader';
@@ -33,22 +33,42 @@ export default function Change() {
     if (!location.state){
        return navigate("/404");
     }
-		if (token != "") {
-      return navigate("/", {state: true});
-    }
   },[location.state]);
   
 	/*############# STATES ############### */
-	const [Fpass, setFpass] = useState("");
 	const [Npass, setNpass] = useState("");
-	const [errNotice, setErrnotice] = useState(null);
+  const [Cpass, setCpass] = useState("");
+	const [errNotice, setErrnotice] = useState<string | null>(null);
 	const [btnloading, setBtnLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 	const state = useLocation() as StateInterface;
 
 	/*------------- METHODS -------------- */
 	function changehandler () {
-		setBtnLoading(true);
-		// Get Data here
+		
+    if (Npass != Cpass){ setErrnotice("Input Mismatch"); return null; }
+
+    if (Npass.length < 8) { setErrnotice("Password too short"); return null; }
+    
+    setBtnLoading(true);
+
+    if (success) {
+      navigate('/dashboard', { state:true })
+    }
+    else {
+      ChangePass({initialpass: null, newpass: Npass, confirmpass: Cpass}).then(result => {
+        if (result.code == 200) {
+          setSuccess(true);
+          setBtnLoading(false);
+        } else {
+          setErrnotice(result.data.message);
+          console.log(result.data)
+        }
+      }).catch((err) => {
+        console.log(err);
+			  setBtnLoading(false);
+      })
+    }
 	}
 
 	return (
@@ -67,38 +87,60 @@ export default function Change() {
 								</Col>
 						</Row>
             <Alert variant='light'>
-									<Sb_Text>Welcome to Sebsib, before we start you need to change your password. For security reasons obviously.</Sb_Text>
+            {success ?
+              (<div className='d-flex'>
+                <FontAwesomeIcon icon={faCheckCircle} style={{'color':'var(--primary)','marginRight':'0.5em'}}/>
+                <Sb_Text>Password Changed Successfully</Sb_Text>
+              </div>) : 
+									<Sb_Text>Welcome to Sebsib, before we start you need to change your password. For security reasons obviously.</Sb_Text>}
 								</Alert>
 						<Row>
 							<Col className='login-form-container'>
-								<Sb_Card className='w-100 p-4'>
-									<div className='login-forms'>
-										<div className='error-notif' style={{'display': errNotice != null ? 'flex' : 'none'}}>
-											<FontAwesomeIcon icon={faTimesCircle} style={{'fontSize':14, 'marginRight':'0.3rem'}}/> 
-											<Sb_Text font={12} color="--lightGrey">{errNotice}</Sb_Text>
-										</div>
-										<div>
-											<Form.Group className="mb-3" controlId="LoginEmail">
-												<Form.Label><Sb_Text font={12}>Enter New Password</Sb_Text></Form.Label>
-												<Form.Control size="sm" type="password" placeholder="Password" 
-												autoComplete='new-password' value={Fpass} onChange={(e) => setFpass(e.target.value)}/>
-											</Form.Group>
+								
+                      {
+                        success ? 
+                        null
+                        :
+                        <>
+                        <Sb_Card className='w-100 p-4'>
+                          <div className='login-forms'>
+                          <div className='error-notif' style={{'display': errNotice != null ? 'flex' : 'none'}}>
+                            <FontAwesomeIcon icon={faTimesCircle} style={{'fontSize':14, 'marginRight':'0.3rem'}}/> 
+                            <Sb_Text font={12} color="--lightGrey">{errNotice}</Sb_Text>
+                          </div>
+                          <div>
+                          <Form.Group className="mb-3" controlId="LoginEmail">
+                            <Form.Label><Sb_Text font={12}>Enter New Password</Sb_Text></Form.Label>
+                            <Form.Control size="sm" type="password" placeholder="Password" 
+                            autoComplete='new-password' value={Npass} onChange={(e) => setNpass(e.target.value)}/>
+                          </Form.Group>
 
-											<Form.Group className="mb-3" controlId="LoginPassword">
-												<Form.Label><Sb_Text font={12}>Confirm New Password</Sb_Text></Form.Label>
-												<Form.Control size="sm" type="password" placeholder="Password" 
-												autoComplete='new-password' value={Npass} 
-												onKeyDown ={(e) => e.key == 'Enter' ? changehandler() : null}
-												onChange={(e) => setNpass(e.target.value)}/>
-											</Form.Group>
-											{/* LOL autoComplete="off doesn't work anymore, this is a work around" */}
-											<input type="text" autoComplete='on' style={{'display':'none'}} /> 
-											<Button size="sm" onClick={() => changehandler()} disabled = {btnloading}>
-												{ btnloading ? <Sb_Loader/> : <Sb_Text font={12} color="--lightGrey">Continue</Sb_Text>}												
-											</Button>
-										</div>
-									</div>
-								</Sb_Card>
+                          <Form.Group className="mb-3" controlId="LoginPassword">
+                            <Form.Label><Sb_Text font={12}>Confirm New Password</Sb_Text></Form.Label>
+                            <Form.Control size="sm" type="password" placeholder="Password" 
+                            autoComplete='new-password' value={Cpass} 
+                            onKeyDown ={(e) => e.key == 'Enter' ? changehandler() : null}
+                            onChange={(e) => setCpass(e.target.value)}/>
+                          </Form.Group>
+                          {/* LOL autoComplete="off doesn't work anymore, this is a work around" */}
+                          <input type="text" autoComplete='on' style={{'display':'none'}} /> 
+                          <Button size="sm" onClick={() => changehandler()} disabled = {btnloading}>
+                            { btnloading ? <Sb_Loader/> : <Sb_Text font={12} color="--lightGrey">Continue</Sb_Text>}												
+                          </Button>
+                          </div>
+                          </div>
+                        </Sb_Card>
+                        </>
+                      }
+										
+                {
+                  success ?
+                  <Button size="sm" onClick={() => changehandler()} disabled = {btnloading}>
+                  { btnloading ? <Sb_Loader/> : <Sb_Text font={12} color="--lightGrey">Continue</Sb_Text>}												
+                  </Button>
+                  :
+                  null
+                }
 							</Col>
 						</Row>
 						<div className='version-tag'><Sb_Text font={12}>Version 1.0</Sb_Text></div>
