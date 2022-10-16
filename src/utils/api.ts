@@ -217,7 +217,7 @@ export async function SendRequest(type: "REGISTER" | "RENEWAL", body: SendReques
 
 export async function GetOrgStatus(shortOrgId:string):Promise<ResponseInterface>{
   try {
-    var result = await axios.get('get/orgstatus/'+shortOrgId);
+    var result = await axios.get('noauth/orgstatus/'+shortOrgId);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}

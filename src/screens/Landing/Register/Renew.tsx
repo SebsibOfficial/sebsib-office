@@ -11,6 +11,8 @@ import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import dashen from "../../../assets/dashen.jpg";
 import cbe from "../../../assets/cbe.png";
 import Sb_Modal from "../../../components/Sb_Modal/Sb_Modal";
+import { GetOrgStatus, SendRequest } from "../../../utils/api";
+import { translateIds } from "../../../utils/helpers";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -19,11 +21,15 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [orgId, setOrgId] = useState("");
   const [pkg, setPackage] = useState("");
+  const [fetchedName, setFetchedName] = useState("");
+  const [fetchedDay, setFetchedDay] = useState("");
+  const [fetchedPkg, setFetchedPkg] = useState("");
   const [bank, setBank] = useState<"DASHEN" | "CBE" | null>();
   const [tranNo, setTranNo] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [modalState, setModalState] = useState(false);
+  const [fetching, setFetching] = useState(false);
 
   const {t} = useTranslation();
 
@@ -34,8 +40,11 @@ export default function Register() {
     setOrgId("");
     setPackage("");
     setPhone("");
+    setFetchedName("");
+    setFetchedDay("");
+    setFetchedPkg("");
   }
-  async function registerRequest() {
+  async function renewRequest() {
     setBtnLoading(true);
     if (
       name !== "" &&
@@ -44,30 +53,40 @@ export default function Register() {
       phone !== "" &&
       pkg !== ""
     ) {
-      var data = {
-        service_id: process.env.REACT_APP_SERVICE_ID,
-        template_id: "template_jy47etj",
-        user_id: process.env.REACT_APP_USER_ID,
-        template_params: {
-          from_name: name,
-          name: name,
-          father_name: Fname,
-          email: email,
-          phone: phone,
-          package: pkg,
-        },
-      };
-      var resp = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (resp.status == 200) {
-        setBtnLoading(false);
-        clearForm();
-        setConfirm(true);
-      } else console.log(resp.json());
-    }
+      // Send request
+      SendRequest("RENEWAL", 
+      {firstname: name, lastname: Fname, email: email, phone: phone, orgname: fetchedName, pkg: pkg, bank: bank, transno: tranNo, orgId: orgId})
+      .then(result => {
+        if (result.code == 200){
+          clearForm();
+          setBtnLoading(false);
+          setConfirm(true);
+        } else console.info(result)
+      }).catch((err) => console.log(err))
+    } else setBtnLoading(false)
+  }
+  
+  function calcDate (endDate:any) {
+    const startDate = new Date();
+    const differenceInTime = endDate.getTime() - startDate.getTime();
+    return Math.round(differenceInTime / (1000 * 3600 * 24))
+  }
+
+  function onblurHandler () {
+    setFetching(true);
+    // Get OrgInfo
+    GetOrgStatus(orgId).then(result => {
+      if (result.code == 200) {
+        setName(result.data.owner[0].firstName)
+        setFName(result.data.owner[0].lastName)
+        setEmail(result.data.owner[0].email)
+        setPhone(result.data.owner[0].phone)
+        setFetchedName(result.data.name)
+        setFetchedDay(calcDate(new Date(result.data.expires)) + " Days")
+        setFetchedPkg(translateIds("ID", result.data.packageId) as string)
+        setFetching(false)
+      } else {console.log(result.data); setFetching(false)}
+    })
   }
   return (
     <div style={{'overflowX':'hidden'}}>
@@ -96,18 +115,50 @@ export default function Register() {
                 onChange={(e) => setOrgId(e.target.value)}
                 required placeholder="Organization Id" 
                 autoComplete='new-password'
+                onBlur={() => onblurHandler()}
                 />
               </Form.Group>
               <Form.Group className="mb-2 form-item" controlId="LoginEmail">
-                <Form.Label><Sb_Text font={12}>Organization | Status</Sb_Text></Form.Label>
+                <Form.Label><Sb_Text font={12}>Organization Name</Sb_Text></Form.Label>
+                {
+                  fetching ? <Sb_Loader/> : 
+                  <Form.Control size="sm"
+                  value={fetchedName}
+                  type="text"
+                  disabled
+                  />
+                }
+              </Form.Group>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Form.Group className="mb-2 form-item" controlId="LoginEmail">
+                <Form.Label><Sb_Text font={12}>Package</Sb_Text></Form.Label>
+                {
+                  fetching ? <Sb_Loader/> : 
+                  <Form.Control size="sm"
+                  value={fetchedPkg}
+                  type="text"
+                  disabled
+                  />
+                }
+              </Form.Group>
+              <Form.Group className="mb-2 form-item" controlId="LoginEmail">
+                <Form.Label><Sb_Text font={12}>Remaining Days</Sb_Text></Form.Label>
                 <Form.Control size="sm"
+                value={fetchedDay}
                 type="text"
                 disabled
                 />
               </Form.Group>
             </div>
             <Form.Group className="mb-2 form-item">
-              <Form.Label><Sb_Text font={12}>{t('register.package_type')}</Sb_Text></Form.Label>
+              <Form.Label><Sb_Text font={12}>Renew Package to</Sb_Text></Form.Label>
               <Form.Select size="sm"
               value={pkg}
               name="package"
@@ -115,8 +166,7 @@ export default function Register() {
               onChange={(e) => setPackage(e.target.value)}
               required>
                 <option value="">{t('register.package_type')}</option>
-                <option value="FREE TRIALRIAL">Free Trial</option>
-                <option value="standard">
+                <option value="STANDARD">
                   Standard
                 </option>
                 <option value="premium" disabled>
@@ -128,7 +178,7 @@ export default function Register() {
               </Form.Select>
             </Form.Group>
             {
-              pkg == 'FREE TRIALRIAL' || pkg == '' ? '' :
+              pkg == 'FREE TRIAL' || pkg == '' ? '' :
               <>
               <div>
                 <Row>
@@ -169,16 +219,16 @@ export default function Register() {
             
           </div>
           <div style={{ textAlign: "center", padding: "1.5em" }}>
-            <button onClick={() => registerRequest()} disabled={btnLoading}>
+            <button onClick={() => renewRequest()} disabled={btnLoading}>
               {btnLoading ? <Sb_Loader /> : t('renew.renew')}
             </button>
           </div>
           <div
             className="confirm"
-            style={{ display: confirm ? "block" : "none" }}
+            style={{display: confirm ? 'block' : 'none'}}
+            onClick={() => setConfirm(false)}
           >
-            {t('register.thankyou_msg')}
-            <span onClick={() => setConfirm(false)}>X</span>
+            <b>Thank you for renewing</b><br></br> We will contact you shortly
           </div>
         </form>
       </section>
