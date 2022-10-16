@@ -1,4 +1,4 @@
-import { faIdBadge, faKey, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faIdBadge, faKey, faLock, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useContext, useEffect, useState } from 'react';
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
@@ -6,10 +6,11 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import logo from '../../assets/officeLogoBlack.svg';
 import Sb_Card from '../../components/Sb_Card/Sb_Card';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
-import { login, ResponseInterface } from '../../utils/api';
+import { login, ResetPass, ResponseInterface } from '../../utils/api';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import './Login.css';
 import Sb_Loader from '../../components/Sb_Loader';
+import { start } from 'repl';
 
 interface StateInterface {
 	hash: string,
@@ -43,13 +44,23 @@ export default function Forgot() {
 	const [email, setEmail] = useState("");
 	const [errNotice, setErrnotice] = useState(null);
 	const [btnloading, setBtnLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 	const state = useLocation() as StateInterface;
 
 	/*------------- METHODS -------------- */
 	function changehandler () {
 		setBtnLoading(true);
-		// Get Data here
+		ResetPass({email: email, shortOrgId: shortOrgId}).then(result => {
+      if (result.code == 200) {
+        setSuccess(true);
+        setEmail(""); setShortOrgId("")
+        setBtnLoading(false);
+      } else {console.log(result.data); setBtnLoading(false)}
+    })
 	}
+  function replaceRange(s:string, start:number, end: number, substitute:string) {
+    return s.substring(0, start) + substitute + s.substring(end);
+  }
 
 	return (
 		<div className='login-screen'>
@@ -66,9 +77,14 @@ export default function Forgot() {
 									<Sb_Text font={32} weight={500}>Reset Password</Sb_Text>
 								</Col>
 						</Row>
-            <Alert variant='light'>
-									<Sb_Text>Enter your organization ID and your email, then check your email for access.</Sb_Text>
-								</Alert>
+            <Alert variant={success ? `success` :`light`}>
+              {success ?
+              (<div className='d-flex'>
+                <FontAwesomeIcon icon={faCheckCircle} style={{'color':'var(--primary)','marginRight':'0.5em'}}/>
+                <Sb_Text>Reset email sent to {replaceRange(email, 1, 6, '******')}</Sb_Text>
+              </div>) : 
+              <Sb_Text>Enter your organization ID and your email, then check your email for access.</Sb_Text>}
+            </Alert>
 						<Row>
 							<Col className='login-form-container'>
 								<Sb_Card className='w-100 p-4'>
