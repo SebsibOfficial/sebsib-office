@@ -103,7 +103,7 @@ export default function Dashboard () {
     <>
     <Row className='dashboard-container g-0'>
       <Col md='2'>
-        <Sb_Side_Nav name={decodeJWT(token as string).org_name}/>
+        <Sb_Side_Nav name={decodeJWT(token as string).shortOrgId}/>
       </Col>
       <Col style={{'padding':'1em 4em', 'overflowX':'auto'}}>
         <Row className='g-0' style={{'marginBottom':'3em'}}>
