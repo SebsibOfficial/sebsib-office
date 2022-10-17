@@ -12,6 +12,25 @@ import dashen from "../../../assets/dashen.jpg";
 import cbe from "../../../assets/cbe.png";
 import Sb_Modal from "../../../components/Sb_Modal/Sb_Modal";
 import { SendRequest } from "../../../utils/api";
+import PRICE from "../../../utils/price.json";
+
+export function getPrice (pkg:string, subType: "ONE_MONTH" | "ONE_YEAR" | string) {
+  var multiplier = 1.6;
+  var p;
+  PRICE.forEach(PKG => {
+    if (pkg == PKG.name) {
+      if (subType == 'ONE_YEAR'){
+        console.log(PKG.price)
+        p = (PKG.price * multiplier).toString()
+      }
+      else
+        p = PKG.price.toString()
+    }
+    else
+      return "NO PKG"
+  })
+  return p;
+}
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -20,6 +39,7 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [org, setOrg] = useState("");
   const [pkg, setPackage] = useState("");
+  const [subType, setSubType] = useState<string>("ONE_MONTH");
   const [bank, setBank] = useState<"DASHEN" | "CBE" | null>();
   const [tranNo, setTranNo] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
@@ -48,7 +68,7 @@ export default function Register() {
       pkg !== ""
     ) {
       SendRequest("REGISTER", 
-      {firstname: name, lastname: Fname, email: email, phone: phone, orgname: org, pkg: pkg, bank: bank, transno: tranNo})
+      {firstname: name, lastname: Fname, email: email, phone: phone, orgname: org, pkg: pkg, bank: bank, transno: tranNo, subType: subType})
       .then(result => {
         if (result.code == 200){
           clearForm();
@@ -172,9 +192,36 @@ export default function Register() {
             {
               pkg == 'FREE TRIAL' || pkg == '' ? '' :
               <>
+              <div key={`inline-radio`} className="mb-2 mt-3 radio_price">
+                <div style={{'display':'flex','alignItems':'center'}}>
+                <Form.Check
+                  inline
+                  label="One Month"
+                  value={"ONE_MONTH"}
+                  onChange={e => setSubType(e.currentTarget.value)}
+                  checked={subType == 'ONE_MONTH'}
+                  name="group1"
+                  type="radio"
+                  id={`inline-radio-1`}
+                />
+                <Form.Check
+                  inline
+                  label="One Year"
+                  value={"ONE_YEAR"}
+                  onChange={e => setSubType(e.currentTarget.value)}
+                  checked={subType == 'ONE_YEAR'}
+                  name="group1"
+                  type="radio"
+                  id={`inline-radio-2`}
+                />
+                </div>
+                <div className="reg_price">
+                  <p>Br {getPrice(pkg, subType)}</p>
+                </div>
+              </div>
               <div>
                 <Row>
-                  <Col>Choose Bank</Col>
+                  <Col><Sb_Text>Choose Bank</Sb_Text></Col>
                   <Col className="me-2" style={{'textAlign':'end'}}>
                     <FontAwesomeIcon icon={faQuestionCircle} style={{'cursor':'pointer'}} onClick={() => setModalState(true)}/>
                   </Col>

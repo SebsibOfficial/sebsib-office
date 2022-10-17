@@ -103,3 +103,19 @@
   .dashen {
     outline-color: darkblue;
   }
+  .radio_price {
+    font-size: 12px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding-right: 1em;
+  }
+  .reg_price {
+    font-weight: 700;
+    font-family: 'Teko';
+    font-size: 1.5em;
+    font-style: italic;
+  }
+  .reg_price p {
+    margin: 0;
+  }

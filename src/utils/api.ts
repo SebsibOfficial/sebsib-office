@@ -205,7 +205,7 @@ export async function DeleteSurvey(pid: string, sid: string):Promise<ResponseInt
 }
 
 // NEW ENDPOINTS
-interface SendRequestI {pkg:string, firstname:string, lastname:string, email:string, phone:string, orgname:string, bank?:string | null, transno?:string | null, orgId?:string | null}
+interface SendRequestI {pkg:string, firstname:string, lastname:string, email:string, phone:string, orgname:string, bank?:string | null, transno?:string | null, orgId?:string | null, subType?: string}
 export async function SendRequest(type: "REGISTER" | "RENEWAL", body: SendRequestI):Promise<ResponseInterface>{
   try {
     var result = await axios.post('noauth/sendrequest/'+type, body);
