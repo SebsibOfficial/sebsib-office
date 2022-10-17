@@ -163,7 +163,7 @@ export default function Sb_Question (props:Props) {
                   <textarea name="question" id="" cols={40} rows={5} className="question-text-area" style={{'fontSize':'12px', 'padding':'1em'}}
                   onChange={(e) => setQuestion(e.target.value)} value={getQuestion(props.id).question}></textarea>
                 </Form.Group>
-                <div className={`mt-2 ${getQuestion(props.id).inputType === 'TEXT' ? 'd-none' : ''}`}>
+                <div className={`mt-2 ${getQuestion(props.id).inputType === 'MULTI-SELECT' || getQuestion(props.id).inputType === 'CHOICE' ? '' : 'd-none'}`}>
                   {
                     getQuestion(props.id).choices.map((choice:Choice, index:number) => (
                       <Form.Group className="mb-3" controlId="ChoiceOption" key={index}>
@@ -190,6 +190,18 @@ export default function Sb_Question (props:Props) {
                     <option value={"CHOICE"}>Choice</option>
                     <option value={"TEXT"}>Text</option>
                     <option value={"MULTI-SELECT"}>Multi Select</option>
+                    <option value={"NUMBER"}>Number</option>
+                    <option value={"GEO-POINT"}>Geo Point</option>
+                    <option value={"DATE"}>Date</option>
+                    <option value={"TIME"}>Time</option>
+                    <option value={"FILE"}>File Upload</option>
+                    <option value={"PHOTO"}>Photo Capture</option>
+                    <option value={"MULTI-NUMBER"}>Multiple Number Input</option>
+                    <option value={"MULTI-GEO-POINT"}>Multiple Geo Point Input</option>
+                    <option value={"MULTI-DATE"}>Multiple Date Input</option>
+                    <option value={"MULTI-TIME"}>Multiple Time Input</option>
+                    <option value={"MULTI-PHOTO"}>Multiple Photo Captures</option>
+                    <option value={"MULTI-TEXT"}>Multiple Text Input</option>
                   </Form.Select>
                 </Form.Group>
 
