@@ -47,7 +47,7 @@ export default function Create_Project () {
 			var mem_arr:Member[] = [];
 			mem_arr_resp.forEach((member:any) => {
 				if (member.roleId != '623cc24a8b7ab06011bd1e60')
-					mem_arr.push({_id: member._id, name: member.username});
+					mem_arr.push({_id: member._id, name: member.firstName+' '+member.lastName});
 			})
 			setMembers(mem_arr);
 			setPageLoading(false);

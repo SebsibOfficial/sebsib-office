@@ -177,7 +177,7 @@ export function Dashboard_Landing () {
         var arr:MemberItem[] = [];
         mem_arr.forEach((member:any) => {
           if (member.roleId != '623cc24a8b7ab06011bd1e60')
-            arr.push({_id: member._id, name: member.username})
+            arr.push({_id: member._id, name: member.firstName+ ''+member.lastName})
         })
         setMembers(arr);
         setMemberLoading(false);

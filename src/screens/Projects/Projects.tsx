@@ -89,7 +89,7 @@ export function Projects_Landing () {
       for (let k = 0; k < mem_arr_resp.length; k++) {
         const member_obj = mem_arr_resp[k];
         if (mem_arr_resp[k].projectsId.includes(prj_id))
-          mem_arr.push({_id: member_obj._id, name: member_obj.username});
+          mem_arr.push({_id: member_obj._id, name: member_obj.firstName+' '+member_obj.lastName});
       }
      
       arr.push({
@@ -207,7 +207,7 @@ export function Projects_Landing () {
     var mem_arr_resp = mem_res.data;
     mem_arr_resp.forEach((mem:any) => {
       if (!mem.projectsId.includes(projectID) && mem.roleId != '623cc24a8b7ab06011bd1e60')
-        mta.push({_id: mem._id, name: mem.username});
+        mta.push({_id: mem._id, name: mem.firstName+' '+mem.lastName});
     })
     setMembersToAdd(mta);
   }

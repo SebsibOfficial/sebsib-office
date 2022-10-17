@@ -16,16 +16,18 @@ interface Props {
 }
 
 class AddMemberPayload {
-  constructor (mn: string, me: string, mu: string, mp: string, pi: string[]){
-    this.memberName = mn;
+  constructor (mfn: string,mln: string, mph: string, me: string, mp: string, pi: string[]){
+    this.firstname = mfn;
+    this.lastname = mln;
+    this.phone = mph;
     this.email = me;
-    this.username = mu;
     this.password = mp;
     this.projectsId = pi;
   }
-  memberName: string;
+  firstname: string;
+  lastname: string;
+  phone: string;
   email: string;
-  username: string;
   password: string;
   projectsId: string[];
 }
@@ -42,6 +44,9 @@ export default function Add_Modify_Member(props:Props) {
   /*############# STATES ############### */
   const [memberName, setMemberName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
+  const [memberPhone, setMemberPhone] = useState("");
+  const [memberLastName, setMemberLastName] = useState("");
+  const [memberFirstName, setMemberFirstName] = useState("");
   const [memberUsername, setMemberUsername] = useState("");
   const [memberPassword, setMemberPassword] = useState("");
   const [projectsInvolved, setProjectsInvolved] = useState<string[]>([]);
@@ -80,7 +85,9 @@ export default function Add_Modify_Member(props:Props) {
     GetMember(params.id).then((res:any) => {
       if (res.code == 200){
         console.log(res.data);
-        setMemberUsername(res.data.username);
+        setMemberFirstName(res.data.firstName)
+        setMemberLastName(res.data.lastName)
+        setMemberPhone(res.data.phone)
         setMemberEmail(res.data.email);
         setProjectsInvolved(res.data.projectsId);
         var projectList = [...projects];
@@ -120,11 +127,11 @@ export default function Add_Modify_Member(props:Props) {
       setProjectsInvolved(pi);
     }
   }
-
+//(mfn: string,mln: string, mph: string, me: string, mu: string, mp: string, pi: string[]){
   function saveAddButtonHandler () {
     setBtnLoading(true);
     if (props.pageType === 'ADD'){
-      var payload = new AddMemberPayload(memberName, memberEmail, memberUsername, memberPassword, projectsInvolved);
+      var payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberEmail, memberPassword, projectsInvolved);
       AddMember(payload).then(res => {
         if (res.code == 200) {
           setBtnLoading(false);
@@ -132,12 +139,12 @@ export default function Add_Modify_Member(props:Props) {
         } else {
           console.log(res.data);
           setBtnLoading(false);
-          Notif?.setNotification({code: res.code, type: "ERROR", message: res.data, id:1})
+          Notif?.setNotification({code: res.code, type: "ERROR", message: res.data.message, id:1})
         }
       })
     }
     else if (props.pageType === 'EDIT') {
-      var payload = new AddMemberPayload(memberName, memberEmail, memberUsername, memberPassword, projectsInvolved);
+      var payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberEmail, memberPassword, projectsInvolved);
       EditMember(params.id as string, payload).then(res => {
         if (res.code == 200) {
           setBtnLoading(false);
@@ -160,16 +167,20 @@ export default function Add_Modify_Member(props:Props) {
       </Sb_Alert>
         <Col md="3" className="me-4">
 					<Form.Group className="mb-3" controlId="AddMemberName">
-						<Form.Label><Sb_Text font={16}>Member Name</Sb_Text></Form.Label>
-						<Form.Control size="sm" type="text" placeholder="Name" value={memberName} onChange={(e) => setMemberName(e.target.value)} disabled = {true}/>
+						<Form.Label><Sb_Text font={16}>Member First Name</Sb_Text></Form.Label>
+						<Form.Control size="sm" type="text" placeholder="Name" value={memberFirstName} onChange={(e) => setMemberFirstName(e.target.value)}/>
+					</Form.Group>
+          <Form.Group className="mb-3" controlId="AddMemberName">
+						<Form.Label><Sb_Text font={16}>Member Last Name</Sb_Text></Form.Label>
+						<Form.Control size="sm" type="text" placeholder="Name" value={memberLastName} onChange={(e) => setMemberLastName(e.target.value)}/>
+					</Form.Group>
+          <Form.Group className="mb-3" controlId="AddMemberName">
+						<Form.Label><Sb_Text font={16}>Member Phone</Sb_Text></Form.Label>
+						<Form.Control size="sm" type="text" placeholder="Name" value={memberPhone} onChange={(e) => setMemberPhone(e.target.value)}/>
 					</Form.Group>
           <Form.Group className="mb-3" controlId="AddMemberEmail">
 						<Form.Label><Sb_Text font={16}>Email</Sb_Text></Form.Label>
 						<Form.Control size="sm" type="text" placeholder="Email" value={memberEmail} onChange={(e) => setMemberEmail(e.target.value)}/>
-					</Form.Group>
-          <Form.Group className="mb-3" controlId="AddMemberUsername">
-						<Form.Label><Sb_Text font={16}>Member Username</Sb_Text></Form.Label>
-						<Form.Control size="sm" type="text" placeholder="Name" value={memberUsername} onChange={(e) => setMemberUsername(e.target.value)}/>
 					</Form.Group>
           <Form.Group className="mb-3" controlId="AddMemberPassword">
 						<Form.Label><Sb_Text font={16}>Password</Sb_Text></Form.Label><br></br>

@@ -97,8 +97,8 @@ export default function View_Survey () {
         var res = await GetMember(responses[index].enumratorId);
         if (res.code == 200) {
           resp.push(responses[index]._id);
-          enumr.push(res.data.username);
-          modifiedResp[index].enumratorName = res.data.username;
+          enumr.push(res.data.firstName+' '+res.data.lastName);
+          modifiedResp[index].enumratorName = res.data.firstName+' '+res.data.lastName;
         }
       }      
     }
