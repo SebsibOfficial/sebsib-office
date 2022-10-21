@@ -56,17 +56,17 @@ export default function Register() {
     setPackage("");
     setPhone("");
   }
+
+  function isInfoGood() {
+    if ( name !== "" && Fname !== "" && email !== "" && phone !== "" &&  org !== "" && pkg !== "" ) {
+      return true
+    } else return false
+  }
+
   async function registerRequest() {
     if (pkg !== 'FREE TRIAL' && (tranNo == "" || bank == null)) {return alert("Enter Bank infomation!")}
     setBtnLoading(true);
-    if (
-      name !== "" &&
-      Fname !== "" &&
-      email !== "" &&
-      phone !== "" &&
-      org !== "" &&
-      pkg !== ""
-    ) {
+    if (isInfoGood()) {
       SendRequest("REGISTER", 
       {firstname: name, lastname: Fname, email: email, phone: phone, orgname: org, pkg: pkg, bank: bank, transno: tranNo, subType: subType})
       .then(result => {
@@ -258,7 +258,7 @@ export default function Register() {
             
           </div>
           <div style={{ textAlign: "center", padding: "1.5em" }}>
-            <button onClick={() => registerRequest()} disabled={btnLoading}>
+            <button onClick={() => registerRequest()} disabled={btnLoading || !isInfoGood()}>
               {btnLoading ? <Sb_Loader /> : t('register.regis')}
             </button>
           </div>

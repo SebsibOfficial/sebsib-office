@@ -24,6 +24,7 @@ export default function Register() {
   const [pkg, setPackage] = useState("");
   const [subType, setSubType] = useState<string>("ONE_MONTH");
   const [fetchedName, setFetchedName] = useState("");
+  const [fetchedId, setFetchedId] = useState("");
   const [fetchedDay, setFetchedDay] = useState("");
   const [fetchedPkg, setFetchedPkg] = useState("");
   const [bank, setBank] = useState<"DASHEN" | "CBE" | null>();
@@ -46,19 +47,20 @@ export default function Register() {
     setFetchedDay("");
     setFetchedPkg("");
   }
+
+  function isInfoGood() {
+    if ( name !== "" && Fname !== "" && email !== "" && phone !== "" && pkg !== "" ) {
+      return true
+    } else return false
+  }
+
   async function renewRequest() {
     setBtnLoading(true);
-    if (
-      name !== "" &&
-      Fname !== "" &&
-      email !== "" &&
-      phone !== "" &&
-      pkg !== ""
-    ) {
+    if (isInfoGood()) {
       console.log(subType)
       // Send request
       SendRequest("RENEWAL", 
-      {firstname: name, lastname: Fname, email: email, phone: phone, orgname: fetchedName, pkg: pkg, bank: bank, transno: tranNo, orgId: orgId, subType: subType})
+      {firstname: name, lastname: Fname, email: email, phone: phone, orgname: fetchedName, longOrgId: fetchedId, pkg: pkg, bank: bank, transno: tranNo, orgId: orgId, subType: subType})
       .then(result => {
         if (result.code == 200){
           clearForm();
@@ -85,7 +87,9 @@ export default function Register() {
         setEmail(result.data.owner[0].email)
         setPhone(result.data.owner[0].phone)
         setFetchedName(result.data.name)
+        setFetchedId(result.data.orgId)
         setFetchedDay(calcDate(new Date(result.data.expires)) + " Days")
+        console.log(translateIds("ID", result.data.packageId))
         setFetchedPkg(translateIds("ID", result.data.packageId) as string)
         setFetching(false)
       } else {console.log(result.data); setFetching(false)}
@@ -249,7 +253,7 @@ export default function Register() {
             
           </div>
           <div style={{ textAlign: "center", padding: "1.5em" }}>
-            <button onClick={() => renewRequest()} disabled={btnLoading}>
+            <button  onClick={() => renewRequest()} disabled={btnLoading || !isInfoGood()}>
               {btnLoading ? <Sb_Loader /> : t('renew.renew')}
             </button>
           </div>
