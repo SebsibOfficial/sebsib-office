@@ -10,6 +10,7 @@ import { DeleteSurvey, GetMember, GetResponseList } from "../../utils/api";
 import './View_Survey.css';
 import { translateIds } from "../../utils/helpers";
 import * as XLSX from "xlsx";
+import CryptoJS from "crypto-es";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 
 interface StateInterface {
@@ -103,7 +104,7 @@ export default function View_Survey () {
       }      
     }
     //console.log(modifiedResp);
-    setResponses(modifiedResp);
+    setResponses(modifiedResp.sort(function(a,b) { return new Date(b.sentDate).getTime() - new Date(a.sentDate).getTime() } ));
   }
 
   useEffect(() => {
@@ -149,6 +150,11 @@ export default function View_Survey () {
     return 'Not found';
   }
 
+  function encryptPath (path: string) {
+    var encrypted = CryptoJS.Rabbit.encrypt(path, process.env.REACT_APP_PRIVATE_KEY);
+    return encrypted.toString().replaceAll('/', '*');
+  }
+
   function formatData (questions: Question[], responses: Response[]) {
     var rows:any[][] = [[]];
     var queses:string[] = [];
@@ -170,6 +176,38 @@ export default function View_Survey () {
       rows.push(anses);
     })
     return rows;
+  }
+
+  function properDisplay (answer:Answer) {
+    if (translateIds('ID', answer.inputType) == 'CHOICE' || translateIds('ID', answer.inputType) == 'MULTI-SELECT') {
+      return getAnswer(answer.answer as string)
+    }
+    else if (translateIds('ID', answer.inputType) == 'MULTI-PHOTO' || translateIds('ID', answer.inputType) == 'MULTI-FILE') {
+      if (typeof answer.answer === 'object') {
+        var paths:string[] = answer.answer;
+        return (
+          <>
+            {
+              paths.map((path) => (
+                <a className="d-block" href={`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(path)}`} target={'_blank'}>View File/Photo</a>
+              ))
+            }
+          </>
+        )
+      }
+      else if (typeof answer.answer === 'string') {
+        return (        
+          <a href={`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`} target={'_blank'}>View File/Photo</a>
+        )
+      }
+    }
+    else if (translateIds('ID', answer.inputType) == 'PHOTO' || translateIds('ID', answer.inputType) == 'FILE') {
+      return (        
+        <a href={`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`} target={'_blank'}>View File/Photo</a>
+      )
+    }
+    else
+      return answer.answer
   }
 
   return (
@@ -245,8 +283,7 @@ export default function View_Survey () {
                       response.answers.map((answer => (
                         <td key={answer._id}>
                           {
-                            translateIds('ID', answer.inputType) === "CHOICE" || translateIds('ID', answer.inputType) === "MULTI-SELECT"
-                            ? getAnswer(answer.answer as string) : answer.answer
+                            properDisplay(answer)
                           }
                         </td>
                       )))
