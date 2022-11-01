@@ -165,7 +165,7 @@ export default function Create_Survey () {
                     {console.log(question.inputType)}
                     <Row className="answer-form g-0">
                       {
-                        question.inputType !== "TEXT" ?
+                        question.inputType == "CHOICE" || question.inputType == "MULTI-SELECT" ?
                         question.choices.map((option:any, letter:number) => (
                           <Col className="an-answer mb-1" key={letter}>
                             { String.fromCharCode(letter + 65)+". "+option.text}

@@ -33,6 +33,7 @@ interface Response {
   surveyId: string,
   enumratorId: string,
   enumratorName: string | null,
+  geoPoint?: string,
   sentDate: Date,
   name: string,
   answers: Answer[]
@@ -171,11 +172,60 @@ export default function View_Survey () {
       anses.push(response.enumratorName);
       anses.push(response.sentDate.toString().replace('T',' ').slice(0,16));
       response.answers.forEach((answer:Answer) => {
-        anses.push(translateIds('ID', answer.inputType) == 'TEXT' ? answer.answer : getAnswer(answer.answer));
+        //anses.push(translateIds('ID', answer.inputType) == 'TEXT' ? answer.answer : getAnswer(answer.answer));
+        anses.push(properDisplayString(answer));
       })
       rows.push(anses);
     })
     return rows;
+  }
+
+  function properDisplayString (answer:Answer) {
+    if (translateIds('ID', answer.inputType) == 'CHOICE' || translateIds('ID', answer.inputType) == 'MULTI-SELECT') {
+      return getAnswer(answer.answer as string)
+    }
+    else if (translateIds('ID', answer.inputType) == 'MULTI-PHOTO' || translateIds('ID', answer.inputType) == 'MULTI-FILE') {
+      if (typeof answer.answer === 'object') {
+        var paths:string[] = answer.answer;
+        var out_p:string = "";
+        paths.map((path) => {
+          out_p = out_p.concat(`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(path)} ,`)
+        })
+        return out_p
+      }
+      else if (typeof answer.answer === 'string') {
+        return `${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`
+      }
+    }
+    else if (translateIds('ID', answer.inputType) == 'PHOTO' || translateIds('ID', answer.inputType) == 'FILE') {
+      return `${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`
+    }
+    else if (translateIds('ID', answer.inputType) == 'GEO-POINT' || translateIds('ID', answer.inputType) == 'MULTI-GEO-POINT') {
+      if (typeof answer.answer === 'object') {
+        var locs:string[] = answer.answer;
+        var out_g = ""
+        locs.map((loc) => {
+          out_g = out_g.concat(`https://maps.google.com/?q=${(loc as string).split(',')[0]},${(loc as string).split(',')[1]} ,`)
+        })
+        return out_g
+      }
+      else if (typeof answer.answer === 'string') {
+        return `https://maps.google.com/?q=${(answer.answer as string).split(',')[0]},${(answer.answer as string).split(',')[1]}`
+      }
+    }
+    else {
+      if (typeof answer.answer === 'object') {
+        var anses:string[] = answer.answer;
+        var out_pl = "";
+        anses.map((plain_answer) => (
+          out_pl = out_pl.concat(plain_answer+' ,')
+        ))
+        return out_pl
+      }
+      else if (typeof answer.answer === 'string') {
+        return answer.answer
+      }
+    }
   }
 
   function properDisplay (answer:Answer) {
@@ -206,8 +256,46 @@ export default function View_Survey () {
         <a href={`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`} target={'_blank'}>View File/Photo</a>
       )
     }
-    else
-      return answer.answer
+    else if (translateIds('ID', answer.inputType) == 'GEO-POINT' || translateIds('ID', answer.inputType) == 'MULTI-GEO-POINT') {
+      if (typeof answer.answer === 'object') {
+        var locs:string[] = answer.answer;
+        return (
+          <>
+            {
+              locs.map((loc) => (
+                <a className="d-block" href={`https://maps.google.com/?q=${(loc as string).split(',')[0]},${(loc as string).split(',')[1]}`} target={'_blank'}>View On Google Maps</a>
+              ))
+            }
+          </>
+        )
+      }
+      else if (typeof answer.answer === 'string') {
+        return (        
+          <a className="d-block" href={`https://maps.google.com/?q=${(answer.answer as string).split(',')[0]},${(answer.answer as string).split(',')[1]}`} target={'_blank'}>
+            View On Google Maps
+            </a>
+        )
+      }
+    }
+    else {
+      if (typeof answer.answer === 'object') {
+        var anses:string[] = answer.answer;
+        return (
+          <>
+            {
+              anses.map((plain_answer) => (
+                plain_answer
+              ))
+            }
+          </>
+        )
+      }
+      else if (typeof answer.answer === 'string') {
+        return (        
+          answer.answer
+        )
+      }
+    }
   }
 
   return (
@@ -245,7 +333,7 @@ export default function View_Survey () {
                   </Row>
                   <Row className="answer-form g-0">
                     {
-                      translateIds('ID', question.inputType) !== "TEXT" ?
+                      translateIds('ID', question.inputType) == "CHOICE" || translateIds('ID', question.inputType) == "MULTI-SELECT"?
                       question.options.map((option:any, letter:number) => (
                         <Col className="an-answer mb-1">
                           { String.fromCharCode(letter + 65)+". "+option.text}
@@ -264,6 +352,7 @@ export default function View_Survey () {
               <tr>
                 <th>#</th>
                 <th>Enumrator</th>
+                <th>Sent From</th>
                 <th>Date</th>
                 {
                   questions.map(((question, index) => (
@@ -278,6 +367,13 @@ export default function View_Survey () {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{response.enumratorName}</td>
+                    <td>
+                      {
+                        response.geoPoint != undefined ||  response.geoPoint != null ? 
+                        <a href={`https://maps.google.com/?q=${(response.geoPoint as string).split(',')[0]},${(response.geoPoint as string).split(',')[1]}` ?? '-'}>View on Google Maps</a> :
+                        "-"
+                      }
+                    </td>
                     <td>{response.sentDate.toString().substring(0, 10)}</td>
                     {
                       response.answers.map((answer => (
