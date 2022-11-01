@@ -9,7 +9,9 @@ import Sb_Text from "../Sb_Text/Sb_Text";
 import './Sb_Question.css';
 
 export type ActionType = "ADD" | "EDIT";
-export type InputType = "CHOICE" | "TEXT" | "MULTI-SELECT";
+export type InputType = "CHOICE" | "TEXT" | "MULTI-SELECT" | "NUMBER" | "GEO-POINT" 
+| "DATE" | "TIME" | "FILE" | "PHOTO" | "MULTI-NUMBER" | "MULTI-GEO-POINT" | "MULTI-DATE" 
+| "MULTI-TIME" | "MULTI-FILE" | "MULTI-PHOTO" | "MULTI-TEXT";
 export interface Choice {
   _id: string,
   text: string
@@ -111,7 +113,7 @@ export default function Sb_Question (props:Props) {
 
   function addButtonClickHandler() {
     var payload = new Payload(props.id, props.number, question, choices, inputType, showPattern, mandatory);
-    inputType === 'TEXT' ? payload.choices = [] : null
+    (inputType !== 'CHOICE' && inputType !== 'MULTI-SELECT') ? payload.choices = [] : null
     props.onAddEdit(props.id, props.state, payload);
     setLastExport(payload);
   }
