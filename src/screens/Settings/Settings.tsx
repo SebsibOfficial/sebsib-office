@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Container from "../../components/Sb_Container/Sb_Container";
@@ -63,8 +63,10 @@ export default function Settings () {
   }
 
   return (
+    <>
     <Col md="5">
       <Sb_Alert>Enter the organization details and settings you want to change, then click <b>Save Changes</b> to save you changes</Sb_Alert>
+      <Sb_Text font={20} weight={600}>Organization ID: {decodeJWT(token as string).shortOrgId}</Sb_Text><br></br>
       <Sb_Text font={16} weight={500}>Credentials</Sb_Text>
       <Sb_Container className="p-3 mt-2 mb-2">
         <div style={{'width':'70%'}}>
@@ -102,5 +104,6 @@ export default function Settings () {
         <Sb_Text font={12} color="--lightGrey">Save Changes</Sb_Text>
       </Button>
     </Col>
+    </>
   )
 }
