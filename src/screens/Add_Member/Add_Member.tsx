@@ -9,17 +9,18 @@ import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { useAuth } from "../../states/AuthContext";
 import { NotifContext } from "../../states/NotifContext";
 import { AddMember, EditMember, GetMember, GetMemberList, GetProjectList } from "../../utils/api";
-import { decodeJWT } from "../../utils/helpers";
+import { decodeJWT, translateIds } from "../../utils/helpers";
 
 interface Props {
   pageType: "ADD" | "EDIT"
 }
 
 class AddMemberPayload {
-  constructor (mfn: string,mln: string, mph: string, me: string, mp: string, pi: string[]){
+  constructor (mfn: string,mln: string, mph: string, rid: string, me: string, mp: string, pi: string[]){
     this.firstname = mfn;
     this.lastname = mln;
     this.phone = mph;
+    this.role = rid;
     this.email = me;
     this.password = mp;
     this.projectsId = pi;
@@ -27,6 +28,7 @@ class AddMemberPayload {
   firstname: string;
   lastname: string;
   phone: string;
+  role: string;
   email: string;
   password: string;
   projectsId: string[];
@@ -47,6 +49,7 @@ export default function Add_Modify_Member(props:Props) {
   const [memberPhone, setMemberPhone] = useState("");
   const [memberLastName, setMemberLastName] = useState("");
   const [memberFirstName, setMemberFirstName] = useState("");
+  const [memberRole, setMemberRole] = useState("MEMBER");
   const [memberUsername, setMemberUsername] = useState("");
   const [memberPassword, setMemberPassword] = useState("");
   const [projectsInvolved, setProjectsInvolved] = useState<string[]>([]);
@@ -88,6 +91,7 @@ export default function Add_Modify_Member(props:Props) {
         setMemberFirstName(res.data.firstName)
         setMemberLastName(res.data.lastName)
         setMemberPhone(res.data.phone)
+        setMemberRole(translateIds("ID",res.data.roleId) as string)
         setMemberEmail(res.data.email);
         setProjectsInvolved(res.data.projectsId);
         var projectList = [...projects];
@@ -131,7 +135,12 @@ export default function Add_Modify_Member(props:Props) {
   function saveAddButtonHandler () {
     setBtnLoading(true);
     if (props.pageType === 'ADD'){
-      var payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberEmail, memberPassword, projectsInvolved);
+      var payload:AddMemberPayload;
+      if (memberRole == "MEMBER")
+        payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, projectsInvolved);
+      else (memberRole == "ANALYST")
+        payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, []);
+      
       AddMember(payload).then(res => {
         if (res.code == 200) {
           setBtnLoading(false);
@@ -144,7 +153,7 @@ export default function Add_Modify_Member(props:Props) {
       })
     }
     else if (props.pageType === 'EDIT') {
-      var payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberEmail, memberPassword, projectsInvolved);
+      var payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, projectsInvolved);
       EditMember(params.id as string, payload).then(res => {
         if (res.code == 200) {
           setBtnLoading(false);
@@ -176,8 +185,27 @@ export default function Add_Modify_Member(props:Props) {
 					</Form.Group>
           <Form.Group className="mb-3" controlId="AddMemberName">
 						<Form.Label><Sb_Text font={16}>Member Phone</Sb_Text></Form.Label>
-						<Form.Control size="sm" type="text" placeholder="Name" value={memberPhone} onChange={(e) => setMemberPhone(e.target.value)}/>
+						<Form.Control size="sm" type="text" placeholder="Phone" value={memberPhone} onChange={(e) => setMemberPhone(e.target.value)}/>
 					</Form.Group>
+          {
+             props.pageType == 'ADD' ? 
+             <>
+              <Form.Group className="mb-3" controlId="AddMemberName">
+                <Form.Label><Sb_Text font={16}>Member Role</Sb_Text></Form.Label>
+                <Form.Select size="sm"
+                  value={memberRole}
+                  name="package"
+                  id="pk"
+                  onChange={(e) => setMemberRole(e.target.value)}
+                  required>
+                    <option value="MEMBER">Enumerator</option>
+                    <option value="ANALYST">Analyst</option>
+                  </Form.Select>
+              </Form.Group>
+             </>
+             :
+             null
+          }
           <Form.Group className="mb-3" controlId="AddMemberEmail">
 						<Form.Label><Sb_Text font={16}>Email</Sb_Text></Form.Label>
 						<Form.Control size="sm" type="text" placeholder="Email" value={memberEmail} onChange={(e) => setMemberEmail(e.target.value)}/>
@@ -187,19 +215,39 @@ export default function Add_Modify_Member(props:Props) {
             <Form.Label><Sb_Text weight={300} font={12}>Do not forget this password, Copy it if you can</Sb_Text></Form.Label>
 						<Form.Control size="sm" type="text" placeholder="Password" value={memberPassword} onChange={(e) => setMemberPassword(e.target.value)}/>
 					</Form.Group>
+          {
+             memberRole == "ANALYST" ? 
+             <>
+              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
+                <Sb_Text font={12} color="--lightGrey">
+                  {
+                    btnLoading ? <Sb_Loader/> :<span>{props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}</span>
+                  }
+                </Sb_Text>
+              </Button>
+             </>
+             :
+             null
+          }
         </Col>
         <Col md="4">
-          <Sb_Text font={16} weight={500}><p>Projects Involved In</p></Sb_Text>
-          <Sb_List 
-					items={projects} 
-					listType="PROJECT" compType='SELECT' onAction={(id, name, ac) => projectSelectHandler(id, ac)}/>
-          <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
-            <Sb_Text font={12} color="--lightGrey">
-              {
-                btnLoading ? <Sb_Loader/> :<span>{props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}</span>
-              }
-            </Sb_Text>
-          </Button>
+          {
+            memberRole == "MEMBER" ? 
+            <>
+              <Sb_Text font={16} weight={500}><p>Projects Involved In</p></Sb_Text>
+              <Sb_List 
+              items={projects} 
+              listType="PROJECT" compType='SELECT' onAction={(id, name, ac) => projectSelectHandler(id, ac)}/>
+              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
+                <Sb_Text font={12} color="--lightGrey">
+                  {
+                    btnLoading ? <Sb_Loader/> :<span>{props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}</span>
+                  }
+                </Sb_Text>
+              </Button>
+            </> 
+            : null
+          }          
         </Col>
       </Row>
     </Col>
