@@ -202,6 +202,7 @@ export default function Sb_Question (props:Props) {
                     <option value={"MULTI-GEO-POINT"}>Multiple Geo Point Input</option>
                     <option value={"MULTI-DATE"}>Multiple Date Input</option>
                     <option value={"MULTI-TIME"}>Multiple Time Input</option>
+                    <option value={"MULTI-FILE"}>Multiple File Upload</option>
                     <option value={"MULTI-PHOTO"}>Multiple Photo Captures</option>
                     <option value={"MULTI-TEXT"}>Multiple Text Input</option>
                   </Form.Select>
