@@ -2,6 +2,7 @@
     width: 100%;
     background-color: var(--lightPurple);
     display: flex;
+    border-radius: 3px;
 }
 .HORIZONTAL-THICK {
     border-top: 6px solid var(--primary);
@@ -11,9 +12,11 @@
 }
 .HORIZONTAL-THIN {
     border-top: 2px solid var(--primary);
+    border-radius: 0px;
 }
 .VERTICAL-THIN {
     border-left: 2px solid var(--primary);
+    border-radius: 0px;
 }
 .PURPLE {
     background-color: var(--lightPurple) !important;

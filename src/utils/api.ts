@@ -102,6 +102,7 @@ export interface AddEditMemberInterface {
   firstname?: string;
   lastname?: string;
   phone?: string;
+  role: string
   password: string;
   projectsId: string[];
 }

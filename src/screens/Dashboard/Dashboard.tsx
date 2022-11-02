@@ -103,7 +103,7 @@ export default function Dashboard () {
     <>
     <Row className='dashboard-container g-0'>
       <Col md='2'>
-        <Sb_Side_Nav name={decodeJWT(token as string).shortOrgId}/>
+        <Sb_Side_Nav name={decodeJWT(token as string).shortOrgId + ' \n' +decodeJWT(token as string).email}/>
       </Col>
       <Col style={{'padding':'1em 4em', 'overflowX':'auto'}}>
         <Row className='g-0' style={{'marginBottom':'3em'}}>
@@ -158,6 +158,7 @@ export function Dashboard_Landing () {
   
   // ## MEMBER RELATED STATES
   const [members, setMembers] = useState<MemberItem[]>([])
+  const [analysts, setAnalyst] = useState<MemberItem[]>([])
   const [memberLoading, setMemberLoading] = useState<boolean>(true);
   // ## PROJECT RELATED STATES
   const [projects, setProjects] = useState<ProjectItem[]>([]);
@@ -175,11 +176,17 @@ export function Dashboard_Landing () {
       if (res.code == 200){
         var mem_arr = res.data;
         var arr:MemberItem[] = [];
+        var Analystarr:MemberItem[] = [];
         mem_arr.forEach((member:any) => {
-          if (member.roleId != '623cc24a8b7ab06011bd1e60')
+          if (member.roleId == '623cc24a8b7ab06011bd1e5f')
             arr.push({_id: member._id, name: member.firstName+ ''+member.lastName})
         })
+        mem_arr.forEach((member:any) => {
+          if (member.roleId == '6362ad70297414bfb79bdf01')
+          Analystarr.push({_id: member._id, name: member.firstName+ ''+member.lastName})
+        })
         setMembers(arr);
+        setAnalyst(Analystarr);
         setMemberLoading(false);
         setRecentLoading(false);
       } else {
@@ -376,7 +383,26 @@ export function Dashboard_Landing () {
             <div className='dash-cols dash-members'>
               <Row className='g-0 mb-2'>
                 <Col md="8">
-                  <Sb_Text font={16}>Member List</Sb_Text>
+                  <Sb_Text font={16}>Analysts</Sb_Text>
+                </Col>
+                <Col className='text-end' style={{'cursor':'pointer'}} onClick={() => navigate('members', { state:true })}>
+                  <Sb_Text font={12} weight={300}>See All</Sb_Text>
+                </Col>
+              </Row>
+              <Row>
+              <Sb_Alert>This is the list of analysts in your organization</Sb_Alert>
+                <Sb_Container borderDir='HORIZONTAL' className='p-3'>
+                {
+                  memberLoading ? <Sb_Loader/> : <Sb_List items={analysts} listType="MEMBER" compType='DISPLAY' onAction={(id, ac) => console.log()}/>
+                }
+                </Sb_Container>
+              </Row>
+            </div>
+
+            <div className='dash-cols dash-members'>
+              <Row className='g-0 mb-2'>
+                <Col md="8">
+                  <Sb_Text font={16}>Enumrators</Sb_Text>
                 </Col>
                 <Col className='text-end' style={{'cursor':'pointer'}} onClick={() => navigate('members', { state:true })}>
                   <Sb_Text font={12} weight={300}>See All</Sb_Text>

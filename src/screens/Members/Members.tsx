@@ -96,7 +96,7 @@ export function Members_Landing () {
           Notif?.setNotification({type: "OK", message: "Member Deleted", id:1})
         } else {
           console.log(res.data.message);
-          Notif?.setNotification({type: "ERROR", message: res.data.message, id:1})
+          Notif?.setNotification({type: "ERROR", code: res.code,  message: res.data.message, id:1})
         }
       })
     }

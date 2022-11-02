@@ -206,7 +206,7 @@ export function Projects_Landing () {
     var mem_res = await GetMemberList(decodeJWT(token as string).org);
     var mem_arr_resp = mem_res.data;
     mem_arr_resp.forEach((mem:any) => {
-      if (!mem.projectsId.includes(projectID) && mem.roleId != '623cc24a8b7ab06011bd1e60')
+      if (!mem.projectsId.includes(projectID) && mem.roleId == '623cc24a8b7ab06011bd1e5f')
         mta.push({_id: mem._id, name: mem.firstName+' '+mem.lastName});
     })
     setMembersToAdd(mta);
