@@ -43,3 +43,20 @@ td {
   margin-top: 2em !important;
   width: 70% !important;
 }
+
+.sb-pagination {
+  transform: scale(0.8);
+}
+
+.sb-pagination li a{
+  color: var(--secondary);
+}
+
+.sb-pagination .active span {
+  background-color: var(--primary) !important;
+}
+
+.sb-pagination .page-link:focus, .sb-pagination .page-link:hover {
+  box-shadow:none;
+  color: var(--primary);
+}

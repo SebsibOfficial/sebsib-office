@@ -1,7 +1,7 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Collapse, Row, Table } from "react-bootstrap";
+import { Button, Col, Collapse, Pagination, Row, Table } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
@@ -12,6 +12,7 @@ import { translateIds } from "../../utils/helpers";
 import * as XLSX from "xlsx";
 import CryptoJS from "crypto-es";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
+import Sb_Loader from "../../components/Sb_Loader";
 
 interface StateInterface {
   hash: string,
@@ -57,7 +58,11 @@ export default function View_Survey () {
   const Notif = useContext(NotifContext);
   const state = useLocation() as StateInterface;
   const [modalState, setModalState] = useState(false);
-  const [pageLoading, setPageLoading] = useState(false);
+  const [arSt, setArSt] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  const [currPage, setCurrPage] = useState(0);
+  const [arEnd, setArEnd] = useState(10);
+  const [pageLoading, setPageLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [responses, setResponses] = useState<Response[]>([]);
   const [collapse, setCollapse] = useState(false);
@@ -69,10 +74,26 @@ export default function View_Survey () {
     }
   },[location.state]);
   
+  let items = [];
+  for (let number = 1; number <= Math.ceil(responses.length/perPage); number++) {
+    items.push(
+      <Pagination.Item key={number} active={number === currPage + 1} onClick={() => goTo(number-1)}>
+        {number}
+      </Pagination.Item>,
+    );
+}
+
   const exportToXLSX = (Jdata:any, fileName:string) => {
     const ws = XLSX.utils.aoa_to_sheet(Jdata);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     XLSX.writeFile(wb, `${fileName}.xlsx`);
+  }
+
+  function goTo(page:number) {
+    if (page < Math.ceil(responses.length/perPage)){
+      setCurrPage(page)
+      setArSt(page*perPage); setArEnd(page*perPage + perPage);
+    }
   }
 
   async function loadResponses () {
@@ -299,6 +320,8 @@ export default function View_Survey () {
   }
 
   return (
+    pageLoading ? <Sb_Loader full/> :
+    <>
     <Col className="veiw-survey">
       <Row className="g-0 mb-3" style={{'margin': 'auto'}}>
         <Sb_Alert>This where you can view the gathered data, not only view but <b>Export</b> it to Excel also. You can <b>Delete</b> the survey and also view the questions and choices of the survey by clicking the <b>View Questionnaire</b> button</Sb_Alert>
@@ -363,7 +386,7 @@ export default function View_Survey () {
             </thead>
             <tbody>
               {
-                responses.map(((response, index) => (
+                responses.slice(arSt, arEnd).map(((response, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{response.enumratorName}</td>
@@ -389,6 +412,15 @@ export default function View_Survey () {
               }
             </tbody>
           </Table>
+          <Row>
+            <Col className="d-flex m-4" style={{'justifyContent':'center'}}>
+              <Pagination className="sb-pagination">
+                <Pagination.Item onClick={() => goTo(currPage-1)}>Prev</Pagination.Item>
+                {items}
+                <Pagination.Item onClick={() => goTo(currPage+1)}>Next</Pagination.Item>
+              </Pagination>
+            </Col>
+          </Row>
         </Col>
       </Row>
       {/* ---------------------------------The Modal------------------------------------------------------ */}
@@ -410,5 +442,6 @@ export default function View_Survey () {
           </>        
       </Sb_Modal>
     </Col>
+    </>
   )
 }
