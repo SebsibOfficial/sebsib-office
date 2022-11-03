@@ -81,14 +81,15 @@ export function Projects_Landing () {
         const survey_obj = srv_arr_resp[j];
         srv_arr.push({_id: survey_obj._id, name: survey_obj.name})
       }
-      console.log("Hey");
+
       // Get the members involved in the project
       var mem_res = await GetMemberList(decodeJWT(token as string).org);
       var mem_arr_resp = mem_res.data;
       var mem_arr:SurveyMember[] = [];
       for (let k = 0; k < mem_arr_resp.length; k++) {
         const member_obj = mem_arr_resp[k];
-        if (mem_arr_resp[k].projectsId.includes(prj_id))
+        // NOT SHOW OWNER
+        if (mem_arr_resp[k].projectsId.includes(prj_id) && mem_arr_resp[k].roleId != '623cc24a8b7ab06011bd1e60')
           mem_arr.push({_id: member_obj._id, name: member_obj.firstName+' '+member_obj.lastName});
       }
      

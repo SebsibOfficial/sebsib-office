@@ -77,7 +77,9 @@ export default function Create_Project () {
 
 	async function createProjectHandler () {
 		setBtnLoading(true);
-		console.log(selectedMembers);
+    // Add owner
+    if (decodeJWT(token as string).role == '623cc24a8b7ab06011bd1e60')
+      selectedMembers.push(decodeJWT(token as string)._id)
 		var res = await CreateProject(projectname, selectedMembers);
 		if (res.code == 200){
 			navigate('/dashboard/projects', {state: true});
