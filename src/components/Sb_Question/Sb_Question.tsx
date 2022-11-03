@@ -119,13 +119,13 @@ export default function Sb_Question (props:Props) {
   }
 
   function hasDifference() {
-    if (inputType === 'TEXT') {
-      if (lastExport?.question !== question || lastExport.inputType !== inputType || lastExport.showPattern !== showPattern)
+    if (inputType !== 'CHOICE' && inputType !== 'MULTI-SELECT') {
+      if (lastExport?.question !== question || lastExport.inputType !== inputType || lastExport.showPattern !== showPattern || lastExport.mandatory !== mandatory)
         return true
     }
     else {
       if (lastExport?.choices !== choices || lastExport.question !== question || 
-        lastExport.inputType !== inputType || lastExport.showPattern !== showPattern)
+        lastExport.inputType !== inputType || lastExport.showPattern !== showPattern || lastExport.mandatory !== mandatory)
         return true
       else
         return false
