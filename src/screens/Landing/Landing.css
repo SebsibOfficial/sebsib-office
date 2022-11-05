@@ -16,7 +16,7 @@ body {
 }
 /* ########################################################### */
 nav {
-  width: 100vw;
+  width: 99vw;
   display: flex;
   background-color: var(--lightGrey);
   z-index: 9;
@@ -250,17 +250,9 @@ footer {
   position: relative;
   font-family: "HelveticaNeue";
   text-align: center;
-}
-footer::before {
-  background-image: url("../../assets/officeLogoBlack.svg");
-  opacity: 0.05;
-  background-size: 20% 40%;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
-  content: "";
+  background-color: var(--secondary);
+  color: white;
+  padding-bottom: 3em;
 }
 footer h1 {
   font-weight: 900;

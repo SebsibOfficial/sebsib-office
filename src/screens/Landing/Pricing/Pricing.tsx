@@ -1,8 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "../Landing.css";
 import "./Pricing.css";
 import Nav from "../Nav/Nav";
+import { Button, Col, Row } from "react-bootstrap";
+import {Card_Comp, CardI }from "./Card_Comp";
+import data from "./priceData";
 
 export default function Pricing() {
   function scrollTo(to: string) {
@@ -14,8 +17,9 @@ export default function Pricing() {
   }, []);
 
   const { t } = useTranslation();
+  const [priceType, setPriceType] = useState<"ANNUAL" | "ONE_MONTH">("ONE_MONTH")
   return (
-    <div style={{'overflowX':'hidden'}}>
+    <div>
       <Nav />
       <section className="price_section" id="price-top">
         <div className="title">
@@ -23,84 +27,22 @@ export default function Pricing() {
             <p>PACKAGES</p>
           </div>
           <div className="toggle_price">
-            <span id="mth" className="active_toggle_mth">
+            <span id="mth" className={priceType == 'ONE_MONTH' ? 'active_toggle_mth' : ''}
+            style={{'cursor':'pointer'}}
+            onClick={() => setPriceType("ONE_MONTH")}>
               {t("pricing.monthly")}
             </span>
-            <span id="yr">{t("pricing.yearly")}</span>
+            <span id="yr" className={priceType == 'ANNUAL' ? 'active_toggle_yr' : ''} style={{'cursor':'pointer'}} 
+            onClick={() => setPriceType("ANNUAL")}>
+              {t("pricing.yearly")}
+            </span>
           </div>
         </div>
-        <div className="cards_prices">
-          <div className="price_card white">
-            <span className="cut_out"></span>
-            <div className="card_content">
-              <div className="card_title">Free Trial</div>
-              <ul className="card_list">
-                <li className="card_list_item">1 Project</li>
-                <li className="card_list_item">2 Surveys</li>
-                <li className="card_list_item">3 Members</li>
-                <li className="card_list_item">50 Responses</li>
-                <li className="card_list_item">30 Days</li>
-              </ul>
-              <div className="card_title">Free</div>
-            </div>
-          </div>
-          <div className="price_card black op-3">
-            <span className="cut_out"></span>
-            <div className="card_content">
-              <div className="card_title">Basic</div>
-              <ul className="card_list">
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-              </ul>
-              <div className="card_title">TBD</div>
-            </div>
-          </div>
-          <div className="price_card black op-3">
-            <span className="cut_out"></span>
-            <div className="card_content">
-              <div className="card_title">Standard</div>
-              <ul className="card_list">
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-              </ul>
-              <div className="card_title">TBD</div>
-            </div>
-          </div>
-          <div className="price_card purple op-3">
-            <span className="cut_out"></span>
-            <div className="card_content">
-              <div className="card_title">Premium</div>
-              <ul className="card_list">
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-              </ul>
-              <div className="card_title">TBD</div>
-            </div>
-          </div>
-          <div className="price_card yellow op-3">
-            <span className="cut_out"></span>
-            <div className="card_content">
-              <div className="card_title">Enterprise</div>
-              <ul className="card_list">
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-                <li className="card_list_item">TBD</li>
-              </ul>
-              <div className="card_title">TBD</div>
-            </div>
-          </div>
-        </div>
+        {
+          data.map((item:CardI) => (
+            <Card_Comp data={item} annual = {priceType == "ANNUAL"}/>
+          ))
+        }
       </section>
     </div>
   );
