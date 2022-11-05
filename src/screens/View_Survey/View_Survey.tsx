@@ -9,7 +9,8 @@ import { NotifContext } from "../../states/NotifContext";
 import { DeleteSurvey, GetMember, GetResponseList } from "../../utils/api";
 import './View_Survey.css';
 import { translateIds } from "../../utils/helpers";
-import * as XLSX from "xlsx";
+// import * as XLSX from "xlsx";
+import * as XLSX from "sheetjs-style";
 import CryptoJS from "crypto-es";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Loader from "../../components/Sb_Loader";
@@ -85,6 +86,51 @@ export default function View_Survey () {
 
   const exportToXLSX = (Jdata:any, fileName:string) => {
     const ws = XLSX.utils.aoa_to_sheet(Jdata);
+    var wscols = [
+      {wch: 30},
+      {wch: 20},
+    ];
+
+    ws['!cols'] = wscols;
+    for (const [key, value] of Object.entries(ws)) {
+      // Set Question Row Style
+      if ((key.length == 2 && key.charAt(1) == '5')) {
+        ws[key].s = { // set the style for target cell
+          font: {
+            bold: true
+          },
+        };
+      }
+      // Set Links Style
+      if ((ws[key].v+'').includes(process.env.REACT_APP_FILE_SERVER_URL as string) || (ws[key].v+'').includes("https://maps.google")){
+        if (!(ws[key].v+'').includes(',')){
+          ws[key].l = { Target: ws[key].v, Tooltip: "View" };
+        }
+        ws[key].s = { 
+          font: {
+            underline: true
+          },
+          color: {rgb: "FF0000FF"}
+        };
+      }
+      // Set Number Format
+      if (!isNaN(Number(ws[key].v))) {
+        ws[key].v = Number(ws[key].v)
+        ws[key].t = 'n'
+      }
+      // Set Date Format
+      if ((ws[key].v+'')[4] == '-' && (ws[key].v+'')[7] == '-' && (ws[key].v+'').length == 16) {
+        ws[key].t = 'd'
+      }
+    }
+    // Set Excel Title style
+    ws["A2"].s = { // set the style for target cell
+      font: {
+        name:"Arial",
+        sz: 24,
+        bold: true,
+      },
+    };
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     XLSX.writeFile(wb, `${fileName}.xlsx`);
   }
@@ -181,7 +227,8 @@ export default function View_Survey () {
     var rows:any[][] = [[]];
     var queses:string[] = [];
     rows.push([state.state.name + ' Generated Report'])
-    rows.push([" "]);
+    rows.push(["Generated on : "+new Date().toLocaleDateString()]);
+    rows.push([])
     queses.push("Enumrator Name");
     queses.push("Sent Date and Time");
     questions.forEach((question:Question) => {
