@@ -179,11 +179,11 @@ export function Dashboard_Landing () {
         var Analystarr:MemberItem[] = [];
         mem_arr.forEach((member:any) => {
           if (member.roleId == '623cc24a8b7ab06011bd1e5f')
-            arr.push({_id: member._id, name: member.firstName+ ''+member.lastName})
+            arr.push({_id: member._id, name: member.firstName+ ' '+member.lastName})
         })
         mem_arr.forEach((member:any) => {
           if (member.roleId == '6362ad70297414bfb79bdf01')
-          Analystarr.push({_id: member._id, name: member.firstName+ ''+member.lastName})
+          Analystarr.push({_id: member._id, name: member.firstName+ ' '+member.lastName})
         })
         setMembers(arr);
         setAnalyst(Analystarr);
