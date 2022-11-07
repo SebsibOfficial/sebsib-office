@@ -85,6 +85,15 @@ export async function GetSurveyListByProject(projId: string): Promise<ResponseIn
   }
 }
 
+export async function GetSurvey(id: string): Promise<ResponseInterface>{
+  try {
+    var result = await axios.get('get/survey/'+id);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
 export async function GetRecentResponseList(orgId: string):Promise<ResponseInterface>{
   try {
     var result = await axios.get('get/recentresponse/'+orgId);
