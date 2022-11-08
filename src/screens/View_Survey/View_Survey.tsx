@@ -68,7 +68,7 @@ export default function View_Survey () {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [responses, setResponses] = useState<Response[]>([]);
   const [collapse, setCollapse] = useState(false);
-  const [survey, setSurvey] = useState<any>();
+  const [shortSurveyId, setShortSurveyId] = useState("");
 
   // Prevents routing from the URL
   useEffect(() => {
@@ -154,6 +154,13 @@ export default function View_Survey () {
     } else {
       console.log(res.data);
     }
+
+    GetSurvey(location.pathname.slice(location.pathname.length - 24, location.pathname.length)).then(res => {
+      if (res.code == 200){
+        console.log(res.data)
+        setShortSurveyId(res.data.shortSurveyId as string);
+      }
+    })
   }
 
   async function filterResponses (responses:Response[]) {
@@ -179,12 +186,6 @@ export default function View_Survey () {
 
   useEffect(() => {
     loadResponses();
-    GetSurvey(location.pathname.slice(location.pathname.length - 24, location.pathname.length)).then(res => {
-      if (res.code == 200){
-        console.log(res.data)
-        setSurvey(res.data);
-      }
-    })
   }, [])
 
   async function deleteSurveyHandler () {
@@ -381,7 +382,7 @@ export default function View_Survey () {
       <Row className="g-0 mb-3" style={{'margin': 'auto'}}>
         <Sb_Alert>This where you can view the gathered data, not only view but <b>Export</b> it to Excel also. You can <b>Delete</b> the survey and also view the questions and choices of the survey by clicking the <b>View Questionnaire</b> button</Sb_Alert>
         <Col>
-          <Sb_Text font={32} weight={600}>{state.state.name}</Sb_Text><br></br><Sb_Text font={12}>ID: {survey.shortSurveyId}</Sb_Text>
+          <Sb_Text font={32} weight={600}>{state.state.name}</Sb_Text><br></br><Sb_Text font={12}>ID: {shortSurveyId}</Sb_Text>
         </Col>
         <Col className='text-end'>
           <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
