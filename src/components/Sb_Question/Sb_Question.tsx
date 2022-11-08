@@ -211,7 +211,15 @@ export default function Sb_Question (props:Props) {
                 <Form.Group className="mb-3">
                   <div className="d-flex req_feild">
                     <Sb_Checkbox default={mandatory ? "SELECTED" : "UNSELECTED"}
-                    onChange={(state:boolean) => setMandatory(!mandatory)}/>
+                    onChange={(state:boolean) => {
+                      // If ShowPattern is applied when mandatory is selected, remove show pattern
+                      if (showPattern.hasShow == true) {
+                        var temp = {...showPattern}
+                        temp.hasShow = false;
+                        setShowPattern(temp)
+                      }
+                      setMandatory(!mandatory)
+                    }}/>
                     <Sb_Text font={12}>Required</Sb_Text>
                   </div>
                 </Form.Group>
@@ -222,7 +230,11 @@ export default function Sb_Question (props:Props) {
                     <div className="d-flex justify-content-between">
                       <Sb_Text font={12}>Show Pattern</Sb_Text>
                       <Sb_Checkbox disabled={isLast} default={`${getQuestion(props.id).showPattern.hasShow ? 'SELECTED' : 'UNSELECTED'}`}
-                      onChange={(state:boolean) => {showPatternChangeHandler("STATUS", state)}}/>
+                      onChange={(state:boolean) => {
+                        // If mandatory is set on show pattern, mandatory is removed 
+                        if (mandatory == true)
+                          setMandatory(false)
+                        showPatternChangeHandler("STATUS", state)}}/>
                     </div>
                   </Form.Group>
                   
@@ -232,7 +244,7 @@ export default function Sb_Question (props:Props) {
                     onChange={(e) => showPatternChangeHandler("QUES", e.target.value)}>
                       <option>Choose...</option>
                       {
-                        props.otherQuestions.filter((question) => question.inputType !== 'TEXT')
+                        props.otherQuestions.filter((question) => question.inputType == 'CHOICE' || question.inputType == 'MULTI-SELECT')
                         .map((question, index) => (
                           <option key={index} value={question.id}>Question #{question.number}</option>
                         ))
