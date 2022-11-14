@@ -82,8 +82,8 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faUsers} className="ficon"/>
             <p className="sub_title">ADD MEMBERS</p>
-            <p className="desc">After that go to the members section and create the enumerators 
-            that can collect the data. You can just create one if it is just you.
+            <p className="desc">After that you can go to the members section and create the enumerators and analysts
+            that can collect the data and help you analyze it respectivley.
             </p>
           </div>
           <div className="arrow">
@@ -102,7 +102,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faLayerGroup} className="ficon"/>
             <p className="sub_title">COLLECT</p>
-            <p className="desc">Finally the fun begins, Download the app and enter your enumerator credentials. After your in, download the 
+            <p className="desc">Finally the fun begins, Download the app and enter your sebsib credentials. After your in, download the 
             survey and gather responses as much as you like and send it to the website
             </p>
           </div>

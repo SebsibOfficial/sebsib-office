@@ -109,3 +109,21 @@
     line-height: 1em;
   }
   /* ################################################################################### */
+
+
+  @media screen and (max-width: 700px) {
+    .cards_prices {
+      padding: 0;
+    }
+    .title {
+      width: 100% !important;
+    }
+    .toggle_price {
+      margin-top: 0;
+    }
+    .card_desc {
+      padding: 0em 1em;
+      width: 100%;
+      text-align: center;
+    }
+  }
