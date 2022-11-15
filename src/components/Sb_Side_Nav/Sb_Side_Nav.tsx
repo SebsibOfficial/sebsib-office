@@ -30,6 +30,8 @@ const Sb_Side_Nav = (props: Props) => {
       return "Projects";
     else if (routeArray.includes("settings"))
       return "Settings";
+    else if (routeArray.includes("help"))
+      return "Help";
     else
       return "Dashboard";    
   }

@@ -1,5 +1,5 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faArchive, faCog, faInfoCircle, faThLarge, faTrash, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faArchive, faCog, faInfoCircle, faQuestion, faThLarge, faTrash, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AnySrvRecord } from 'dns';
 import { useContext, useEffect, useState } from 'react';
@@ -66,6 +66,8 @@ export default function Dashboard () {
         return faArchive;
       case 'settings':
         return faCog;
+      case 'help':
+        return faQuestion;
       default:
         return faThLarge;
     }
@@ -105,7 +107,8 @@ export default function Dashboard () {
       <Col md='2'>
         <Sb_Side_Nav name={decodeJWT(token as string).shortOrgId + ' \n' +decodeJWT(token as string).email}/>
       </Col>
-      <Col style={{'padding':'1em 4em', 'overflowX':'auto'}}>
+      
+      <Col style={ getPageTitle() == 'view-survey' ? {'padding':'1em 4em',  'overflowX':'auto'} : {'padding':'1em 4em'}}>
         <Row className='g-0' style={{'marginBottom':'3em'}}>
           <Col>
           {console.log(page)}

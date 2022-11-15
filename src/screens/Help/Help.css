@@ -1,0 +1,31 @@
+.help_menu {
+  margin-top: 0.5em;
+  padding: 0.5em;
+  font-weight: 300;
+  transition: all 200ms ease;
+}
+
+.help_menu p {
+  cursor: pointer;
+}
+
+.help_active{
+  padding: 0.5em;
+  background-color: #5050751c;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  font-weight: 500;
+  transition: all 200ms ease;
+}
+
+.help_menu p {
+  font-family: 'HelveticaNeue';
+  font-size: 0.9em;
+  margin: 0;
+}
+
+.help_menu_cont {
+  position: sticky;
+  top: 0;
+  padding-top: 2em;
+}

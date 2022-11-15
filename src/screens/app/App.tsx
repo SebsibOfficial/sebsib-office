@@ -31,6 +31,7 @@ import NotFound from "../404/404";
 import Renew from "../Landing/Register/Renew";
 import Change from "../Login/Change";
 import Forgot from "../Login/Forgot";
+import Help from "../Help/Help";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
@@ -115,6 +116,7 @@ function App() {
                   />
                 </Route>
                 <Route path="settings" element={<Settings />}></Route>
+                <Route path="help" element={<Help />}></Route>
               </Route>
               <Route path="login" element={<Login />} />
               <Route path="changepassword" element={<Change />} />

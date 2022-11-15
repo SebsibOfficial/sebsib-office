@@ -47,7 +47,7 @@ const navData5: SideNavData = {
   id: 5,
   title: "Help",
   icon: faQuestion,
-  path: "#" // no idea what goes here
+  path: "/dashboard/help"
 };
 
 export const NavData = [

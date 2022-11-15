@@ -48,7 +48,14 @@
     "package_type": "የጥቅል ዓይነት",
     "choose_package":"ጥቅል ይምረጡ",
     "thankyou_msg": "ስለተመዘገቡ እናመሰናለን፣ ኢሜል በቅርቡ ይደርሶታል።",
-    "regis":"ተመዝገቡ"
+    "regis":"ተመዝገቡ",
+    "title": "ተመዝገብ",
+    "transaction_ref": "ልዩ የክፍያ ቁጥር",
+    "choose_bank": "ባንክ ምረጡ"
+  },
+  "renew": {
+    "renew": "አድስ",
+    "renewal": "ጥቅል እድሳት"
   },
   "css_sub_text": "heavy_weight"
 }
