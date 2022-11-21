@@ -1,5 +1,10 @@
 import { Props as HelpI } from "../../components/Sb_Help/Sb_Help";
-import GF from '../../assets/72kg.gif';
+import cm from '../../assets/help/create_member.gif';
+import cp from '../../assets/help/create_project.gif';
+import em from '../../assets/help/edit_member.gif';
+import re from '../../assets/help/remove_enum.gif';
+import su from '../../assets/help/setting_update.gif';
+import vs from '../../assets/help/view_survey.gif';
 
 const helpData:HelpI[] = [
   {
@@ -27,7 +32,7 @@ const helpData:HelpI[] = [
     </li>
     <li class="c1 li-bullet-0"><span class="c0">After you are done, click Create to create your project.</span></li>
   </ol>`].join(''),
-    img1: GF
+    img1: cp
   },
   {
     id: 'hlp_3',
@@ -44,6 +49,7 @@ const helpData:HelpI[] = [
     <li class="c1 li-bullet-0"><span class="c0">Now click Create Member and hand over the credentials to you
         enumerators</span></li>
   </ol>`].join(''),
+    img1: cm
   },
   {
     id: 'hlp_4',
@@ -56,6 +62,7 @@ const helpData:HelpI[] = [
     <li class="c1 li-bullet-0"><span class="c0">Now the enumerator has no access to the surveys in the project</span>
     </li>
   </ol>`].join(''),
+    img1: re
   },
   {
     id: 'hlp_5',
@@ -66,6 +73,7 @@ const helpData:HelpI[] = [
     <li class="c1 li-bullet-0"><span class="c0">Change the contents you to your liking</span></li>
     <li class="c1 li-bullet-0"><span class="c0">Click Save Changes to finish</span></li>
   </ol>`].join(''),
+    img1: em
   },
   {
     id: 'hlp_6',
@@ -133,6 +141,7 @@ const helpData:HelpI[] = [
         organization ID </span></li>
     <li class="c1 li-bullet-0"><span class="c0">Click on Save Changes to finish</span></li>
   </ol>`].join(''),
+    img1: su
   },
   {
     id: 'hlp_8',
@@ -146,6 +155,7 @@ const helpData:HelpI[] = [
     <li class="c1 li-bullet-0"><span class="c0">Click on the Download Excel to export the data to Microsoft Excel
         (.xlsx) format</span></li>
   </ol>`].join(''),
+    img1: vs
   },
   {
     id: 'hlp_9',
