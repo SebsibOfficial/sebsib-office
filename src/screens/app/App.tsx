@@ -32,6 +32,8 @@ import Renew from "../Landing/Register/Renew";
 import Change from "../Login/Change";
 import Forgot from "../Login/Forgot";
 import Help from "../Help/Help";
+import Blogs from "../Blog/Blogs";
+import SingleBlog from "../Blog/SingleBlog";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
@@ -121,6 +123,8 @@ function App() {
               <Route path="login" element={<Login />} />
               <Route path="changepassword" element={<Change />} />
               <Route path="forgotpassword" element={<Forgot />} />
+              <Route path="blogs" element={<Blogs />} />
+              <Route path="blogs/:id" element={<SingleBlog />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

@@ -63,12 +63,12 @@ export default function Nav() {
             <div className={"list_item "+t("css_sub_text")}>{t("nav_items.pricing")}</div>
           </Link>
           <div className="list_item netela">፣</div>
-          <Link to={"/renewal"} state={true}>
-            <div className={"list_item "+t("css_sub_text")}>{t("nav_items.renew")}</div>
+          <Link to={"/blogs"} state={true}>
+            <div className={"list_item "+t("css_sub_text")}>Blog</div>
           </Link>
           <div className="list_item netela">፣</div>
-          <Link to={"/"} state={true} onClick={() => scrollTo("#contact-us")}>
-            <div className={"list_item "+t("css_sub_text")}>{t("nav_items.contact_us")}</div>
+          <Link to={"/renewal"} state={true}>
+            <div className={"list_item "+t("css_sub_text")}>{t("nav_items.renew")}</div>
           </Link>
           <div className="list_item netela">፣</div>
           <Link to={toWhere()} state={true}>
