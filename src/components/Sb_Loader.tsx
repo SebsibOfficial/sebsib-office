@@ -5,11 +5,15 @@ export default function Sb_Loader (prop:Prop) {
   return (
     <>
     {
-      !full ? <div style={{'display': off ? 'none':'flex', 'width':'30px', 'justifyContent':'center'}}>
-      <span style={{'left':'-30px'}} className='mini-loader'></span>
-    </div> : <div style={{'height': '70vh', 'display':'flex'}}>
-      <span className='loader'></span>
-    </div>
+      !full ? 
+      <div style={{'display': off ? 'none':'flex', 'width':'30px', 'justifyContent':'center'}}>
+        <div className="mini-spinner rounded-circle">
+        </div>
+      </div> : 
+      <div style={{'height': '70vh', 'display':'flex'}}>
+        <div className="spinner rounded-circle">
+        </div>
+      </div>
     }
     
     </>

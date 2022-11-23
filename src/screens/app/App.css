@@ -1,55 +1,36 @@
 .parent-screen {
   width: -webkit-fill-available;
   background-color: var(--lightGrey);
+  height: 100vh;
 }
 .btn:focus {
   box-shadow: none !important;
 }
-.loader {
-  width: 6px;
-  height: 38px;
-  display: block;
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid lightgray;
   margin: auto;
-  left: -20px;
-  position: relative;
-  border-radius: 4px;
-  box-sizing: border-box;
-  animation: animloader 500ms linear infinite alternate;
+  border-top-color: var(--primary);
+  animation: Rotate 800ms linear 0s infinite forwards;
 }
 
-@keyframes animloader {
+@keyframes Rotate {
   0% {
-    box-shadow: 20px 0 #505075, 40px 0 white, 60px 0 white;
-  }
-  50% {
-    box-shadow: 20px 0 white, 40px 0 #505075, 60px 0 white;
+      transform: rotate(0deg);
   }
   100% {
-    box-shadow: 20px 0 white, 40px 0 white, 60px 0 #505075;
+      transform: rotate(360deg);
   }
 }
 
-.mini-loader {
-  width: 4px;
+.mini-spinner {
+  width: 15px;
   height: 15px;
-  display: block;
+  border: 2px solid rgba(211, 211, 211, 0.347);
   margin: auto;
-  left: -20px;
-  position: relative;
-  border-radius: 4px;
-  box-sizing: border-box;
-  animation: mini-animloader 300ms linear infinite alternate;
-}
-
-@keyframes mini-animloader {
-  0% {
-    box-shadow: 20px 0 #505075, 30px 0 white, 40px 0 white;
-  }
-  50% {
-    box-shadow: 20px 0 white, 30px 0 #505075, 40px 0 white;
-  }
-  100% {
-    box-shadow: 20px 0 white, 30px 0 white, 40px 0 #505075;
-  }
+  border-top-color: white;
+  animation: Rotate 500ms linear 0s infinite forwards;
 }
     
