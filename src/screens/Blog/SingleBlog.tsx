@@ -55,7 +55,7 @@ export default function SingleBlog () {
         {
           pageLoading ? <Sb_Loader full/> :
           <Row className="blog_container">
-            <Col md="1">
+            <Col md="1" className="side_col">
               <Row className="side_icon">
                 <Col>
                   <FontAwesomeIcon icon={faLink} style={{'fontSize':'1.5em', 'cursor':'pointer'}} 

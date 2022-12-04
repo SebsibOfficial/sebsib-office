@@ -119,15 +119,15 @@ export default function Nav() {
           <div className="list_item">{t("nav_items.pricing")}</div>
         </Link>
         <div className="list_item netela">፣</div>
+        <Link to={"/blogs"} onClick={() => menubar(false)}>
+          <div className="list_item">Blogs</div>
+        </Link>
+        <div className="list_item netela">፣</div>
         <Link
-          to={"/"}
+          to={"/renewal"}
           state={true}
-          onClick={() => {
-            menubar(false);
-            scrollTo("#contact-us");
-          }}
         >
-          <div className="list_item">{t("nav_items.contact_us")}</div>
+          <div className="list_item">{t("nav_items.renew")}</div>
         </Link>
         <div className="list_item netela">፣</div>
         <Link to={toWhere()} onClick={() => menubar(false)} state={true}>

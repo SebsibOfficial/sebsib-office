@@ -180,20 +180,19 @@ export default function Landing() {
             <img src={LogoW} alt="" style={{'width':'20%'}}/>
           </Col>
           <Col className="contact_address">
-            <h6>Some Place, Some building</h6>
+            <h6></h6>
             <h6>Addis Ababa</h6> 
             <h6>Ethiopia</h6>
           </Col>
           <Col className="contact_phones">
             <h6>+251920642556</h6>
-            <h6>+251973506446</h6>
             <h6>+251920747084</h6>
             <h6>+251919486919</h6>
           </Col>
           <Col className="contact_emails">
             <h6>info@sebsib.com</h6>
             <h6>nathan@sebsib.com</h6>
-            <h6>kirubel@sebsib.com</h6>
+            <h6>yoseph@sebsib.com</h6>
             <h6>yohannes@sebsib.com</h6>
           </Col>
           <Col className="contact_socials" md="2">
