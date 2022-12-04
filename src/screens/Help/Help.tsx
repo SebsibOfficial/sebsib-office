@@ -6,11 +6,16 @@ import ex from '../../assets/dashen.jpg';
 import { Col, Form, Row } from 'react-bootstrap';
 import Sb_Text from '../../components/Sb_Text/Sb_Text';
 import helpData from './help_data';
+import { useAuth } from '../../states/AuthContext';
+import { decodeJWT } from '../../utils/helpers';
 
 export default function Help () {
   let location = useLocation();
   let navigate = useNavigate();
   // Prevents routing from the URL
+
+  const {token, setAuthToken} = useAuth();
+
   useEffect(() => {
     if (!location.state){
         return navigate("/404");
@@ -41,9 +46,10 @@ export default function Help () {
 					</Form.Group>
           <div className='help_menu_cont'>
             {
-              helpData.map((help, index) => (
+              helpData.filter((help) => help.title.toLowerCase().includes(searchHelp.toLowerCase()) || help.title.toUpperCase().includes(searchHelp.toUpperCase()))
+              .map((help, index) => (
                 <Row key={index} className={`help_menu ${activeId == help.id ? ' help_active' : ''}`}>
-                  <Col style={{'cursor':'pointer'}} onClick={() => setActiveId(help.id)}>
+                  <Col style={{'cursor':'pointer'}} onClick={() => {setActiveId(help.id)}}>
                     <p>{help.title}</p>
                   </Col>
                 </Row>
@@ -55,6 +61,7 @@ export default function Help () {
         <Col>
           {
             helpData.map((help, index) => (
+              help.id == 'hlp_13' && decodeJWT(token as string).pkgId == '623d73a051e8bcb894b3f7df' ? 'Upgrade your Package to have access to Sebsib Shelf' :
               <Sb_Help key={index} id={help.id} title={help.title} desc1={help.desc1}  img1={help.img1} desc2={help.desc2}  img2={help.img2}/>
             ))
           }

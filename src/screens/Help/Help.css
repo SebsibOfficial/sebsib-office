@@ -29,3 +29,8 @@
   top: 0;
   padding-top: 2em;
 }
+
+thead, tbody, tfoot, tr, td, th {
+  border-width: 1px !important;
+  padding: 1em;
+}

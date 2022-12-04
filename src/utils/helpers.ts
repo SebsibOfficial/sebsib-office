@@ -15,6 +15,7 @@ interface Token {
   iat: number,
   shortOrgId: string,
   email?: string,
+  pkgId: string
 }
 
 var def:Token = {
@@ -24,7 +25,8 @@ var def:Token = {
   role: '',
   shortOrgId: '',
   exp: 0,
-  iat: 0
+  iat: 0,
+  pkgId: ''
 }
 
 export const validRoutes = [

@@ -19,12 +19,12 @@ const data:CardI[] = [
     projectCount: "5 Project",
     surveyCount: "10 Surveys",
     memberCount: "15 Users",
-    featureOne: "Own Database Storage API",
+    featureOne: "Sebsib Shelf API",
     dayCount: "For 30 Days",
     price: "2,000 Br",
     priceAnnual: "19,200 br",
     descTitle: "COLLECTING DATA FOR RESEARCH ",
-    desc: "The standard package offers you a lot more in your data collection journey. If you are collecting data regularly we recommend this package. Moreover we have an interface for you to store the data collected directly into your database."
+    desc: "The standard package offers you a lot more in your data collection journey. If you are collecting data regularly we recommend this package. Moreover we have an API interface for you to store the data collected directly into your database."
   }
 ]
 export default data;

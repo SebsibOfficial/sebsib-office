@@ -1,7 +1,6 @@
 .parent-screen {
   width: -webkit-fill-available;
   background-color: var(--lightGrey);
-  height: 100vh;
 }
 .btn:focus {
   box-shadow: none !important;

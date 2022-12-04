@@ -208,6 +208,87 @@ const helpData:HelpI[] = [
         the Sebsib office for viewing</span></li>
   </ol>`].join(''),
   },
+  {
+    id: 'hlp_13',
+    title: 'Sebsib Shelf Integration',
+    desc1: [`<p>Sebsib Shelf is a service that helps you retrieve data from Sebsib programmatically. To integrate it with you system here is the request and response parameters.</p>
+    <p>Authentication type is Basic. Use your email as username, and your password.</p>
+    <table>
+    <tbody>
+    <tr>
+    <td>
+    <p>METHOD</p>
+    </td>
+    <td>
+    <p>Request</p>
+    </td>
+    <td>
+    <p>Response</p>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <p>GET</p>
+    <p>Get all the responses from the survey</p>
+    </td>
+    <td>
+    <p>https://138.68.186.119.nip.io/shelf/&lt;Organization Id&gt;/&lt;SurveyId&gt;</p>
+    </td>
+    <td>
+    <p>Array of Arrays</p>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <p>GET</p>
+    <p>Get responses from the specified day</p>
+    </td>
+    <td>
+    <p>https://138.68.186.119.nip.io/shelf/&lt;Organization Id&gt;/&lt;SurveyId&gt;?at=MM-DD-YYYY</p>
+    </td>
+    <td>
+    <p>Array of Arrays</p>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <p>GET</p>
+    <p>Get responses from the specified day and afterwards</p>
+    </td>
+    <td>
+    <p>https://138.68.186.119.nip.io/shelf/&lt;Organization Id&gt;/&lt;SurveyId&gt;?from=MM-DD-YYYY</p>
+    </td>
+    <td>
+    <p>Array of Arrays</p>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <p>GET</p>
+    <p>Get responses in between the dates</p>
+    </td>
+    <td>
+    <p>https://138.68.186.119.nip.io/shelf/&lt;Organization Id&gt;/&lt;SurveyId&gt;?from=MM-DD-YYYY&amp;to=MM-DD-YYYY</p>
+    </td>
+    <td>
+    <p>Array of Arrays</p>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <p>Get</p>
+    <p>Get all the responses from the survey in Excel</p>
+    </td>
+    <td>
+    <p>https://138.68.186.119.nip.io/shelf/xl/&lt;Organization Id&gt;/&lt;SurveyId&gt;</p>
+    </td>
+    <td>
+    <p>Excel file</p>
+    </td>
+    </tr>
+    </tbody>
+    </table>`].join(''),
+  }
 ]
 
 export default helpData ;

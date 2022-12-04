@@ -239,6 +239,7 @@ export default function View_Survey () {
     rows.push(["Generated on : "+new Date().toLocaleDateString()]);
     rows.push([])
     queses.push("Enumrator Name");
+    queses.push("Sent From");
     queses.push("Sent Date and Time");
     questions.forEach((question:Question) => {
       queses.push(question.questionText)
@@ -247,6 +248,7 @@ export default function View_Survey () {
     responses.forEach((response:Response) => {
       let anses:any[] = [];
       anses.push(response.enumratorName);
+      anses.push(response.geoPoint);
       anses.push(response.sentDate.toString().replace('T',' ').slice(0,16));
       response.answers.forEach((answer:Answer) => {
         //anses.push(translateIds('ID', answer.inputType) == 'TEXT' ? answer.answer : getAnswer(answer.answer));
@@ -449,7 +451,7 @@ export default function View_Survey () {
                     <td>
                       {
                         response.geoPoint != undefined ||  response.geoPoint != null ? 
-                        <a href={`https://maps.google.com/?q=${(response.geoPoint as string).split(',')[0]},${(response.geoPoint as string).split(',')[1]}` ?? '-'}>View on Google Maps</a> :
+                        <a href={`https://maps.google.com/?q=${(response.geoPoint as string).split(',')[0]},${(response.geoPoint as string).split(',')[1]}` ?? '-'} target={'_blank'}>View on Google Maps</a> :
                         "-"
                       }
                     </td>
