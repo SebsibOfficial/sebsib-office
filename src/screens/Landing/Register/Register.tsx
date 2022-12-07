@@ -15,13 +15,13 @@ import { SendRequest } from "../../../utils/api";
 import PRICE from "../../../utils/price.json";
 
 export function getPrice (pkg:string, subType: "ONE_MONTH" | "ONE_YEAR" | string) {
-  var multiplier = 1.6;
+  var multiplier = 0.8;
   var p;
   PRICE.forEach(PKG => {
     if (pkg == PKG.name) {
       if (subType == 'ONE_YEAR'){
         console.log(PKG.price)
-        p = (PKG.price * multiplier).toString()
+        p = (PKG.price * multiplier * 12).toString()
       }
       else
         p = PKG.price.toString()

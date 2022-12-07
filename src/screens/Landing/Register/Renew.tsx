@@ -87,7 +87,7 @@ export default function Register() {
         setEmail(result.data.owner[0].email)
         setPhone(result.data.owner[0].phone)
         setFetchedName(result.data.name)
-        setFetchedId(result.data.orgId)
+        setFetchedId(result.data._id)
         setFetchedDay(calcDate(new Date(result.data.expires)) + " Days")
         console.log(translateIds("ID", result.data.packageId))
         setFetchedPkg(translateIds("ID", result.data.packageId) as string)
