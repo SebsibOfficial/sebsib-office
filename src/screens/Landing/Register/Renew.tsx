@@ -218,7 +218,9 @@ export default function Register() {
                 <Row>
                   <Col><Sb_Text>Choose Bank</Sb_Text></Col>
                   <Col className="me-2" style={{'textAlign':'end'}}>
-                    <FontAwesomeIcon icon={faQuestionCircle} style={{'cursor':'pointer'}} onClick={() => setModalState(true)}/>
+                    <div className="d-flex" style={{'justifyContent':'flex-end', 'cursor':'pointer','color':'var(--primary)'}}onClick={() => setModalState(true)}>
+                      <Sb_Text font={12}>Payment Info </Sb_Text>
+                    </div>
                   </Col>
                 </Row>
                 <Row className="g-0 align-items-center">
