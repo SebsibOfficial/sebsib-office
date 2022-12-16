@@ -356,6 +356,22 @@ export default function View_Survey () {
         )
       }
     }
+    else if (translateIds('ID', answer.inputType) == 'MULTI-NUMBER') {
+      if (typeof answer.answer === 'object') {
+        var nums:string[] = answer.answer;
+        return (
+          <>
+            {
+              nums.map((num, index) => (
+                <>
+                  { nums.length - 1 == index ? num : num+", " }
+                </>
+              ))
+            }
+          </>
+        )
+      }
+    }
     else {
       if (typeof answer.answer === 'object') {
         var anses:string[] = answer.answer;
