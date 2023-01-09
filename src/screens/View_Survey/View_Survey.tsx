@@ -248,10 +248,9 @@ export default function View_Survey () {
     responses.forEach((response:Response) => {
       let anses:any[] = [];
       anses.push(response.enumratorName);
-      anses.push(response.geoPoint);
+      anses.push(`https://maps.google.com/?q=${(response.geoPoint ?? '' as string).split(',')[0]},${(response.geoPoint ?? '' as string).split(',')[1]}`);
       anses.push(response.sentDate.toString().replace('T',' ').slice(0,16));
       response.answers.forEach((answer:Answer) => {
-        //anses.push(translateIds('ID', answer.inputType) == 'TEXT' ? answer.answer : getAnswer(answer.answer));
         anses.push(properDisplayString(answer));
       })
       rows.push(anses);
@@ -356,7 +355,7 @@ export default function View_Survey () {
         )
       }
     }
-    else if (translateIds('ID', answer.inputType) == 'MULTI-NUMBER') {
+    else if (translateIds('ID', answer.inputType) == 'MULTI-NUMBER' || translateIds('ID', answer.inputType) == 'MULTI-TEXT') {
       if (typeof answer.answer === 'object') {
         var nums:string[] = answer.answer;
         return (
@@ -378,8 +377,10 @@ export default function View_Survey () {
         return (
           <>
             {
-              anses.map((plain_answer) => (
-                plain_answer
+              anses.map((plain_answer, index) => (
+                <>
+                  { anses.length - 1 == index ? plain_answer : plain_answer+", " }
+                </>
               ))
             }
           </>

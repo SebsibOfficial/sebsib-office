@@ -278,9 +278,9 @@ export default function Register() {
       width={30}>
           <>        
               <p><Sb_Text>Pay with your preferred bank to the below accounts and input the Transaction Reference Number</Sb_Text></p>
-              <p><Sb_Text>CBE: </Sb_Text><Sb_Text weight={900}>1000546715467890</Sb_Text> <Sb_Text> Or Dashen:</Sb_Text><Sb_Text weight={900}>55467854678910</Sb_Text></p>
+              <p><Sb_Text>CBE: </Sb_Text><Sb_Text weight={900}> 1000196349468</Sb_Text> <Sb_Text> Or Dashen: </Sb_Text><Sb_Text weight={900}> 5444310705011</Sb_Text></p>
               <p></p>
-              <p><Sb_Text>If you are facing any issues contact us at support@sebsib.com or +251912345678</Sb_Text></p>
+              <p><Sb_Text>If you are facing any issues contact us at support@sebsib.com or +251920642556</Sb_Text></p>
           </>
         </Sb_Modal>
     </div>
