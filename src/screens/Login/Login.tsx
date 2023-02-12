@@ -30,9 +30,6 @@ export default function Login() {
 
   // Prevents routing from the URL
   useEffect(() => {
-    if (!location.state){
-       return navigate("/404");
-    }
 		if (token != "") {
       return navigate("/", {state: true});
     }
@@ -84,13 +81,14 @@ export default function Login() {
 			<Row style={{ 'justifyContent': 'center', 'minHeight': '80vh', 'alignContent': 'center' }}>
 				<Col className='login-container' md="3">
 						<Row>
-								<Col className={state.state.from !== 'main' ? 'login-tag' : 'mb-2'}>
+								<Col className={state.state == null || state.state.from == null ? 'login-tag' : 'mb-2'}>
 									<FontAwesomeIcon icon={faIdBadge} style={{ 'fontSize': '2em', 'marginRight': '1rem', 'color': 'var(--primary)' }} />
 									<Sb_Text font={32} weight={500}>Log In</Sb_Text>
 								</Col>
 						</Row>
+            {console.log(state)}
 						{
-							state.state.from === 'main' && 
+							state.state != null && state.state.from != null && 
 								<Alert variant='success'>
 									<Sb_Text>Successfully Logged Out</Sb_Text>
 								</Alert>

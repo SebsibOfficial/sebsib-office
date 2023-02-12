@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook, faGooglePlay, faInstagram, faLinkedin, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faAndroid, faFacebook, faGooglePlay, faInstagram, faLinkedin, faTelegram, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faClipboardList, faIdBadge, faLayerGroup, faLongArrowAltRight, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "react-bootstrap";
@@ -40,10 +40,10 @@ export default function Landing() {
         </div>
         
           <div id="download_app">
-          <Link to="/register" style={{'color':'var(--secondary)', 'textDecoration':'none'}}>
-            <FontAwesomeIcon icon={faGooglePlay as IconProp} style={{'marginRight':'0.5rem'}}/>
-            Download App
-            </Link>
+            <a href="./app/Sebsib-Collect.apk" download={"Sebsib-Collect.apk"}>
+              <FontAwesomeIcon icon={faAndroid as IconProp} style={{'marginRight':'0.5rem'}}/>
+              Download App
+            </a>
           </div>
       </section>
       <section id="second">
@@ -197,16 +197,20 @@ export default function Landing() {
           </Col>
           <Col className="contact_socials" md="2">
             <div className="soc_platform">
-              <FontAwesomeIcon icon={faFacebook as IconProp}/>
+              <a href="https://www.linkedin.com/company/sebsib-data/" style={{'color':'white', 'textDecoration':'none'}} target="_blank">
+                <FontAwesomeIcon icon={faLinkedin as IconProp}/>
+              </a>
             </div>
             <div className="soc_platform">
-              <FontAwesomeIcon icon={faLinkedin as IconProp}/>
+              <a href="https://t.me/sebsibofficial" style={{'color':'white', 'textDecoration':'none'}} target="_blank">
+                <FontAwesomeIcon icon={faTelegram as IconProp}/>
+              </a>
+              
             </div>
             <div className="soc_platform">
+              <a href="https://twitter.com/sebsibofficial" style={{'color':'white', 'textDecoration':'none'}} target="_blank">
               <FontAwesomeIcon icon={faTwitter as IconProp}/>
-            </div>
-            <div className="soc_platform">
-              <FontAwesomeIcon icon={faInstagram as IconProp}/>
+              </a>
             </div>
           </Col>
         </Row>
