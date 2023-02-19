@@ -33,7 +33,7 @@ export default function Survey_Choice () {
             <FontAwesomeIcon icon={faLongArrowAltRight} style={{'color':'var(--primary)', 'marginLeft':'0.5em', 'fontSize':'1.2em'}}/>
           </div>
         </Col>
-        <Col style={{'cursor':'pointer'}} onClick={() => navigate('create-online-survey/'+state.state.id, { state:{name: state.state.name} })}>
+        <Col style={{'cursor':'pointer'}} onClick={() => navigate('/dashboard/projects/create-online-survey/'+state.state.id, { state:{name: state.state.name} })}>
           <div className="survey_type">
             <FontAwesomeIcon icon={faGlobe} style={{'fontSize':'4em','marginBottom':'0.25em','color':'white'}}/><br></br>
             <Sb_Text font={24} weight={900} color="--lightGrey">Online Survey</Sb_Text>

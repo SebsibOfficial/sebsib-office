@@ -1,0 +1,18 @@
+.link-share-box {
+  background-color: var(--primary);
+  outline: 1px solid var(--primary);
+  color: white;
+  padding: 0.75em;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+.link-container {
+  background-color: white;
+  outline: 1px solid var(--primary);
+  display: flex;
+  align-items: center;
+  padding: 0.75em;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 40%;
+}
