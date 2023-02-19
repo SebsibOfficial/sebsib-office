@@ -1,0 +1,27 @@
+.survey_type_disc {
+  font-family: "HelveticaNeue";
+  font-weight: 100;
+  font-style: italic;
+  color: white;
+  margin-top: 0.25em;
+  opacity: 0.9;
+}
+.survey_type {
+  background-color: var(--primary);
+  padding: 2em;
+  border-radius: 10px;
+  text-align: center;
+  min-height: 330px;
+}
+.survey_type:hover {
+  box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.3);
+  transform: translate(0, -4px);
+}
+.survey_type_btn {
+  font-family: 'HelveticaNeue';
+  font-style: italic;
+  margin: 1em 0;
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+}

@@ -34,6 +34,7 @@ import Forgot from "../Login/Forgot";
 import Help from "../Help/Help";
 import Blogs from "../Blog/Blogs";
 import SingleBlog from "../Blog/SingleBlog";
+import Survey_Choice from "../Survey_Choice/Survey_Choice";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
@@ -100,22 +101,15 @@ function App() {
                 <Route path="projects" element={<Projects />}>
                   <Route index element={<Projects_Landing />} />
                   <Route path="create-project" element={<Create_Project />} />
-                  <Route
-                    path="create-survey/:pid"
-                    element={<Create_Survey />}
-                  />
+                  <Route path="create-survey" element={<Survey_Choice />} />
+                  <Route path="create-survey/:pid" element={<Create_Survey />} />
+                  <Route path="create-online-survey/:pid" element={<Create_Survey />} />
                   <Route path="view-survey/:sid" element={<View_Survey />} />
                 </Route>
                 <Route path="members" element={<Members />}>
                   <Route index element={<Members_Landing />} />
-                  <Route
-                    path="add-member"
-                    element={<Add_Modify_Member pageType="ADD" />}
-                  />
-                  <Route
-                    path="edit-member/:id"
-                    element={<Add_Modify_Member pageType="EDIT" />}
-                  />
+                  <Route path="add-member" element={<Add_Modify_Member pageType="ADD" />}/>
+                  <Route path="edit-member/:id" element={<Add_Modify_Member pageType="EDIT" />}/>
                 </Route>
                 <Route path="settings" element={<Settings />}></Route>
                 <Route path="help" element={<Help />}></Route>

@@ -244,7 +244,7 @@ export function Projects_Landing () {
                       <Sb_Container className="d-block mnh-100">
                         <Row>
                           <Col>
-                            <Button size="sm" className="m-4" onClick={() => navigate('create-survey/'+project.projectID, { state:{name: project.projectName} })}>
+                            <Button size="sm" className="m-4" onClick={() => navigate('create-survey/', { state:{name: project.projectName, id:project.projectID} })}>
                               <Sb_Text font={12} color="--lightGrey">Create Survey</Sb_Text></Button>
                           </Col>
                         </Row>

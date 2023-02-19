@@ -130,7 +130,7 @@ export default function Login() {
 								</Sb_Card>
 							</Col>
 						</Row>
-						<div className='version-tag'><Sb_Text font={12}>Version 1.0</Sb_Text></div>
+						<div className='version-tag'><Sb_Text font={12}>Version 2.0</Sb_Text></div>
 					</Col>
 			</Row>
 		</div>
