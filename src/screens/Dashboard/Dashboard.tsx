@@ -57,6 +57,9 @@ export default function Dashboard () {
       else
         return routeArray[arrayLength - 2];
     }
+    else if (routeArray[arrayLength - 1] == "") {
+      return routeArray[arrayLength - 2];
+    }
     else
       return routeArray[arrayLength - 1];
   }
