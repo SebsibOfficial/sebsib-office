@@ -433,7 +433,7 @@ export default function View_Survey () {
               <Sb_Text font={16}>forms.sebsib.com/ytvasb-213basd</Sb_Text>
             </div>
           </Col>
-          <Col md="2" className="d-flex" style={{'justifyContent':'center', 'alignItems':'center'}}>
+          <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
             <label className="switch">
               <input type="checkbox" onChange={(e) => handleStatusChange(e.target.checked)}/>
               <span className="slider round"></span>
