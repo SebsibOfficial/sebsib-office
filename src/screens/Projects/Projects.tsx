@@ -20,6 +20,7 @@ import "./Projects.css";
 interface Project {
   projectID: string,
   projectName: string,
+  descr?: string,
   surveys: SurveyMember[],
   members: SurveyMember[]
 }
@@ -235,6 +236,11 @@ export function Projects_Landing () {
                   <Button variant="danger" size="sm" onClick={() => {setModalType("DELETION");setModalState(true);setCurrentModalID(project.projectID)}}>
                     <Sb_Text font={12} color="--lightGrey">Delete Project</Sb_Text>
                   </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="8" className="mb-3" style={{'display': project.descr == "" || project.descr == null || project.descr == undefined ? 'none': ''}}>
+                  <Sb_Text>{project.descr}</Sb_Text>
                 </Col>
               </Row>
               <Row>
