@@ -1,4 +1,4 @@
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faShareAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Collapse, Pagination, Row, Table } from "react-bootstrap";
@@ -69,6 +69,8 @@ export default function View_Survey () {
   const [responses, setResponses] = useState<Response[]>([]);
   const [collapse, setCollapse] = useState(false);
   const [shortSurveyId, setShortSurveyId] = useState("");
+  const [surveydesc, setSurveyDesc] = useState("");
+  const [surveyStatus, setSurveyStatus] = useState<"STARTED" | "STOPPED">("STOPPED");
 
   // Prevents routing from the URL
   useEffect(() => {
@@ -394,6 +396,12 @@ export default function View_Survey () {
     }
   }
 
+  function handleStatusChange (checked: boolean) {
+    if (checked)
+      setSurveyStatus("STARTED")
+    else
+      setSurveyStatus("STOPPED")
+  }
   return (
     pageLoading ? <Sb_Loader full/> :
     <>
@@ -416,11 +424,33 @@ export default function View_Survey () {
             <Sb_Text font={12} color="--lightGrey">Delete Survey</Sb_Text>
           </Button>
         </Col>
+        <Row className="g-0">
+          <Col className="d-flex p-0" style={{'transform':'scale(0.7)', 'transformOrigin':'left'}}>
+            <div className="link-share-box">
+              <FontAwesomeIcon icon={faShareAlt}/>
+            </div>
+            <div className="link-container">
+              <Sb_Text font={16}>forms.sebsib.com/ytvasb-213basd</Sb_Text>
+            </div>
+          </Col>
+          <Col md="2" className="d-flex" style={{'justifyContent':'center', 'alignItems':'center'}}>
+            <label className="switch">
+              <input type="checkbox" onChange={(e) => handleStatusChange(e.target.checked)}/>
+              <span className="slider round"></span>
+            </label>
+            <Sb_Text font={16}>{surveyStatus == "STARTED"? "Started" : "Stopped"}</Sb_Text>
+          </Col>
+        </Row>
       </Row>
       <Row>
         <Col>
           <Collapse in={collapse}>
           <Row className="form g-0 mb-4 p-4">
+            <Row className="mb-3 p-0">
+              <Col>
+                <Sb_Text font={16}>{surveydesc}</Sb_Text>
+              </Col>
+            </Row>
             {
               questions.map((question:Question, index:number) => (
                 <Col md="6" className="pe-4 mb-4">

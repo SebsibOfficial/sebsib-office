@@ -62,6 +62,7 @@ export default function Create_Project () {
 
 	/*############# STATES ############### */
 	const [projectname, setProjectname] = useState("");
+  const [projectDesc, setProjectDesc] = useState("");
 	const [members, setMembers] = useState<Member[]>([]);
 	const [btnLoading, setBtnLoading] = useState(false);
 	const [pageLoading, setPageLoading] = useState(true);
@@ -94,13 +95,18 @@ export default function Create_Project () {
 	return (
 		pageLoading ? <Sb_Loader full/> :
 		<Col>
-			<Row className="mb-4" style={{'width':'30%'}}>
+			<Row className="mb-2" style={{'width':'30%'}}>
 				<Sb_Alert>Enter the project name and select the enumrators to be involved.</Sb_Alert>
         		<Col>
-					<Form.Group className="mb-3" controlId="LoginEmail">
-						<Form.Label><Sb_Text font={16}>Project Name</Sb_Text></Form.Label>
-						<Form.Control size="sm" type="text" placeholder="Name" onChange={(e) => setProjectname(e.target.value)}/>
-					</Form.Group>
+            <Form.Group className="mb-3" controlId="LoginEmail">
+              <Form.Label><Sb_Text font={16}>Project Name</Sb_Text></Form.Label>
+              <Form.Control size="sm" type="text" placeholder="Name" onChange={(e) => setProjectname(e.target.value)}/>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="LoginEmail">
+              <Form.Label><Sb_Text font={16}>Project Description</Sb_Text></Form.Label>
+              <textarea name="question" id="" cols={50} rows={2} className="question-text-area" style={{'fontSize':'12px', 'padding':'1em'}}
+              onChange={(e) => setProjectDesc(e.target.value)}></textarea>
+            </Form.Group>
        			</Col>
       		</Row>
 			<Row style={{'width':'30%'}}>
