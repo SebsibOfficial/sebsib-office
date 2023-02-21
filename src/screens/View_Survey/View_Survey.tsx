@@ -71,6 +71,7 @@ export default function View_Survey () {
   const [shortSurveyId, setShortSurveyId] = useState("");
   const [surveydesc, setSurveyDesc] = useState("");
   const [surveyStatus, setSurveyStatus] = useState<"STARTED" | "STOPPED">("STOPPED");
+  const [surveyType, setSurveyType] = useState<"REGULAR" | "ONLINE" | "INCENTIVIZED">("ONLINE")
 
   // Prevents routing from the URL
   useEffect(() => {
@@ -479,8 +480,8 @@ export default function View_Survey () {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Enumrator</th>
-                <th>Sent From</th>
+                <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Enumrator</th>
+                <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Sent From</th>
                 <th>Date</th>
                 {
                   questions.map(((question, index) => (
@@ -494,8 +495,8 @@ export default function View_Survey () {
                 responses.slice(arSt, arEnd).map(((response, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{response.enumratorName}</td>
-                    <td>
+                    <td style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>{response.enumratorName}</td>
+                    <td style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>
                       {
                         response.geoPoint != undefined ||  response.geoPoint != null ? 
                         <a href={`https://maps.google.com/?q=${(response.geoPoint as string).split(',')[0]},${(response.geoPoint as string).split(',')[1]}` ?? '-'} target={'_blank'}>View on Google Maps</a> :
