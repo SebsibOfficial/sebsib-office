@@ -43,7 +43,12 @@ export const validRoutes = [
 ]
 
 export function generateId () {
-  return createObjectID();
+  return hex(Date.now() / 1000) +
+    ' '.repeat(16).replace(/./g, () => hex(Math.random() * 16))
+}
+
+function hex (value:any) {
+  return Math.floor(value).toString(16)
 }
 
 export function decodeJWT(token:string) {

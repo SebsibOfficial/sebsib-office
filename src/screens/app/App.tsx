@@ -36,6 +36,7 @@ import Blogs from "../Blog/Blogs";
 import SingleBlog from "../Blog/SingleBlog";
 import Survey_Choice from "../Survey_Choice/Survey_Choice";
 import Create_Online_Survey from "../Create_Online_Survey/Create_Online_Survey";
+import Create_Survey_V2 from "../Create_Survey_V2/Create_Survey_V2";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
@@ -104,6 +105,7 @@ function App() {
                   <Route path="create-project" element={<Create_Project />} />
                   <Route path="create-survey" element={<Survey_Choice />} />
                   <Route path="create-survey/:pid" element={<Create_Survey />} />
+                  <Route path="create-new-survey/:pid" element={<Create_Survey_V2 />} />
                   <Route path="create-online-survey/:pid" element={<Create_Online_Survey />} />
                   <Route path="view-survey/:sid" element={<View_Survey />} />
                 </Route>

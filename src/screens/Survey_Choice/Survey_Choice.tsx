@@ -22,7 +22,7 @@ export default function Survey_Choice () {
       <Sb_Alert>There different kinds of survey of survey you can run, for now we have Standard (Regular on the feild data collection) and Online (Where a link is shared to the participants). Choose the one best for you.
         </Sb_Alert>
       <Row>
-        <Col style={{'cursor':'pointer'}} onClick={() => navigate('/dashboard/projects/create-survey/'+state.state.id, { state:{name: state.state.name} })}>
+        <Col style={{'cursor':'pointer'}} onClick={() => navigate('/dashboard/projects/create-new-survey/'+state.state.id, { state:{name: state.state.name} })}>
           <div className="survey_type">
             <FontAwesomeIcon icon={faFileInvoice} style={{'fontSize':'4em','marginBottom':'0.25em','color':'white'}}/><br></br>
             <Sb_Text font={24} weight={900} color="--lightGrey">Standard Survey</Sb_Text>
