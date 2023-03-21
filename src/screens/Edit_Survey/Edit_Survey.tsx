@@ -10,7 +10,6 @@ import { CriticalContext, useCritical } from '../../states/CriticalContext';
 import { CreateSurvey } from "../../utils/api";
 import { generateId, translateIds } from "../../utils/helpers";
 import Sb_Question_V2 from "../../components/Sb_Question_V2/Sb_Question_V2";
-import './Edit_Survey.css'
 import { ChoiceI, ChoiceStorage, LangStorage, LangVariantI, LooseObject, QuestionObject, QuestionStorage, ShowPatternI, ShowPatternStorage } from "../../utils/interfaces";
 
 /* eslint-disable */
