@@ -417,6 +417,10 @@ export default function View_Survey () {
           onClick={() => setCollapse(!collapse)}>
             <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Questionnaire" : "View Questionnaire"}</Sb_Text>
           </Button>
+          <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
+          onClick={() => navigate("/dashboard/projects/edit-survey/"+params.sid, {state: true})}>
+            <Sb_Text font={12} color="--lightGrey">Edit Survey</Sb_Text>
+          </Button>
           <Button style={{'marginRight': '2em'}} variant="primary" size="sm" 
           onClick={() => exportToXLSX(formatData(questions, responses), state.state.name)}>
             <Sb_Text font={12} color="--lightGrey">Download Excel</Sb_Text>

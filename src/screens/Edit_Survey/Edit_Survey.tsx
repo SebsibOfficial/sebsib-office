@@ -10,7 +10,7 @@ import { CriticalContext, useCritical } from '../../states/CriticalContext';
 import { CreateSurvey } from "../../utils/api";
 import { generateId, translateIds } from "../../utils/helpers";
 import Sb_Question_V2 from "../../components/Sb_Question_V2/Sb_Question_V2";
-import './Create_Survey_V2.css'
+import './Edit_Survey.css'
 import { ChoiceI, ChoiceStorage, LangStorage, LangVariantI, LooseObject, QuestionObject, QuestionStorage, ShowPatternI, ShowPatternStorage } from "../../utils/interfaces";
 
 /* eslint-disable */
@@ -35,7 +35,7 @@ interface StateInterface {
   state: {name: string},
 }
 
-export default function Create_Survey_V2 () {
+export default function Edit_Survey () {
   let params = useParams();
   let location = useLocation();
   let navigate = useNavigate();
@@ -46,31 +46,86 @@ export default function Create_Survey_V2 () {
   /*#################################### */
 
   const [surveyName, setSurveyName] = useState("");
+  const [surveyId, setSurveyId] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
   const {page, setCriticalpage} = useCritical();
   const [collapse, setCollapse] = useState(false);
 
-  // Initially generated RID for Choices and Questions
-  var intialQuestion = generateId();
-  var intialQuestionLang = generateId();
-  var intialChoice = generateId();
-  var initalChoiceLang = generateId();
+  var DummyResponse:any = 
+  {
+    _id: "ID",
+    name: "Dummy Survey",
+    description: "",
+    pic: "",
+    questions: [
+      {
+        _id: "ID2",
+        hasShowPattern: true,
+        PtrnCount: 0,
+        showIf: [
+          {
+            questionId: "ID5",
+            answerId: "ID6"
+          },
+          {
+            questionId: "ID7",
+            answerId: "ID8"
+          },
+        ],
+        options: [
+          {
+            _id: "ID3",
+            text: [
+              {
+                langId: "en",
+                text: "Choice 1"
+              }
+            ]
+          },
+          {
+            _id: "ID4",
+            text: [
+              {
+                langId: "en",
+                text: "Choice 2"
+              },
+              {
+                langId: "am",
+                text: "Choice 2 AMhraic"
+              }
+            ]
+          }
+        ],
+        questionText: [
+          {
+            langId: "en",
+            text: "Question Text"
+          },
+          {
+            langId: "am",
+            text: "Question Text amharic"
+          }
+        ],
+        inputType: "624558d1a263f17689cdc5bd",
+        mandatory: false,
+        Expected_Min: 0,
+        Expected_Max: 10000
+      }
+    ],
+    createdOn: "20230321",
+    link: "",
+    status: "STARTED",
+    type: "REGULAR",
+  }
+
+  var RESP = assignRID(DummyResponse)
+
   // Empty question storage
-  const [QUESTION_STORE, SET_QUESTION_STORE] = useState<QuestionStorage[]>([
-    {
-      RID: intialQuestion,
-      required: false,
-      hasShowPattern: false,
-      ShowPatterns: [],
-      inputType: "CHOICE",
-      QuestionText: [intialQuestionLang],
-      Choices: [intialChoice]
-    }
-  ])
+  const [QUESTION_STORE, SET_QUESTION_STORE] = useState<QuestionStorage[]>([])
   // Choice storage
-  const [CHOICE_STORE, SET_CHOICE_STORE] = useState<ChoiceStorage[]>([{RID: intialChoice, Choice:[initalChoiceLang]}])
+  const [CHOICE_STORE, SET_CHOICE_STORE] = useState<ChoiceStorage[]>([])
   // Language object storage
-  const [LNG_STORE, SET_LNG_STORE] = useState<LangStorage[]>([{RID: intialQuestionLang, langId: "en", text: ""}, {RID: initalChoiceLang, langId: "en", text: ""}])
+  const [LNG_STORE, SET_LNG_STORE] = useState<LangStorage[]>([])
   // Showpattern object storage
   const [SHPTRN_STORE, SET_SHPTRN_STORE] = useState<ShowPatternStorage[]>([])
 
@@ -81,8 +136,123 @@ export default function Create_Survey_V2 () {
     }
   },[surveyName])
 
+  useEffect(() => {
+    // 1. Set Survey Name & Id
+    setSurveyName(DummyResponse.name)
+    setSurveyId(DummyResponse._id)
+    destructQuestionResp(RESP)
+  }, [])
+
   /*------------- METHODS -------------- */
   /*------------------------------------ */
+
+  function assignRID (RESP:any) {
+    var LocalResp:any[] = RESP.questions
+
+    LocalResp.forEach(Q => {
+      (Q.options as any[]).forEach(O => {
+        (O.text as any[]).forEach(T => {
+          T.RID = "RND_"+(Math.random() * 1000)
+        })
+      });
+
+      (Q.questionText as any[]).forEach(QT => {
+        QT.RID = "RND_"+(Math.random() * 1000)
+      });
+
+      (Q.showIf as any[]).forEach(SH => {
+        SH.RID = "RND_"+(Math.random() * 1000)
+      })
+    })
+
+    return LocalResp
+  }
+
+  function getLangStore (RESP:any):LangStorage[] {
+    var LocalResp:any[] = RESP
+    var STR:LangStorage[] = []
+
+    LocalResp.forEach(Q => {
+      (Q.options as any[]).forEach(O => {
+        (O.text as any[]).forEach(T => {
+          STR.push(T as LangStorage)
+        })
+      });
+
+      (Q.questionText as any[]).forEach(QT => {
+        STR.push(QT as LangStorage)
+      })
+    })
+
+    return STR
+  }
+
+  function getChoiceStore (RESP:any):ChoiceStorage[] {
+    var LocalResp:any[] = RESP
+    var STR:ChoiceStorage[] = []
+
+    LocalResp.forEach(Q => {
+      (Q.options as any[]).forEach(O => {
+        var L_RID:string[] = [];
+        (O.text as any[]).forEach(T => L_RID.push(T.RID));
+        STR.push({RID: (O._id as string), Choice: L_RID})
+      });
+    })
+
+    return STR
+  }
+
+  function getQuestionStore (RESP:any):QuestionStorage[] {
+    var LocalResp:any[] = RESP
+    var STR:QuestionStorage[] = []
+
+    LocalResp.forEach(Q => {
+      var C_RID:string[] = [];
+      var QT_RID:string[] = [];
+      var SHPT_RID:string[] = [];
+      (Q.options as any[]).forEach(O => C_RID.push(O._id));
+      (Q.questionText as any[]).forEach(QT => QT_RID.push(QT.RID));
+      (Q.showIf as any[]).forEach(SH => SHPT_RID.push(SH.RID));
+      STR.push(
+        {RID: Q._id, 
+        required: Q.mandatory, 
+        hasShowPattern: Q.hasShowPattern, 
+        QuestionText: QT_RID, 
+        Choices: C_RID, 
+        ShowPatterns: SHPT_RID,
+        inputType: translateIds("ID", Q.inputType) as string,
+        expectedMin: Q.Expected_Min,
+        expectedMax: Q.Expected_Max
+      })
+    })
+
+    return STR
+  }
+
+  function getShowPatternStore (RESP:any):ShowPatternStorage[] {
+    var LocalResp:any[] = RESP
+    var STR:ShowPatternStorage[] = []
+
+    LocalResp.forEach(Q => {
+      (Q.showIf as any[]).forEach(SH => {
+        STR.push({RID: (SH.RID as string), IfQues: SH.questionId, IfAns: SH.answerId})
+      });
+    })
+
+    return STR
+  }
+
+  function destructQuestionResp (RESP_WITH_ID: any) {
+    // 1. Load Language Store
+    SET_LNG_STORE(getLangStore(RESP_WITH_ID))
+    // 2. Load Choice Store
+    SET_CHOICE_STORE(getChoiceStore(RESP_WITH_ID))
+    // 3. Load Show pattern store
+    SET_SHPTRN_STORE(getShowPatternStore(RESP_WITH_ID))
+    // 4. Load Question store
+    SET_QUESTION_STORE(getQuestionStore(RESP_WITH_ID))
+  }
+
 
   /* 
   `handleOnAction`
@@ -619,14 +789,14 @@ export default function Create_Survey_V2 () {
         Click <b>Preview Survey</b> to see what your survey looks like. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
         </Sb_Alert>
       <Row>
-        <Col md="3">
+        {/* <Col md="3">
           <Form.Group className="mb-3" controlId="LoginEmail">
               <Form.Label><Sb_Text font={16}>Project Name</Sb_Text></Form.Label>
               <Form.Select size="sm" placeholder="Name" disabled>
                 <option value="">{state.state.name}</option>
               </Form.Select>
 					</Form.Group>
-        </Col>
+        </Col> */}
         <Col md="3">
           <Form.Group className="mb-3" controlId="LoginEmail">
               <Form.Label><Sb_Text font={16}>Survey Name</Sb_Text></Form.Label>
