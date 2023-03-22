@@ -18,7 +18,7 @@ import { AuthContext, useAuth } from '../../states/AuthContext';
 import { NotifContext, NotifContextInterface, NotifInterface } from '../../states/NotifContext';
 import { CriticalContext, useCritical } from '../../states/CriticalContext';
 import { GetMemberList, GetProjectList, GetRecentResponseList, GetSurveyListByOrg } from '../../utils/api';
-import { decodeJWT, validRoutes } from '../../utils/helpers';
+import { decodeJWT, translateIds, validRoutes } from '../../utils/helpers';
 import './Dashboard.css';
 import Sb_Modal from '../../components/Sb_Modal/Sb_Modal';
 
@@ -112,7 +112,7 @@ export default function Dashboard () {
     <>
     <Row className='dashboard-container g-0'>
       <Col md='2'>
-        <Sb_Side_Nav name={decodeJWT(token as string).shortOrgId + ' \n' +decodeJWT(token as string).email}/>
+        <Sb_Side_Nav name={decodeJWT(token as string).shortOrgId + ' \n' +decodeJWT(token as string).email} role={translateIds("ID",decodeJWT(token as string).role)}/>
       </Col>
       
       <Col style={ getPageTitle() == 'view-survey' ? {'padding':'1em 4em',  'overflowX':'auto'} : {'padding':'1em 4em'}}>

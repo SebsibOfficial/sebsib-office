@@ -7,9 +7,10 @@ import Sb_Text from "../Sb_Text/Sb_Text";
 
 interface Props {
   username: string;
+  role?: string
 }
 
-const Sb_User_Profile: React.FC<Props> = ({ username }:Props) => {
+const Sb_User_Profile: React.FC<Props> = ({ username, role }:Props) => {
   let navigate = useNavigate();
 
   return (
@@ -19,12 +20,16 @@ const Sb_User_Profile: React.FC<Props> = ({ username }:Props) => {
         <Sb_Text font={12} color="--lightGrey">
           {username}
         </Sb_Text>
-        <FontAwesomeIcon
-          icon={faCog}
-          className = "setting-icon"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate('/dashboard/settings', { state: true})}
-        />
+        {
+          role !== "VISITOR" && 
+          <FontAwesomeIcon
+            icon={faCog}
+            className = "setting-icon"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate('/dashboard/settings', { state: true})}
+          />
+        }
+        
       </div>
     </Container>
   );

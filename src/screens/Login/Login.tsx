@@ -10,6 +10,7 @@ import { login, ResponseInterface } from '../../utils/api';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import './Login.css';
 import Sb_Loader from '../../components/Sb_Loader';
+import { translateIds } from '../../utils/helpers';
 
 interface StateInterface {
 	hash: string,
@@ -49,16 +50,19 @@ export default function Login() {
 		login(username, password)
 		.then((result:any) => {
 			if (result.code == 200) {
-				// Set token to state
+        // Set token to state
 				var ac = localStorage.getItem('access_count');
 				localStorage.getItem('access_count') != null ? 
 				localStorage.setItem('access_count', (parseInt(ac as string) + 1).toString()) : 
 				localStorage.setItem('access_count', '1');
 				setAuthToken(result.data.token as string);
-        console.log(result.data.orgId.hasPassChange)
-        if (result.data.orgId.hasPassChange)
-				  setTimeout(() => navigate('/dashboard', { state:true }), 50);
-        else if	(result.data.orgId.hasPassChange === false)
+        if (result.data.user.hasPassChange){
+          if (translateIds("ID", result.data.user.roleId) === "VISITOR")
+				    setTimeout(() => navigate('/dashboard/shared-surveys', { state:true }), 50);
+          else
+            setTimeout(() => navigate('/dashboard', { state:true }), 50);
+        }
+        else if	(result.data.user.hasPassChange === false)
           setTimeout(() => navigate('/changepassword', { state:true }), 50);
 			} else {
 				setErrnotice(result.data.message);

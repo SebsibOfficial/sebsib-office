@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
-interface SideNavData {
+export interface SideNavData {
   id: number;
   title: string;
   icon: IconProp;

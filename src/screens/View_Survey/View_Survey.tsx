@@ -8,12 +8,13 @@ import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
 import { DeleteSurvey, GetMember, GetResponseList, GetSurvey } from "../../utils/api";
 import './View_Survey.css';
-import { translateIds } from "../../utils/helpers";
+import { translateIds, decodeJWT } from "../../utils/helpers";
 // import * as XLSX from "xlsx";
 import * as XLSX from "sheetjs-style";
 import CryptoJS from "crypto-es";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Loader from "../../components/Sb_Loader";
+import { useAuth } from "../../states/AuthContext";
 
 interface StateInterface {
   hash: string,
@@ -72,7 +73,8 @@ export default function View_Survey () {
   const [surveydesc, setSurveyDesc] = useState("");
   const [surveyStatus, setSurveyStatus] = useState<"STARTED" | "STOPPED">("STOPPED");
   const [surveyType, setSurveyType] = useState<"REGULAR" | "ONLINE" | "INCENTIVIZED">("ONLINE")
-
+  const {token, setAuthToken} = useAuth();
+  
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -417,17 +419,25 @@ export default function View_Survey () {
           onClick={() => setCollapse(!collapse)}>
             <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Questionnaire" : "View Questionnaire"}</Sb_Text>
           </Button>
-          <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
-          onClick={() => navigate("/dashboard/projects/edit-survey/"+params.sid, {state: true})}>
-            <Sb_Text font={12} color="--lightGrey">Edit Survey</Sb_Text>
-          </Button>
+          {
+            translateIds("ID", decodeJWT(token as string).role) !== "VISITOR" &&
+            <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
+            onClick={() => navigate("/dashboard/projects/edit-survey/"+params.sid, {state: true})}>
+              <Sb_Text font={12} color="--lightGrey">Edit Survey</Sb_Text>
+            </Button>
+          }
+
           <Button style={{'marginRight': '2em'}} variant="primary" size="sm" 
           onClick={() => exportToXLSX(formatData(questions, responses), state.state.name)}>
             <Sb_Text font={12} color="--lightGrey">Download Excel</Sb_Text>
           </Button>
-          <Button variant="danger" size="sm" onClick={() => setModalState(true)}>
-            <Sb_Text font={12} color="--lightGrey">Delete Survey</Sb_Text>
-          </Button>
+
+          {
+            translateIds("ID", decodeJWT(token as string).role) !== "VISITOR" &&
+            <Button variant="danger" size="sm" onClick={() => setModalState(true)}>
+              <Sb_Text font={12} color="--lightGrey">Delete Survey</Sb_Text>
+            </Button>
+          }
         </Col>
         <Row className="g-0">
           <Col className="d-flex p-0" style={{'transform':'scale(0.7)', 'transformOrigin':'left'}}>
@@ -438,13 +448,16 @@ export default function View_Survey () {
               <Sb_Text font={16}>forms.sebsib.com/ytvasb-213basd</Sb_Text>
             </div>
           </Col>
-          <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
-            <label className="switch">
-              <input type="checkbox" onChange={(e) => handleStatusChange(e.target.checked)}/>
-              <span className="slider round"></span>
-            </label>
-            <Sb_Text font={16}>{surveyStatus == "STARTED"? "Started" : "Stopped"}</Sb_Text>
-          </Col>
+          {
+            translateIds("ID", decodeJWT(token as string).role) !== "VISITOR" &&
+            <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
+              <label className="switch">
+                <input type="checkbox" onChange={(e) => handleStatusChange(e.target.checked)}/>
+                <span className="slider round"></span>
+              </label>
+              <Sb_Text font={16}>{surveyStatus == "STARTED"? "Started" : "Stopped"}</Sb_Text>
+            </Col>
+          }
         </Row>
       </Row>
       <Row>
