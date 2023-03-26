@@ -43,15 +43,30 @@ interface Response {
   answers: Answer[]
 }
 
+interface ResponseExpanded {
+  _id: string,
+  shortSurveyId: string,
+  surveyId: string,
+  enumratorId: string,
+  enumratorName: string | null,
+  geoPoint?: string,
+  sentDate: Date,
+  name: string,
+  answers: (Answer | string) []
+}
+
+interface Option {
+  _id: string,
+  text: string
+}
+
 interface Question {
-  id: string;
+  _id: string;
   questionText: string;
-  options: {
-    _id: string,
-    text: string
-  }[];
+  options: Option[];
   inputType: string;
   hasShowPattern: boolean;
+  number: number
 }
 
 export default function View_Survey () {
@@ -67,12 +82,14 @@ export default function View_Survey () {
   const [arEnd, setArEnd] = useState(10);
   const [pageLoading, setPageLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [questionsForDisplay, setQuestionsForDisplay] = useState<( Question | Option | string)[]>([]);
+  const [responseForDisplay, setResponseForDisplay] = useState<ResponseExpanded[]>([]);
   const [responses, setResponses] = useState<Response[]>([]);
   const [collapse, setCollapse] = useState(false);
   const [shortSurveyId, setShortSurveyId] = useState("");
   const [surveydesc, setSurveyDesc] = useState("");
   const [surveyStatus, setSurveyStatus] = useState<"STARTED" | "STOPPED">("STOPPED");
-  const [surveyType, setSurveyType] = useState<"REGULAR" | "ONLINE" | "INCENTIVIZED">("ONLINE")
+  const [surveyType, setSurveyType] = useState<"REGULAR" | "ONLINE" | "INCENTIVIZED">("REGULAR")
   const {token, setAuthToken} = useAuth();
   
   // Prevents routing from the URL
@@ -90,6 +107,163 @@ export default function View_Survey () {
       </Pagination.Item>,
     );
 }
+  
+  /* WORKS */
+  /* ------------*/
+  const ReOrderAnswers = (IQC: Question[], IRC: Response[]):Response[] => {
+    var InputQuestions = clone(IQC) as Question[]; var InputResponses = clone(IRC) as Response[];
+    var NewAnswerArray:Answer[] = []
+    var QidOrder:string[] = []
+    
+    for (let index = 0; index < InputQuestions.length; index++) {
+      const element = InputQuestions[index];
+      QidOrder.push(element._id)
+    }
+    
+    var NewResponseArray:Response[] = []
+    
+    for (let IRIndex = 0; IRIndex < InputResponses.length; IRIndex++) {
+      const IR = InputResponses[IRIndex];
+      
+      NewAnswerArray = []
+
+      for (let inidex = 0; inidex < QidOrder.length; inidex++) {
+        NewAnswerArray.push({_id: "EMP", inputType: "EMP", questionId: QidOrder[inidex], answer: "EMP"})
+      }
+
+      for (let indexA = 0; indexA < IR.answers.length; indexA++) {
+        const IRA = IR.answers[indexA];
+        var placeAt = QidOrder.indexOf(IRA.questionId)
+        NewAnswerArray.splice(placeAt, 1, IRA)
+      }
+
+      IR.answers = NewAnswerArray
+    }
+
+    NewResponseArray = InputResponses
+    return NewResponseArray
+  }
+
+  /* WORKS */
+  /* ------------*/
+  const ExpandQuestions = (InputQuestions: Question[], OrderedInputResponses: Response[]):(Question | Option | string)[] => {
+    var NewQuestionArray:(Question | Option | string)[] = []
+    var OIR_CPY = clone(OrderedInputResponses) as Response[]
+
+    InputQuestions.forEach(IQ => {
+      if (translateIds("ID", IQ.inputType)  === "CHOICE" || translateIds("ID", IQ.inputType)  === "MULTI-SELECT") {
+        NewQuestionArray.push(IQ)
+        IQ.options.forEach(O => {
+          NewQuestionArray.push(O)
+        })
+      }
+      else if (translateIds("ID", IQ.inputType) === "MULTI-TEXT") {
+        var largestCount = 0
+        for (let indexANS = 0; indexANS < OIR_CPY.length; indexANS++) {
+          const IR = OIR_CPY[indexANS];
+          for (let indexEA = 0; indexEA < IR.answers.length; indexEA++) {
+            const IA = IR.answers[indexEA];
+            console.log(IA.answer)
+            if ((IA.answer as []).length > largestCount && (typeof IA.answer === "object"))
+              largestCount = (IA.answer as []).length
+          }
+          console.log("----------")
+        }
+
+        NewQuestionArray.push(IQ)
+        for (let index = 0; index < largestCount; index++)
+          NewQuestionArray.push("Input "+(index+1))  
+      }
+      else
+        NewQuestionArray.push(IQ)
+    })
+
+    return NewQuestionArray
+  }
+
+  function clone(obj:any){
+    if(obj == null || typeof(obj) != 'object')
+        return obj;
+
+    var temp = new obj.constructor(); 
+    for(var key in obj)
+        temp[key] = clone(obj[key]);
+
+    return temp;
+  }
+
+  /* WORKS */
+  /* ------------*/
+  const ExpandAnswers = (ExpanadedQuestions: (Question | Option | string)[], OrderedInputResponses: Response[]) => {
+    var NewResponseArray:ResponseExpanded[] = []
+    var NewAnswerArray:(Answer | string)[] = []
+    var EQ_CPY = clone(ExpanadedQuestions) as (Question | Option | string)[]
+
+    for (let Rindex = 0; Rindex < OrderedInputResponses.length; Rindex++) {
+      const IR = OrderedInputResponses[Rindex];
+      NewAnswerArray = []
+      for (let indexIR = 0; indexIR < IR.answers.length; indexIR++) {
+        const IRA = IR.answers[indexIR];
+        
+        if (translateIds("ID", IRA.inputType) === "MULTI-SELECT"){
+          (IRA.answer as []).forEach(IRA_ANS => {
+            EQ_CPY.forEach((EQ, index) => {
+              if ((EQ as Option).text) {
+                if ((EQ as Option)._id === IRA_ANS)
+                  NewAnswerArray[index] = "1"
+              }
+            })
+          })
+        }
+        else if (translateIds("ID", IRA.inputType) === "CHOICE") {
+          EQ_CPY.forEach((EQ, index) => {
+            if ((EQ as Option).text) {
+              if ((EQ as Option)._id === IRA.answer)
+                NewAnswerArray[index] = "1"
+              else
+                NewAnswerArray[index] = "0"
+            }
+          })
+        }
+        else if (translateIds("ID", IRA.inputType) === "MULTI-TEXT" || translateIds("ID", IRA.inputType) === "MULTI-NUMBER") {
+          NewAnswerArray.push("→");
+          (IRA.answer as []).forEach(IRA_ANS => {
+            NewAnswerArray.push(IRA_ANS)
+          })
+        }
+        else if (typeof translateIds("ID", IRA.inputType) === "undefined") {
+          EQ_CPY.forEach((EQ, index) => {
+            if ((EQ as Question).questionText) {
+              if ((EQ as Question)._id === IRA.questionId) {
+                  NewAnswerArray.splice(index, 1, "")
+              }
+            }
+          })
+        }
+        else {
+          EQ_CPY.forEach((EQ, index) => {
+            if ((EQ as Question).questionText) {
+              if ((EQ as Question)._id === IRA.questionId) {
+                if (typeof IRA.answer === "object")
+                  NewAnswerArray.splice(index, 1, (IRA.answer as []).join('\r\n'))
+                else
+                  NewAnswerArray.splice(index, 1, IRA.answer)
+              }
+            }
+          })
+        }
+      }
+      
+      NewAnswerArray = Array.from(NewAnswerArray, item => typeof item === 'undefined' ? '→' : item);
+      
+      console.log(NewAnswerArray)
+      var temp:ResponseExpanded = IR
+      temp.answers = NewAnswerArray
+      NewResponseArray.push(temp)
+    }
+
+    return NewResponseArray.sort(function(a,b) { return new Date(b.sentDate).getTime() - new Date(a.sentDate).getTime() } )
+  }
 
   const exportToXLSX = (Jdata:any, fileName:string) => {
     const ws = XLSX.utils.aoa_to_sheet(Jdata);
@@ -149,12 +323,20 @@ export default function View_Survey () {
     }
   }
 
+  function OrderQuestions (QS: any) {
+    var THE_QS:Question[] = clone(QS)
+    return THE_QS.sort(function(a,b) { return (a.number - b.number) } )
+  }
+
   async function loadResponses () {
     var res = await GetResponseList(params.sid as string);
     if (res.code == 200) {
-      console.log(res.data.questions);
-      setQuestions(res.data.questions);
+      setQuestions(OrderQuestions(res.data.questions));
       await filterResponses(res.data.responses);
+      var RDQ = clone(res.data.questions);
+      var RDR = clone(res.data.responses);
+      setQuestionsForDisplay(ExpandQuestions(OrderQuestions(RDQ), ReOrderAnswers(OrderQuestions(RDQ), RDR)))
+      setResponseForDisplay(ExpandAnswers(ExpandQuestions(OrderQuestions(RDQ), ReOrderAnswers(OrderQuestions(RDQ), RDR)), ReOrderAnswers(OrderQuestions(RDQ), RDR)))
       setPageLoading(false);
     } else {
       console.log(res.data);
@@ -162,7 +344,6 @@ export default function View_Survey () {
 
     GetSurvey(location.pathname.slice(location.pathname.length - 24, location.pathname.length)).then(res => {
       if (res.code == 200){
-        console.log(res.data)
         setShortSurveyId(res.data.shortSurveyId as string);
       }
     })
@@ -237,7 +418,7 @@ export default function View_Survey () {
     return encrypted.toString().replaceAll('/', '*');
   }
 
-  function formatData (questions: Question[], responses: Response[]) {
+  function formatData (questions: (Question | Option | string)[], responses: ResponseExpanded[]) {
     var rows:any[][] = [[]];
     var queses:string[] = [];
     rows.push([state.state.name + ' Generated Report'])
@@ -246,17 +427,17 @@ export default function View_Survey () {
     queses.push("Enumrator Name");
     queses.push("Sent From");
     queses.push("Sent Date and Time");
-    questions.forEach((question:Question) => {
-      queses.push(question.questionText)
+    questions.forEach((question:(Question | Option | string)) => {
+      queses.push((question as Question).questionText ?? (question as Option).text ?? question as string)
     });
     rows.push(queses);
-    responses.forEach((response:Response) => {
+    responses.forEach((response:ResponseExpanded) => {
       let anses:any[] = [];
       anses.push(response.enumratorName);
       anses.push(`https://maps.google.com/?q=${(response.geoPoint ?? '' as string).split(',')[0]},${(response.geoPoint ?? '' as string).split(',')[1]}`);
       anses.push(response.sentDate.toString().replace('T',' ').slice(0,16));
-      response.answers.forEach((answer:Answer) => {
-        anses.push(properDisplayString(answer));
+      response.answers.forEach((answer:Answer | string) => {
+        anses.push(((answer as Answer).answer ?? answer) === "" ? "-" : ((answer as Answer).answer ?? answer));
       })
       rows.push(anses);
     })
@@ -428,7 +609,7 @@ export default function View_Survey () {
           }
 
           <Button style={{'marginRight': '2em'}} variant="primary" size="sm" 
-          onClick={() => exportToXLSX(formatData(questions, responses), state.state.name)}>
+          onClick={() => exportToXLSX(formatData(questionsForDisplay, responseForDisplay), state.state.name)}>
             <Sb_Text font={12} color="--lightGrey">Download Excel</Sb_Text>
           </Button>
 
@@ -441,13 +622,19 @@ export default function View_Survey () {
         </Col>
         <Row className="g-0">
           <Col className="d-flex p-0" style={{'transform':'scale(0.7)', 'transformOrigin':'left'}}>
-            <div className="link-share-box">
-              <FontAwesomeIcon icon={faShareAlt}/>
-            </div>
-            <div className="link-container">
-              <Sb_Text font={16}>forms.sebsib.com/ytvasb-213basd</Sb_Text>
-            </div>
+          {
+            surveyType == "ONLINE" || surveyType == "INCENTIVIZED" && 
+            <>
+              <div className="link-share-box">
+                <FontAwesomeIcon icon={faShareAlt}/>
+              </div>
+              <div className="link-container">
+                <Sb_Text font={16}>forms.sebsib.com/ytvasb-213basd</Sb_Text>
+              </div>
+            </>
+          }
           </Col>
+          
           {
             translateIds("ID", decodeJWT(token as string).role) !== "VISITOR" &&
             <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
@@ -501,15 +688,15 @@ export default function View_Survey () {
                 <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Sent From</th>
                 <th>Date</th>
                 {
-                  questions.map(((question, index) => (
-                    <th key={index}>{question.questionText}</th>
+                  questionsForDisplay.map(((question, index) => (
+                     <th key={index}>{(question as Question).questionText ?? (question as Option).text ?? question}</th>
                   )))
                 }
               </tr>
             </thead>
             <tbody>
               {
-                responses.slice(arSt, arEnd).map(((response, index) => (
+                responseForDisplay.slice(arSt, arEnd).map(((response, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>{response.enumratorName}</td>
@@ -523,10 +710,8 @@ export default function View_Survey () {
                     <td>{response.sentDate.toString().substring(0, 10)}</td>
                     {
                       response.answers.map((answer => (
-                        <td key={answer._id}>
-                          {
-                            properDisplay(answer)
-                          }
+                        <td key={Math.random()} style={{'whiteSpace':'pre'}}>
+                          {(answer as Answer).answer ?? answer}
                         </td>
                       )))
                     }
