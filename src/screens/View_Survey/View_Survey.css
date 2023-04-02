@@ -121,3 +121,43 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.visual-question {
+  font-family: 'HelveticaNeue';
+  font-weight: 900;
+}
+
+.visual-cont {
+  padding: 2em !important;
+  background-color: #ffffffad;
+  border-radius: 10px;
+  border: 1px solid #0000002b;
+}
+.exceedRange {
+  outline: 3px solid red;
+  outline-offset: -3px;
+  background-color: #ff595912 !important;
+}
+
+.CellWithComment{
+  position:relative;
+}
+
+.CellComment{
+  display:none;
+  position:absolute; 
+  z-index:100;
+  border:1px;
+  background-color:white;
+  border-style:solid;
+  border-width:1px;
+  border-color:red;
+  padding:3px;
+  color:red; 
+  top:20px; 
+  left:20px;
+}
+
+.CellWithComment:hover span.CellComment{
+  display:block;
+}

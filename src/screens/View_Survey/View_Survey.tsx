@@ -1,6 +1,6 @@
 import { faShareAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useEffect, useState } from "react";
+import { ReactChild, useContext, useEffect, useState } from "react";
 import { Button, Col, Collapse, Pagination, Row, Table } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
@@ -9,12 +9,13 @@ import { NotifContext } from "../../states/NotifContext";
 import { DeleteSurvey, GetMember, GetResponseList, GetSurvey } from "../../utils/api";
 import './View_Survey.css';
 import { translateIds, decodeJWT } from "../../utils/helpers";
-// import * as XLSX from "xlsx";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import * as XLSX from "sheetjs-style";
 import CryptoJS from "crypto-es";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Loader from "../../components/Sb_Loader";
 import { useAuth } from "../../states/AuthContext";
+import { Bar, Pie } from "react-chartjs-2";
 
 interface StateInterface {
   hash: string,
@@ -66,6 +67,8 @@ interface Question {
   options: Option[];
   inputType: string;
   hasShowPattern: boolean;
+  expectedMin?: number;
+  expectedMax?: number;
   number: number
 }
 
@@ -91,7 +94,15 @@ export default function View_Survey () {
   const [surveyStatus, setSurveyStatus] = useState<"STARTED" | "STOPPED">("STOPPED");
   const [surveyType, setSurveyType] = useState<"REGULAR" | "ONLINE" | "INCENTIVIZED">("REGULAR")
   const {token, setAuthToken} = useAuth();
-  
+  const backgroundColor = [
+    'rgb(211, 63, 73)',
+    'rgb(63, 48, 71)', 
+    'rgb(134, 187, 216)',
+    'rgb(249, 200, 14)', 
+    'rgb(242, 100, 25)',
+    'rgb(4, 114, 77)', 
+    'rgb(21, 30, 63)'
+  ]
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -227,9 +238,28 @@ export default function View_Survey () {
         }
         else if (translateIds("ID", IRA.inputType) === "MULTI-TEXT" || translateIds("ID", IRA.inputType) === "MULTI-NUMBER") {
           NewAnswerArray.push("→");
+          var push_count = 0; // How many responses were pushed
           (IRA.answer as []).forEach(IRA_ANS => {
             NewAnswerArray.push(IRA_ANS)
+            push_count += 1;
           })
+          // The length of the response gap (Input1, Input2...) for multi-text
+          var Q_LENGTH = 0;
+          EQ_CPY.forEach((EQ, index) => {
+            if ((EQ as Question).questionText){
+              if ((EQ as Question)._id === IRA.questionId) {
+                for (let INNER_INDEX = index; INNER_INDEX < EQ_CPY.length; INNER_INDEX++) {
+                  const element = EQ_CPY[INNER_INDEX];
+                  if ((element as Question)._id)
+                    Q_LENGTH = INNER_INDEX - index - 1;
+                }
+              }
+            }
+          })
+
+          for (let index = 0; index < Q_LENGTH - push_count; index++) {
+            NewAnswerArray.push("")
+          }
         }
         else if (typeof translateIds("ID", IRA.inputType) === "undefined") {
           EQ_CPY.forEach((EQ, index) => {
@@ -245,9 +275,9 @@ export default function View_Survey () {
             if ((EQ as Question).questionText) {
               if ((EQ as Question)._id === IRA.questionId) {
                 if (typeof IRA.answer === "object")
-                  NewAnswerArray.splice(index, 1, (IRA.answer as []).join('\r\n'))
+                  NewAnswerArray.splice(index, 1, (IRA.answer as []).map((ans:string) => { translateIds("ID", IRA.inputType) === "DATE" ? ans.substring(0,10) : ans}).join('\r\n'))
                 else
-                  NewAnswerArray.splice(index, 1, IRA.answer)
+                  NewAnswerArray.splice(index, 1, translateIds("ID", IRA.inputType) === "DATE" ? (IRA.answer as string).substring(0,10) : IRA)
               }
             }
           })
@@ -335,6 +365,7 @@ export default function View_Survey () {
       await filterResponses(res.data.responses);
       var RDQ = clone(res.data.questions);
       var RDR = clone(res.data.responses);
+      console.log(questions)
       setQuestionsForDisplay(ExpandQuestions(OrderQuestions(RDQ), ReOrderAnswers(OrderQuestions(RDQ), RDR)))
       setResponseForDisplay(ExpandAnswers(ExpandQuestions(OrderQuestions(RDQ), ReOrderAnswers(OrderQuestions(RDQ), RDR)), ReOrderAnswers(OrderQuestions(RDQ), RDR)))
       setPageLoading(false);
@@ -444,147 +475,373 @@ export default function View_Survey () {
     return rows;
   }
 
-  function properDisplayString (answer:Answer) {
-    if (translateIds('ID', answer.inputType) == 'CHOICE' || translateIds('ID', answer.inputType) == 'MULTI-SELECT') {
-      return getAnswer(answer.answer as string)
-    }
-    else if (translateIds('ID', answer.inputType) == 'MULTI-PHOTO' || translateIds('ID', answer.inputType) == 'MULTI-FILE') {
-      if (typeof answer.answer === 'object') {
-        var paths:string[] = answer.answer;
-        var out_p:string = "";
-        paths.map((path) => {
-          out_p = out_p.concat(`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(path)} ,`)
-        })
-        return out_p
-      }
-      else if (typeof answer.answer === 'string') {
-        return `${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`
-      }
-    }
-    else if (translateIds('ID', answer.inputType) == 'PHOTO' || translateIds('ID', answer.inputType) == 'FILE') {
-      return `${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`
-    }
-    else if (translateIds('ID', answer.inputType) == 'GEO-POINT' || translateIds('ID', answer.inputType) == 'MULTI-GEO-POINT') {
-      if (typeof answer.answer === 'object') {
-        var locs:string[] = answer.answer;
-        var out_g = ""
-        locs.map((loc) => {
-          out_g = out_g.concat(`https://maps.google.com/?q=${(loc as string).split(',')[0]},${(loc as string).split(',')[1]} ,`)
-        })
-        return out_g
-      }
-      else if (typeof answer.answer === 'string') {
-        return `https://maps.google.com/?q=${(answer.answer as string).split(',')[0]},${(answer.answer as string).split(',')[1]}`
-      }
-    }
-    else {
-      if (typeof answer.answer === 'object') {
-        var anses:string[] = answer.answer;
-        var out_pl = "";
-        anses.map((plain_answer) => (
-          out_pl = out_pl.concat(plain_answer+' ,')
-        ))
-        return out_pl
-      }
-      else if (typeof answer.answer === 'string') {
-        return answer.answer
-      }
-    }
-  }
-
-  function properDisplay (answer:Answer) {
-    if (translateIds('ID', answer.inputType) == 'CHOICE' || translateIds('ID', answer.inputType) == 'MULTI-SELECT') {
-      return getAnswer(answer.answer as string)
-    }
-    else if (translateIds('ID', answer.inputType) == 'MULTI-PHOTO' || translateIds('ID', answer.inputType) == 'MULTI-FILE') {
-      if (typeof answer.answer === 'object') {
-        var paths:string[] = answer.answer;
-        return (
-          <>
-            {
-              paths.map((path) => (
-                <a className="d-block" href={`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(path)}`} target={'_blank'}>View File/Photo</a>
-              ))
-            }
-          </>
-        )
-      }
-      else if (typeof answer.answer === 'string') {
-        return (        
-          <a href={`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`} target={'_blank'}>View File/Photo</a>
-        )
-      }
-    }
-    else if (translateIds('ID', answer.inputType) == 'PHOTO' || translateIds('ID', answer.inputType) == 'FILE') {
-      return (        
-        <a href={`${process.env.REACT_APP_FILE_SERVER_URL+encryptPath(answer.answer)}`} target={'_blank'}>View File/Photo</a>
-      )
-    }
-    else if (translateIds('ID', answer.inputType) == 'GEO-POINT' || translateIds('ID', answer.inputType) == 'MULTI-GEO-POINT') {
-      if (typeof answer.answer === 'object') {
-        var locs:string[] = answer.answer;
-        return (
-          <>
-            {
-              locs.map((loc) => (
-                <a className="d-block" href={`https://maps.google.com/?q=${(loc as string).split(',')[0]},${(loc as string).split(',')[1]}`} target={'_blank'}>View On Google Maps</a>
-              ))
-            }
-          </>
-        )
-      }
-      else if (typeof answer.answer === 'string') {
-        return (        
-          <a className="d-block" href={`https://maps.google.com/?q=${(answer.answer as string).split(',')[0]},${(answer.answer as string).split(',')[1]}`} target={'_blank'}>
-            View On Google Maps
-            </a>
-        )
-      }
-    }
-    else if (translateIds('ID', answer.inputType) == 'MULTI-NUMBER' || translateIds('ID', answer.inputType) == 'MULTI-TEXT') {
-      if (typeof answer.answer === 'object') {
-        var nums:string[] = answer.answer;
-        return (
-          <>
-            {
-              nums.map((num, index) => (
-                <>
-                  { nums.length - 1 == index ? num : num+", " }
-                </>
-              ))
-            }
-          </>
-        )
-      }
-    }
-    else {
-      if (typeof answer.answer === 'object') {
-        var anses:string[] = answer.answer;
-        return (
-          <>
-            {
-              anses.map((plain_answer, index) => (
-                <>
-                  { anses.length - 1 == index ? plain_answer : plain_answer+", " }
-                </>
-              ))
-            }
-          </>
-        )
-      }
-      else if (typeof answer.answer === 'string') {
-        return (        
-          answer.answer
-        )
-      }
-    }
-  }
-
   function handleStatusChange (checked: boolean) {
     if (checked)
       setSurveyStatus("STARTED")
     else
       setSurveyStatus("STOPPED")
+  }
+
+  function ValueFrequency (items:string[]) {
+    const result:any = {};
+
+    const itemFreq = items.reduce((acc:any, curr:any) => {
+      acc[curr] = (acc[curr] ?? 0) + 1;
+      if (acc[curr] >= 3) {
+        result[curr] = acc[curr];
+      }
+      return acc;
+    }, {});
+
+    return itemFreq
+  }
+
+  function visualize (question: Question):ReactChild {
+    switch (translateIds("ID", question.inputType)) {
+      case "CHOICE":
+        return visualizeChoice(question);
+      case "MULTI-SELECT":
+        return visualizeMultiSelect(question);
+      case "TIME":
+        return visualizeTime(question);
+      case "DATE":
+        return visualizeDate(question);
+      case "NUMBER":
+        return visualizeNumber(question);
+    
+      default:
+        return (<></>)
+    }
+  }
+
+  function visualizeChoice (question: Question):ReactChild {
+    var LABELS:string[] = []
+    var DATA:number[] = []
+    var RAW_RES:string[] = []
+
+    for (let index = 0; index < responses.length; index++) {
+      const resp = responses[index];
+      for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
+        const answer = resp.answers[ANS_INDX];
+        if (answer.questionId === question?._id)
+          RAW_RES.push(answer.answer as string)
+      }
+    }
+
+    const ValFreqObj = ValueFrequency(RAW_RES);
+
+    for (const [key, value] of Object.entries(ValFreqObj)) {
+      LABELS.push(getAnswer(key));
+      DATA.push(value as number)
+    }
+
+
+    ChartJS.register(ArcElement, Tooltip, Legend, Title);
+    var data = {
+      labels: LABELS,
+      datasets: [
+        {
+          data: DATA,
+          backgroundColor: backgroundColor
+        },
+      ],
+    };
+
+    var options = {
+      plugins: {
+        legend: {
+          position: "right" as const
+        },
+      }
+    }
+    return (<div><p className="visual-question">{question?.questionText}</p><Pie data={data} options={options}/></div>)
+  }
+
+  function visualizeDate (question: Question):ReactChild {
+    var DATA_MNTH_RAW:string[] = []
+    var DATA_YEAR_RAW:string[] = []
+    var DATA_DAY_RAW:string[] = []
+    var LABEL_YEAR:string[] = []
+    var LABEL_MNTH:string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    var LABEL_DAY:string[] = []
+    var RAW_RES:string[] = []
+
+    var YEAR_DATA:number[] = []
+    var MNTH_DATA:number[] = []
+    var DAY_DATA:number[] = []
+
+    for (let index = 0; index < responses.length; index++) {
+      const resp = responses[index];
+      for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
+        const answer = resp.answers[ANS_INDX];
+        if (answer.questionId === question?._id){
+          RAW_RES.push((answer.answer as string).substring(0,10))
+          DATA_MNTH_RAW.push((answer.answer as string).substring(5,7))
+          DATA_YEAR_RAW.push((answer.answer as string).substring(0,4))
+          DATA_DAY_RAW.push((answer.answer as string).substring(8,10))
+        }
+      }
+    }
+
+    const MNTH_FRQ = ValueFrequency(DATA_MNTH_RAW.sort((a, b) => b.localeCompare(a, undefined, {numeric: true})));
+    const DAY_FRQ = ValueFrequency(DATA_DAY_RAW.sort((a, b) => b.localeCompare(a, undefined, {numeric: true})));
+    const YEAR_FRQ = ValueFrequency(DATA_YEAR_RAW.sort((a, b) => b.localeCompare(a, undefined, {numeric: true})));
+
+    for (const [key, value] of Object.entries(YEAR_FRQ)) {
+      LABEL_YEAR.push(key);
+      YEAR_DATA.push(value as number)
+    }    
+    
+    for (const [key, value] of Object.entries(MNTH_FRQ)) 
+      MNTH_DATA.push(value as number)
+
+    for (const [key, value] of Object.entries(DAY_FRQ))
+      DAY_DATA.push(value as number)
+    
+    for (let index = 1; index <= 31; index++) 
+      LABEL_DAY.push(index.toString())  
+    
+    const options = { plugins: { legend: { position: "top" as const } } };
+
+    const data_year = {
+      labels: LABEL_YEAR,
+      datasets: [
+        {
+          label: "The Year",
+          data: YEAR_DATA,
+          backgroundColor: backgroundColor[3],
+        }
+      ],
+    };
+
+    const data_mnth = {
+      labels: LABEL_MNTH,
+      datasets: [
+        {
+          label: "The Month",
+          data: YEAR_DATA,
+          backgroundColor: backgroundColor[4],
+        }
+      ],
+    };
+
+    const data_day = {
+      labels: LABEL_DAY,
+      datasets: [
+        {
+          label: "The Day",
+          data: YEAR_DATA,
+          backgroundColor: backgroundColor[5],
+        }
+      ],
+    };
+
+    return (
+      <div>
+        <Row>
+          <div>
+            <p className="visual-question">{question?.questionText}</p>
+            <Bar options={options} data={data_day} />
+          </div>
+        </Row>
+        <Row>
+            <Bar options={options} data={data_mnth} />
+        </Row>
+        <Row>
+            <Bar options={options} data={data_year} />
+        </Row>
+      </div>
+    )
+  }
+
+  function visualizeTime (question: Question):ReactChild {
+    var RAW_RES:number[] = []
+    var LABELS:string[] = []
+    var DATA:number[] = []
+
+    for (let index = 0; index < responses.length; index++) {
+      const resp = responses[index];
+      for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
+        const answer = resp.answers[ANS_INDX];
+        if (answer.questionId === question?._id){
+          RAW_RES.push(Number((answer.answer as string).substring(0, 2)))
+        }
+      }
+    }
+
+    // Get frequency
+    const ValFreqObj = ValueFrequency(RAW_RES.sort(((a,b) => a - b)).map(r => r.toString()));
+    for (const [key, value] of Object.entries(ValFreqObj)) {
+      DATA.push(value as number);
+      LABELS.push(key+":00");
+    }
+
+    ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend );
+    
+    const options = { 
+      plugins: { 
+        legend: { 
+          position: "top" as const }, 
+          scales: {
+            yAxes: [{
+              type: 'linear',
+              ticks: {
+                beginAtZero: true,
+                stepSize: 1,
+                autoSkip: false
+              },
+            }]
+          } 
+      }, 
+    };
+
+    const data = {
+      labels: LABELS,
+      datasets: [
+        {
+          label: "Hour",
+          data: DATA,
+          backgroundColor: backgroundColor[4],
+        }
+      ],
+    };
+
+    return (<div><p className="visual-question">{question?.questionText}</p><Bar options={options} data={data} /></div>)
+  }
+
+  function visualizeMultiSelect (question: Question):ReactChild {
+    var LABELS:string[] = []
+    var DATA:number[] = []
+    var RAW_RES:string[] = []
+    
+    for (let index = 0; index < responses.length; index++) {
+      const resp = responses[index];
+      for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
+        const answer = resp.answers[ANS_INDX];
+        if (answer.questionId === question?._id)
+          RAW_RES = RAW_RES.concat(answer.answer as [])
+      }
+    }
+
+    const ValFreqObj = ValueFrequency(RAW_RES);
+
+    for (const [key, value] of Object.entries(ValFreqObj)) {
+      LABELS.push(getAnswer(key));
+      DATA.push(value as number)
+    }
+
+    ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend );
+    
+    const options = { plugins: { legend: { position: "right" as const, display: false }, maintainAspectRatio: false} };
+
+    const data = {
+      labels: LABELS,
+      datasets: [
+        {
+          data: DATA,
+          backgroundColor: backgroundColor[2],
+        },
+      ],
+    };
+
+    return (<div><p className="visual-question">{question?.questionText}</p><Bar options={options} data={data} /></div>)
+  }
+
+  function visualizeNumber (question: Question):ReactChild {
+    var LABELS:string[] = []
+    var DATA:number[] = []
+    var DATA_AVG:number[] = []
+    var DATA_RNG:number[] = []
+    var DATA_MD:number[] = []
+    var RAW_RES:number[] = []
+    
+    for (let index = 0; index < responses.length; index++) {
+      const resp = responses[index];
+      for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
+        const answer = resp.answers[ANS_INDX];
+        if (answer.questionId === question?._id)
+          RAW_RES.push(answer.answer as number)
+      }
+    }
+
+    var mode:number = 0
+    // Get frequency
+    const ValFreqObj = ValueFrequency(RAW_RES.sort(((a,b) => a - b)).map(r => r.toString()));
+    for (const [key, value] of Object.entries(ValFreqObj)) {
+      LABELS.push(key);
+      DATA.push(value as number);
+      (value as number) >= mode ? mode = value as number : null;
+    }
+    // Get Mode
+    DATA_MD.push(mode)
+
+    // Get Average/Mean
+    DATA_AVG.push(RAW_RES.reduce((a,b) => (a + b) / RAW_RES.length))
+    // Get Range
+    DATA_RNG.push(RAW_RES.sort((a,b) => b - a)[0] - RAW_RES.sort((a,b) => b - a)[RAW_RES.length - 1])
+
+    ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend );
+    
+    const options = { plugins: { legend: { position: "top" as const } } };
+
+    const data = {
+      labels: LABELS,
+      datasets: [
+        {
+          label: "Count",
+          data: DATA,
+          backgroundColor: backgroundColor[2],
+        }
+      ],
+    };
+
+    const data_meta = {
+      labels: [""],
+      datasets: [
+        {
+          label: "Average",
+          data: DATA_AVG,
+          backgroundColor: backgroundColor[3],
+        },
+        {
+          label: "Range",
+          data: DATA_RNG,
+          backgroundColor: backgroundColor[4],
+        },
+        {
+          label: "Mode",
+          data: DATA_MD,
+          backgroundColor: backgroundColor[5],
+        },
+      ],
+    };
+
+    return (
+      <div>
+        <Row>
+          <div>
+            <p className="visual-question">{question?.questionText}</p>
+            <Bar options={options} data={data} />
+          </div>
+        </Row>
+        <Row>
+            <Bar options={options} data={data_meta} />
+        </Row>
+      </div>
+    )
+  }
+
+  function expectedValDisp (questions: Question[], answer: Answer):string {
+    for (let index = 0; index < questions.length; index++) {
+      const q = questions[index];
+      if (q._id === answer.questionId) {
+        if ((answer.answer as number) > (q?.expectedMax ?? 0) || (answer.answer as number) < (q?.expectedMin ?? 0))
+          return 'exceedRange CellWithComment'
+        else
+          return 'IN'
+      }
+    }
+    return 'OUT'
   }
   return (
     pageLoading ? <Sb_Loader full/> :
@@ -710,7 +967,8 @@ export default function View_Survey () {
                     <td>{response.sentDate.toString().substring(0, 10)}</td>
                     {
                       response.answers.map((answer => (
-                        <td key={Math.random()} style={{'whiteSpace':'pre'}}>
+                        <td key={Math.random()} style={{'whiteSpace':'pre', }} className={ translateIds("ID", (answer as Answer).inputType) === "NUMBER" ? expectedValDisp(questions, (answer as Answer)) : " "}>
+                          <span className="CellComment">Outside Defined Range</span>
                           {(answer as Answer).answer ?? answer}
                         </td>
                       )))
@@ -720,7 +978,7 @@ export default function View_Survey () {
               }
             </tbody>
           </Table>
-          <Row>
+          <Row className="mb-4">
             <Col className="d-flex m-4" style={{'justifyContent':'center'}}>
               <Pagination className="sb-pagination">
                 <Pagination.Item onClick={() => goTo(currPage-1)}>Prev</Pagination.Item>
@@ -728,6 +986,17 @@ export default function View_Survey () {
                 <Pagination.Item onClick={() => goTo(currPage+1)}>Next</Pagination.Item>
               </Pagination>
             </Col>
+          </Row>
+          <Row className="justify-content-around">
+            {
+              questions
+              .filter((q) => ["CHOICE", "MULTI-SELECT", "DATE", "TIME", "NUMBER"].includes(translateIds("ID", q.inputType) as string))
+              .map((q) => (
+                <Col md="5" className="me-4 mb-4 visual-cont">
+                  { visualize(q) }
+                </Col>
+              ))
+            }
           </Row>
         </Col>
       </Row>
