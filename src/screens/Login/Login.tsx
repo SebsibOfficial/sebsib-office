@@ -57,7 +57,7 @@ export default function Login() {
 				localStorage.setItem('access_count', '1');
 				setAuthToken(result.data.token as string);
         if (result.data.user.hasPassChange){
-          if (translateIds("ID", result.data.user.roleId) === "VISITOR")
+          if (translateIds("ID", result.data.user.roleId) === "VIEWER")
 				    setTimeout(() => navigate('/dashboard/shared-surveys', { state:true }), 50);
           else
             setTimeout(() => navigate('/dashboard', { state:true }), 50);

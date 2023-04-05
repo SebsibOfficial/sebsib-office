@@ -54,8 +54,12 @@ export default function Forgot() {
       if (result.code == 200) {
         setSuccess(true);
         setEmail(""); setShortOrgId("")
+        setErrnotice(null)
         setBtnLoading(false);
-      } else {console.log(result.data); setBtnLoading(false)}
+      } else {
+        setErrnotice(result.data.message)
+        console.log(result.data); setBtnLoading(false)
+      }
     })
 	}
 
