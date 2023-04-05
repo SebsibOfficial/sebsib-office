@@ -8,7 +8,7 @@ import Sb_Loader from "../../components/Sb_Loader";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { useAuth } from "../../states/AuthContext";
 import { NotifContext } from "../../states/NotifContext";
-import { AddMember, EditMember, GetMember, GetMemberList, GetProjectList } from "../../utils/api";
+import { AddMember, EditMember, GetMember, GetMemberList, GetProjectList, GetSurveyListByOrg_PIVOT } from "../../utils/api";
 import { decodeJWT, translateIds } from "../../utils/helpers";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 }
 
 class AddMemberPayload {
-  constructor (mfn: string,mln: string, mph: string, rid: string, me: string, mp: string, pi: string[]){
+  constructor (mfn: string,mln: string, mph: string, rid: string, me: string, mp: string, pi: string[], stv: string[]){
     this.firstname = mfn;
     this.lastname = mln;
     this.phone = mph;
@@ -24,6 +24,7 @@ class AddMemberPayload {
     this.email = me;
     this.password = mp;
     this.projectsId = pi;
+    this.surveysToView = stv;
   }
   firstname: string;
   lastname: string;
@@ -32,6 +33,7 @@ class AddMemberPayload {
   email: string;
   password: string;
   projectsId: string[];
+  surveysToView: string[];
 }
 
 type ProjectItem = {_id: string, name: string, defaultSelectValue?:"UNSELECTED" | "SELECTED"};
@@ -54,9 +56,12 @@ export default function Add_Modify_Member(props:Props) {
   const [memberPassword, setMemberPassword] = useState("");
   const [projectsInvolved, setProjectsInvolved] = useState<string[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [surveys, setSurveys] = useState<ProjectItem[]>([]);
+  const [surveysToView, setSurveysToView] = useState<string[]>([]);
   const [pageLoading, setPageLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
   const [projIn, setProj] = useState(false);
+  const [survtoView, setSurvToView] = useState(false);
 
   useEffect(() => {
     // Populate Project List
@@ -73,13 +78,30 @@ export default function Add_Modify_Member(props:Props) {
         console.log(res.code);
       }
     })
+
+    // Populate Survey List
+    GetSurveyListByOrg_PIVOT(decodeJWT(token as string).org)
+    .then(res => {
+      if (res.code == 200) {
+        var srvs = res.data;
+        var arr:ProjectItem[] = [];
+        srvs.forEach((srv:any) => {
+          arr.push({_id: srv.id, name: srv.name})
+        })
+        setSurveys(arr);
+      } else {
+        console.log(res.code);
+      }
+    })
   },[])
 
   useEffect(() => {
     // Check if Projects are set
     if (projects.length != 0)
       setProj(true);
-  }, [projects]);
+    if (surveys.length != 0)
+      setSurvToView(true);
+  }, [projects, surveys]);
 
   useEffect(() => {
   // Get the editable member data
@@ -94,6 +116,7 @@ export default function Add_Modify_Member(props:Props) {
         setMemberRole(translateIds("ID",res.data.roleId) as string)
         setMemberEmail(res.data.email);
         setProjectsInvolved(res.data.projectsId);
+        // Set Value for Projects
         var projectList = [...projects];
         projects.forEach((project:ProjectItem) => {
           var mem_prj_arr = res.data.projectsId as Array<string>;
@@ -107,9 +130,34 @@ export default function Add_Modify_Member(props:Props) {
       setPageLoading(false)
     })
   }
+
+  if (survtoView) {
+    GetMember(params.id).then((res:any) => {
+      if (res.code == 200){
+        console.log(res.data);
+        setMemberFirstName(res.data.firstName)
+        setMemberLastName(res.data.lastName)
+        setMemberPhone(res.data.phone)
+        setMemberRole(translateIds("ID",res.data.roleId) as string)
+        setMemberEmail(res.data.email);
+        setSurveysToView(res.data.toView)
+        // Set value for Survey
+        var surveyList = [...surveys];
+        surveys.forEach((survey:ProjectItem) => {
+          var mem_srv_arr = res.data.toView as Array<string>;
+          if (mem_srv_arr.includes(survey._id))
+            surveyList.forEach(srv => { if (srv._id == survey._id) srv.defaultSelectValue = 'SELECTED'})
+        })
+        setSurveys(surveyList);
+      } else {
+        console.info(res)
+      }
+      setPageLoading(false)
+    })
+  }
   }
   else setPageLoading(false);
-  }, [projIn]);
+  }, [projIn, survtoView]);
 
   // Prevents routing from the URL
   useEffect(() => {
@@ -131,16 +179,31 @@ export default function Add_Modify_Member(props:Props) {
       setProjectsInvolved(pi);
     }
   }
-//(mfn: string,mln: string, mph: string, me: string, mu: string, mp: string, pi: string[]){
+
+  function surveySelectHandler (id: string, ac: actionType | undefined) {
+    if (ac === 'SELECTED'){
+      var stv = [...surveysToView];
+      stv.push(id);
+      setSurveysToView(stv);
+    }
+    else if (ac === 'UNSELECTED'){
+      var stv = [...surveysToView];
+      stv = stv.filter(survID => survID != id);
+      setSurveysToView(stv);
+    }
+  }
+
   function saveAddButtonHandler () {
     setBtnLoading(true);
     if (props.pageType === 'ADD'){
       var payload:AddMemberPayload;
       if (memberRole == "MEMBER")
-        payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, projectsInvolved);
-      else (memberRole == "ANALYST")
-        payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, []);
-      
+        payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, projectsInvolved, []);
+      else if (memberRole == "ANALYST")
+        payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, [], []);
+      else
+        payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, [], surveysToView);
+
       AddMember(payload).then(res => {
         if (res.code == 200) {
           setBtnLoading(false);
@@ -153,7 +216,7 @@ export default function Add_Modify_Member(props:Props) {
       })
     }
     else if (props.pageType === 'EDIT') {
-      var payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, projectsInvolved);
+      var payload = new AddMemberPayload(memberFirstName, memberLastName, memberPhone, memberRole, memberEmail, memberPassword, projectsInvolved, surveysToView);
       EditMember(params.id as string, payload).then(res => {
         if (res.code == 200) {
           setBtnLoading(false);
@@ -200,6 +263,7 @@ export default function Add_Modify_Member(props:Props) {
                   required>
                     <option value="MEMBER">Enumerator</option>
                     <option value="ANALYST">Analyst</option>
+                    <option value="VIEWER">Viewer</option>
                   </Form.Select>
               </Form.Group>
              </>
@@ -238,6 +302,23 @@ export default function Add_Modify_Member(props:Props) {
               <Sb_List 
               items={projects} 
               listType="PROJECT" compType='SELECT' onAction={(id, name, ac) => projectSelectHandler(id, ac)}/>
+              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
+                <Sb_Text font={12} color="--lightGrey">
+                  {
+                    btnLoading ? <Sb_Loader/> :<span>{props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}</span>
+                  }
+                </Sb_Text>
+              </Button>
+            </> 
+            : null
+          }
+          {
+            memberRole == "VIEWER" ? 
+            <>
+              <Sb_Text font={16} weight={500}><p>Surveys To View</p></Sb_Text>
+              <Sb_List 
+              items={surveys} 
+              listType="SURVEY" compType='SELECT' onAction={(id, name, ac) => surveySelectHandler(id, ac)}/>
               <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
                 <Sb_Text font={12} color="--lightGrey">
                   {

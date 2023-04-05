@@ -66,7 +66,7 @@ export async function GetSurveyListByOrg(orgId: string): Promise<ResponseInterfa
     let survey_arr:any = [];
     for (let index = 0; index < result.data.length; index++) {
       const element = result.data[index];
-      var survey_result = await axios.get('get/surveylist/'+element._id);
+      var survey_result = await axios.get('get/surveylist/project/'+element._id);
       if (survey_result.data.code != 200) res_code = result.code;
       survey_arr = survey_arr.concat(survey_result.data);
     }
@@ -248,6 +248,17 @@ interface ResetPassI {email:string, shortOrgId:string}
 export async function ResetPass(body: ResetPassI):Promise<ResponseInterface>{
   try {
     var result = await axios.patch('noauth/resetpass', body);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+// PIVOT ENDPOINT
+
+export async function GetSurveyListByOrg_PIVOT(id: string): Promise<ResponseInterface>{
+  try {
+    var result = await axios.get('get/surveylist/organization/'+id);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}
