@@ -1,4 +1,4 @@
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faArchive, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
@@ -118,6 +118,15 @@ export function Members_Landing () {
         <Col md="3" key={member._id}>
           <Sb_Member_Card id={member._id} name={member.name} onDelete={(id) => {setModalState(true); setIdtoDel(id)}} onClick={(id) => navigate('edit-member/'+id, { state:true })}/>
         </Col>)
+      }
+      {/* When there are no Projects */}
+      { (members?.length ?? 0) < 1 &&
+        <Row>
+          <Col className="text-center" style={{'opacity':'0.1'}}>
+            <FontAwesomeIcon icon={faUser} style={{'fontSize':'10em'}}/><br></br>
+            <Sb_Text font={48} weight={900}>No Members</Sb_Text>
+          </Col>
+        </Row>
       }
     </Row>
 
