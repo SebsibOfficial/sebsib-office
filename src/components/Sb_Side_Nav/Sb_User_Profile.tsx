@@ -21,7 +21,7 @@ const Sb_User_Profile: React.FC<Props> = ({ username, role }:Props) => {
           {username}
         </Sb_Text>
         {
-          role !== "VISITOR" && 
+          role !== "VIEWER" && 
           <FontAwesomeIcon
             icon={faCog}
             className = "setting-icon"

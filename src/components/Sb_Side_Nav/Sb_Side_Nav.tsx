@@ -38,10 +38,10 @@ const Sb_Side_Nav = (props: Props) => {
   }
 
   function filerItems (IT:SideNavData, PR:any) {
-    if (PR === "VISITOR" && IT.title === "Log Out") {
+    if (PR === "VIEWER" && IT.title === "Log Out") {
       return true
     }
-    else if(PR !== "VISITOR") {
+    else if(PR !== "VIEWER") {
       return true
     }
     else {

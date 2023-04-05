@@ -858,7 +858,7 @@ export default function View_Survey () {
             <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Questionnaire" : "View Questionnaire"}</Sb_Text>
           </Button>
           {
-            translateIds("ID", decodeJWT(token as string).role) !== "VISITOR" &&
+            translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" &&
             <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
             onClick={() => navigate("/dashboard/projects/edit-survey/"+params.sid, {state: true})}>
               <Sb_Text font={12} color="--lightGrey">Edit Survey</Sb_Text>
@@ -871,7 +871,7 @@ export default function View_Survey () {
           </Button>
 
           {
-            translateIds("ID", decodeJWT(token as string).role) !== "VISITOR" &&
+            translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" &&
             <Button variant="danger" size="sm" onClick={() => setModalState(true)}>
               <Sb_Text font={12} color="--lightGrey">Delete Survey</Sb_Text>
             </Button>
@@ -893,7 +893,7 @@ export default function View_Survey () {
           </Col>
           
           {
-            translateIds("ID", decodeJWT(token as string).role) !== "VISITOR" &&
+            translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" &&
             <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
               <label className="switch">
                 <input type="checkbox" onChange={(e) => handleStatusChange(e.target.checked)}/>
