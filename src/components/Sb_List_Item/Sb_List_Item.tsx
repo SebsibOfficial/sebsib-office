@@ -1,4 +1,4 @@
-import { faArchive, faCheckCircle, faMinusSquare, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition, faArchive, faCheckCircle, faFileInvoice, faMinusSquare, faQuestionCircle, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Sb_Checkbox from '../Sb_Checkbox/Sb_Checkbox';
 import Sb_Text from '../Sb_Text/Sb_Text';
@@ -10,10 +10,23 @@ export type compType = "SELECT" | "REMOVE" | "DISPLAY";
 export interface Props {
     _id: string,
     text: string,
-    type: "MEMBER" | "PROJECT",
+    type: "MEMBER" | "PROJECT" | "SURVEY",
     compType: compType,
     defaultSelectValue?: "UNSELECTED" | "SELECTED" | undefined,
     onAction: (id:string, actionType:actionType, text:string) => void
+}
+
+function chooseIcon (type: "MEMBER" | "PROJECT" | "SURVEY"):IconDefinition {
+  switch (type) {
+    case "MEMBER":
+      return faUserCircle;
+    case "PROJECT":
+      return faArchive;
+    case "SURVEY":
+      return faFileInvoice;
+    default:
+      return faQuestionCircle;
+  }
 }
 
 export default function Sb_List_Item (props:Props) {
@@ -23,7 +36,7 @@ export default function Sb_List_Item (props:Props) {
         return (
             <div className='d-flex sb-list-item list-remove'>
                 <div className='d-inline-flex align-items-center' style={{'overflowWrap':'anywhere'}}>
-                    <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 
+                    <FontAwesomeIcon icon={chooseIcon(props.type)} 
                     style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>
                     <Sb_Text font={16}>{props.text}</Sb_Text>
                 </div>
@@ -39,7 +52,7 @@ export default function Sb_List_Item (props:Props) {
                     {/* There is something confusing in this component, it is returning the opposite. So i adapted. */}
                     <Sb_Checkbox default={defaultSelectValue} 
                     onChange={(checkState:boolean) => props.onAction(props._id, checkState ? 'UNSELECTED' : 'SELECTED', props.text)}/> 
-                    <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 
+                    <FontAwesomeIcon icon={chooseIcon(props.type)} 
                     style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>
                     <Sb_Text font={16}>{props.text}</Sb_Text>
                 </div>
@@ -51,7 +64,7 @@ export default function Sb_List_Item (props:Props) {
             <div className='d-flex sb-list-item list-display' style={{'overflowWrap':'anywhere'}}
              onClick={() => props.onAction(props._id, "CLICK", props.text)}>
                 <div className='d-inline-flex align-items-center'>
-                    <FontAwesomeIcon icon={props.type === 'MEMBER' ? faUserCircle : faArchive} 
+                    <FontAwesomeIcon icon={chooseIcon(props.type)} 
                     style={{'fontSize':'1.3em', 'marginRight':'0.6em'}}/>
                     <Sb_Text font={16}>{props.text}</Sb_Text>
                 </div>

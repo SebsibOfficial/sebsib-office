@@ -5,7 +5,7 @@ export type item = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" |
 
 interface Props {
     items: item[],
-    listType: "MEMBER" | "PROJECT",
+    listType: "MEMBER" | "PROJECT" | "SURVEY",
     compType: compType;
     onAction?: (id:string, text:string, actionType?:actionType) => void
 }
