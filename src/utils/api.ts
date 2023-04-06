@@ -78,7 +78,7 @@ export async function GetSurveyListByOrg(orgId: string): Promise<ResponseInterfa
 
 export async function GetSurveyListByProject(projId: string): Promise<ResponseInterface>{
   try {
-    var result = await axios.get('get/surveylist/'+projId);
+    var result = await axios.get('get/surveylist/project/'+projId);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}
@@ -259,6 +259,15 @@ export async function ResetPass(body: ResetPassI):Promise<ResponseInterface>{
 export async function GetSurveyListByOrg_PIVOT(id: string): Promise<ResponseInterface>{
   try {
     var result = await axios.get('get/surveylist/organization/'+id);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+export async function GetSurveyListForViewer(id: string): Promise<ResponseInterface>{
+  try {
+    var result = await axios.get('get/surveylist/user/'+id);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}

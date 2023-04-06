@@ -10,6 +10,7 @@ import { ChangePass, login, ResponseInterface } from '../../utils/api';
 import { AuthContext, useAuth } from '../../states/AuthContext';
 import './Login.css';
 import Sb_Loader from '../../components/Sb_Loader';
+import { translateIds } from '../../utils/helpers';
 
 interface StateInterface {
 	hash: string,
@@ -42,6 +43,7 @@ export default function Change() {
 	const [btnloading, setBtnLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 	const state = useLocation() as StateInterface;
+  const [role, setRole] = useState<"VIEWER" | "OTHER">("OTHER");
 
 	/*------------- METHODS -------------- */
 	function changehandler () {
@@ -50,26 +52,28 @@ export default function Change() {
 
     if (Npass.length < 8) { setErrnotice("Password too short"); return null; }
     
-    setBtnLoading(true);
-
-    if (success) {
-      navigate('/dashboard', { state:true })
-    }
-    else {
-      ChangePass({initialpass: null, newpass: Npass, confirmpass: Cpass}).then(result => {
-        if (result.code == 200) {
-          setSuccess(true);
-          setBtnLoading(false);
-        } else {
-          setErrnotice(result.data.message);
-          console.log(result.data)
-        }
-      }).catch((err) => {
-        console.log(err);
-			  setBtnLoading(false);
-      })
-    }
+    setBtnLoading(true);  
+    
+    ChangePass({initialpass: null, newpass: Npass, confirmpass: Cpass}).then(result => {
+      if (result.code == 200) {
+        setSuccess(true);
+        setBtnLoading(false);
+        setRole(translateIds("ID", result.data.roleId) === "VIEWER" ? "VIEWER" : "OTHER")
+      } else {
+        setErrnotice(result.data.message);
+        console.log(result.data)
+      }
+    }).catch((err) => {
+      console.log(err);
+      setBtnLoading(false);
+    })
 	}
+
+  function continueHandler () {
+    if (success) {
+      navigate( role === "OTHER" ? '/dashboard' : "/dashboard/shared-surveys", { state:true })
+    }
+  }
 
 	return (
 		<div className='login-screen'>
@@ -135,7 +139,7 @@ export default function Change() {
 										
                 {
                   success ?
-                  <Button size="sm" onClick={() => changehandler()} disabled = {btnloading}>
+                  <Button size="sm" onClick={() => continueHandler()} disabled = {btnloading}>
                   { btnloading ? <Sb_Loader/> : <Sb_Text font={12} color="--lightGrey">Continue</Sb_Text>}												
                   </Button>
                   :

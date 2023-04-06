@@ -991,8 +991,8 @@ export default function View_Survey () {
             {
               questions
               .filter((q) => ["CHOICE", "MULTI-SELECT", "DATE", "TIME", "NUMBER"].includes(translateIds("ID", q.inputType) as string))
-              .map((q) => (
-                <Col md="5" className="me-4 mb-4 visual-cont">
+              .map((q, index) => (
+                <Col key={index} md="5" className="me-4 mb-4 visual-cont">
                   { visualize(q) }
                 </Col>
               ))
