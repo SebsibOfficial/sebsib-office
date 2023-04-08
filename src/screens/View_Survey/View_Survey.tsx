@@ -6,7 +6,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
-import { DeleteSurvey, GetMember, GetResponseList, GetSurvey } from "../../utils/api";
+import { DeleteSurvey, GetMember, GetResponseList, GetSurvey, UpdateSurveyStatus } from "../../utils/api";
 import './View_Survey.css';
 import { translateIds, decodeJWT } from "../../utils/helpers";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement } from 'chart.js';
@@ -95,6 +95,8 @@ export default function View_Survey () {
   const [surveyType, setSurveyType] = useState<"REGULAR" | "ONLINE" | "INCENTIVIZED" | "">("");
   const [surveylink, setSurveyLink] = useState("");
   const {token, setAuthToken} = useAuth();
+  const [statusbtnLoading, setStatusbtnLoading] = useState(false);
+
   const backgroundColor = [
     'rgb(211, 63, 73)',
     'rgb(63, 48, 71)', 
@@ -408,7 +410,7 @@ export default function View_Survey () {
     GetSurvey(params.sid as string).then(res => {
       if (res.code == 200) {
         setSurveyType(res.data.type);
-        console.log(res.data)
+        setSurveyStatus(res.data.status);
         setSurveyLink(res.data.link);
       }
     }).then(() => loadResponses())
@@ -485,10 +487,18 @@ export default function View_Survey () {
   }
 
   function handleStatusChange (checked: boolean) {
-    if (checked)
-      setSurveyStatus("STARTED")
-    else
-      setSurveyStatus("STOPPED")
+    setStatusbtnLoading(true)
+    UpdateSurveyStatus(params.sid as string, checked ? "STARTED" : "STOPPED").then(result => {
+      if (result.code == 200) {
+        if (checked)
+          setSurveyStatus("STARTED")
+        else
+          setSurveyStatus("STOPPED")
+      }
+      else
+        console.log(result.data)
+      setStatusbtnLoading(false)
+    }).catch(error => console.log(error))
   }
 
   function ValueFrequency (items:string[]) {
@@ -904,11 +914,12 @@ export default function View_Survey () {
           {
             translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" &&
             <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
+              <Sb_Text font={16}>{surveyStatus == "STARTED"? "Started" : "Stopped"}</Sb_Text>
               <label className="switch">
-                <input type="checkbox" onChange={(e) => handleStatusChange(e.target.checked)}/>
+                <input type="checkbox" onChange={(e) => handleStatusChange(e.target.checked)} checked={surveyStatus === "STARTED"}/>
                 <span className="slider round"></span>
               </label>
-              <Sb_Text font={16}>{surveyStatus == "STARTED"? "Started" : "Stopped"}</Sb_Text>
+              { statusbtnLoading ? <Sb_Loader colored/> : null}
             </Col>
           }
         </Row>

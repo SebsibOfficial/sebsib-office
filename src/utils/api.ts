@@ -277,7 +277,6 @@ export async function GetSurveyListForViewer(id: string): Promise<ResponseInterf
 
 export async function CreateOnlineSurvey(pid: string, body: FinalPayloadOnline):Promise<ResponseInterface>{
   try {
-    console.log(body);
     var result = await axios.post('post/createonlinesurvey/'+pid, body);
     return {code: result.status, data: result.data};
   } catch (error:any) {
@@ -291,5 +290,15 @@ export async function GetQuestionListForSurvey(id: string): Promise<ResponseInte
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}
+  }
+}
+
+export async function UpdateSurveyStatus(sid: string, status: "STARTED" | "STOPPED"):Promise<ResponseInterface>{
+  await WAIT(2000)
+  try {
+    var result = await axios.patch('patch/upadatestatus/'+status+'/'+sid);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data.message}
   }
 }
