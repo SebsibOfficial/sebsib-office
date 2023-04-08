@@ -92,7 +92,8 @@ export default function View_Survey () {
   const [shortSurveyId, setShortSurveyId] = useState("");
   const [surveydesc, setSurveyDesc] = useState("");
   const [surveyStatus, setSurveyStatus] = useState<"STARTED" | "STOPPED">("STOPPED");
-  const [surveyType, setSurveyType] = useState<"REGULAR" | "ONLINE" | "INCENTIVIZED">("REGULAR")
+  const [surveyType, setSurveyType] = useState<"REGULAR" | "ONLINE" | "INCENTIVIZED" | "">("");
+  const [surveylink, setSurveyLink] = useState("");
   const {token, setAuthToken} = useAuth();
   const backgroundColor = [
     'rgb(211, 63, 73)',
@@ -384,25 +385,33 @@ export default function View_Survey () {
     var enumr:string[] = [];
     var resp:string[] = [];
     var modifiedResp:Response[] = responses;
-    for (let index = 0; index < responses.length; index++) {
-      if (resp.includes(responses[index]._id)) {
-        modifiedResp[index].enumratorName = enumr[resp.findIndex((rsp) => rsp == responses[index]._id)];
-      }
-      else {
-        var res = await GetMember(responses[index].enumratorId);
-        if (res.code == 200) {
-          resp.push(responses[index]._id);
-          enumr.push(res.data.firstName+' '+res.data.lastName);
-          modifiedResp[index].enumratorName = res.data.firstName+' '+res.data.lastName;
+    if (surveyType === "REGULAR") {
+      for (let index = 0; index < responses.length; index++) {
+        if (resp.includes(responses[index]._id)) {
+          modifiedResp[index].enumratorName = enumr[resp.findIndex((rsp) => rsp == responses[index]._id)];
         }
-      }      
+        else {
+          var res = await GetMember(responses[index].enumratorId);
+          if (res.code == 200) {
+            resp.push(responses[index]._id);
+            enumr.push(res.data.firstName+' '+res.data.lastName);
+            modifiedResp[index].enumratorName = res.data.firstName+' '+res.data.lastName;
+          }
+        }      
+      }
     }
     //console.log(modifiedResp);
     setResponses(modifiedResp.sort(function(a,b) { return new Date(b.sentDate).getTime() - new Date(a.sentDate).getTime() } ));
   }
 
   useEffect(() => {
-    loadResponses();
+    GetSurvey(params.sid as string).then(res => {
+      if (res.code == 200) {
+        setSurveyType(res.data.type);
+        console.log(res.data)
+        setSurveyLink(res.data.link);
+      }
+    }).then(() => loadResponses())
   }, [])
 
   async function deleteSurveyHandler () {
@@ -860,7 +869,7 @@ export default function View_Survey () {
           {
             translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" &&
             <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
-            onClick={() => navigate("/dashboard/projects/edit-survey/"+params.sid, {state: true})}>
+            onClick={() => navigate( surveyType === "REGULAR" ? "/dashboard/projects/edit-survey/"+params.sid : "/dashboard/projects/edit-online-survey/"+params.sid, {state: true})}>
               <Sb_Text font={12} color="--lightGrey">Edit Survey</Sb_Text>
             </Button>
           }
@@ -880,13 +889,13 @@ export default function View_Survey () {
         <Row className="g-0">
           <Col className="d-flex p-0" style={{'transform':'scale(0.7)', 'transformOrigin':'left'}}>
           {
-            surveyType == "ONLINE" || surveyType == "INCENTIVIZED" && 
+            (surveyType == "ONLINE" || surveyType == "INCENTIVIZED") && 
             <>
               <div className="link-share-box">
                 <FontAwesomeIcon icon={faShareAlt}/>
               </div>
               <div className="link-container">
-                <Sb_Text font={16}>forms.sebsib.com/ytvasb-213basd</Sb_Text>
+                <Sb_Text font={16}>forms.sebsib.com/{surveylink}</Sb_Text>
               </div>
             </>
           }
@@ -915,7 +924,7 @@ export default function View_Survey () {
             </Row>
             {
               questions.map((question:Question, index:number) => (
-                <Col md="6" className="pe-4 mb-4">
+                <Col key={index} md="6" className="pe-4 mb-4">
                   <Row className="question-form mb-2 pe-4">
                     <Col>
                       {(index + 1)+". "} <b style={{'color':'var(--primary)'}}>{(question.hasShowPattern ? "[Depends on a previous response]" : "")}</b> {question.questionText} 
@@ -925,7 +934,7 @@ export default function View_Survey () {
                     {
                       translateIds('ID', question.inputType) == "CHOICE" || translateIds('ID', question.inputType) == "MULTI-SELECT"?
                       question.options.map((option:any, letter:number) => (
-                        <Col className="an-answer mb-1">
+                        <Col key={letter} className="an-answer mb-1">
                           { String.fromCharCode(letter + 65)+". "+option.text}
                         </Col>
                       )) :

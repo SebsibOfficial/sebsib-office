@@ -7,13 +7,13 @@ import Sb_Question, { ActionType, Payload } from "../../components/Sb_Question/S
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
 import { CriticalContext, useCritical } from '../../states/CriticalContext';
-import { CreateSurvey } from "../../utils/api";
+import { CreateOnlineSurvey, CreateSurvey, GetSurvey } from "../../utils/api";
 import { generateId, translateIds } from "../../utils/helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faFileUpload, faShare, faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import "./Create_Online_Survey.css"
 
-export class FinalPayload {
+export class FinalPayloadOnline {
   constructor (sn: string, sd: string, fp: string, pl: Payload[]) {
     this.surveyName = sn;
     this.surveyDesc = sd;
@@ -59,7 +59,8 @@ export default function Create_Online_Survey () {
   const {page, setCriticalpage} = useCritical();
   const [collapse, setCollapse] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [succesCreation, setSuccessCreation] = useState(true);
+  const [succesCreation, setSuccessCreation] = useState(false);
+  const [genLink, setGenLink] = useState("");
   
   useEffect(() => {
     if (surveyName != "") {
@@ -114,16 +115,17 @@ export default function Create_Online_Survey () {
       1. Upload photo to FTP
       2. Use the path, to add to database
     */
-    // var res = await CreateSurvey(projId, new FinalPayload(surveyName, questionsData));
-    // if (res.code == 200) {
-    //   setCriticalpage('');
-    //   navigate('/dashboard/projects', {state: true});
-    // } else {
-    //   console.log(res.data);
-    //   setBtnLoading(false);
-    //   Notif?.setNotification({code:res.code, type: "ERROR", message: res.data, id:1})
-    // }
-    //console.log(new FinalPayload(surveyName, questionsData));
+    var res = await CreateOnlineSurvey(projId, new FinalPayloadOnline(surveyName, surveyDesc, "", questionsData));
+    if (res.code == 200) {
+      setCriticalpage('');
+      setGenLink(res.data.surveyObject.link)
+      setSuccessCreation(true);
+    } else {
+      console.log(res.data);
+      setBtnLoading(false);
+      Notif?.setNotification({code:res.code, type: "ERROR", message: res.data, id:1})
+    }
+    console.log(new FinalPayloadOnline(surveyName, surveyDesc, "", questionsData));
   }
 
   function questionExists (Qid: string) {
@@ -139,7 +141,7 @@ export default function Create_Online_Survey () {
   }
 
   function onFinishHandler () {
-
+    navigate('/dashboard/projects', {state: true});
   }
 
   return (
@@ -160,7 +162,7 @@ export default function Create_Online_Survey () {
                   <FontAwesomeIcon icon={faShareAlt}/>
                 </div>
                 <div className="link-container">
-                  <Sb_Text font={16}>forms.sebsib.com/ytvasb-213basd</Sb_Text>
+                  <Sb_Text font={16}>forms.sebsib.com/{genLink}</Sb_Text>
                 </div>
               </div>
               <div>

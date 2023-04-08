@@ -1,5 +1,6 @@
 import axios from "axios";
 import { FinalPayload } from "../screens/Create_Survey/Create_Survey";
+import { FinalPayloadOnline } from "../screens/Create_Online_Survey/Create_Online_Survey";
 export class ResponseInterface {
   constructor(code: number, data: any) {
     this.code = code;
@@ -268,6 +269,25 @@ export async function GetSurveyListByOrg_PIVOT(id: string): Promise<ResponseInte
 export async function GetSurveyListForViewer(id: string): Promise<ResponseInterface>{
   try {
     var result = await axios.get('get/surveylist/user/'+id);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data}
+  }
+}
+
+export async function CreateOnlineSurvey(pid: string, body: FinalPayloadOnline):Promise<ResponseInterface>{
+  try {
+    console.log(body);
+    var result = await axios.post('post/createonlinesurvey/'+pid, body);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data.message}
+  }
+}
+
+export async function GetQuestionListForSurvey(id: string): Promise<ResponseInterface>{
+  try {
+    var result = await axios.get('get/surveyquestions/'+id);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data}
