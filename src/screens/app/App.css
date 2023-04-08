@@ -32,4 +32,6 @@
   border-top-color: white;
   animation: Rotate 500ms linear 0s infinite forwards;
 }
-    
+.colored-spinner {
+  border-top-color: 2px solid var(--primary) !important;
+}    
