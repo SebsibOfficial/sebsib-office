@@ -41,7 +41,7 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
           <Row>
             <Col>
               <Form.Group>
-                <Form.Label><Sb_Text font={12} weight={300}>Question in English</Sb_Text></Form.Label>
+                <Form.Label><Sb_Text font={12}>Question in English</Sb_Text></Form.Label>
                 <textarea className='question-text-area' name="question" id="" cols={40} rows={5}
                 onChange={(e) => props.onAction(props.question.QuestionText.filter((Q) => Q.langId === "en")[0].RID, "MODIF", "LNG", "LNTX", e.target.value)} 
                 value={props.question.QuestionText.filter((Q) => Q.langId == "en")[0].text}
@@ -175,7 +175,7 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
                                 <Col>
                                   <Form.Group>
                                     <Form.Label><Sb_Text font={12}>Lang text</Sb_Text></Form.Label>
-                                    <Form.Control type="text" placeholder="Choice" size='sm' value={CL.text} onChange={(e) => props.onAction(CL.RID, "MODIF", "LNG", "LNID", e.target.value)}/>
+                                    <Form.Control type="text" placeholder="Choice" size='sm' value={CL.text} onChange={(e) => props.onAction(CL.RID, "MODIF", "LNG", "LNTX", e.target.value)}/>
                                   </Form.Group>
                                 </Col>
                                 <FontAwesomeIcon icon={faMinusCircle} onClick={() => props.onAction(CL.RID, "DEL", "LNG", "WHL")}/>
@@ -237,13 +237,14 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
         <Col className='q-col show-ptrn-col'>
           <Row>
             <Col className='d-flex align-items-center'>
-              <Sb_Checkbox_V2 checked={props.question.hasShowPattern} onCheckAction={(state: boolean) => props.onAction(props.question.RID, "MODIF", "SPT", "HASSP", state)}/>
+              <Sb_Checkbox_V2 checked={props.question.hasShowPattern} 
+                disabled={props.question.RID == props.otherQuestions[0].RID}
+                onCheckAction={(state: boolean) => props.question.RID != props.otherQuestions[0].RID ? props.onAction(props.question.RID, "MODIF", "SPT", "HASSP", state) : null}
+              />
               <Sb_Text font={16}>Show Pattern</Sb_Text>
             </Col>
           </Row>
           <hr />
-          {console.log(props.question)}
-          {console.log(props.otherQuestions)}
           <Row className='m-0'>
             {
               props.question.hasShowPattern && 

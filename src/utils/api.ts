@@ -1,6 +1,6 @@
 import axios from "axios";
-import { FinalPayload } from "../screens/Create_Survey/Create_Survey";
 import { FinalPayloadOnline } from "../screens/Create_Online_Survey/Create_Online_Survey";
+import { CreateSurveyPayload } from "./interfaces";
 export class ResponseInterface {
   constructor(code: number, data: any) {
     this.code = code;
@@ -196,7 +196,7 @@ export async function CreateProject(name: string, enums: string[]):Promise<Respo
   }
 }
 
-export async function CreateSurvey(pid: string, body: FinalPayload):Promise<ResponseInterface>{
+export async function CreateSurvey(pid: string, body: CreateSurveyPayload):Promise<ResponseInterface>{
   try {
     console.log(body);
     var result = await axios.post('post/createsurvey/'+pid, body);

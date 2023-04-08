@@ -11,7 +11,7 @@ import { CreateSurvey } from "../../utils/api";
 import { generateId, translateIds } from "../../utils/helpers";
 import Sb_Question_V2 from "../../components/Sb_Question_V2/Sb_Question_V2";
 import './Create_Survey_V2.css'
-import { ChoiceI, ChoiceStorage, LangStorage, LangVariantI, LooseObject, QuestionObject, QuestionStorage, ShowPatternI, ShowPatternStorage } from "../../utils/interfaces";
+import { ChoiceI, ChoicePayload, ChoiceStorage, CreateSurveyPayload, LangPayload, LangStorage, LangVariantI, LooseObject, QuestionObject, QuestionPayload, QuestionStorage, ShowPatternI, ShowPatternPayload, ShowPatternStorage } from "../../utils/interfaces";
 
 /* eslint-disable */
 // @ts-ignore
@@ -423,8 +423,8 @@ export default function Create_Survey_V2 () {
         })
         SET_LNG_STORE(LNG_CP)
         break;
-      case "LNTX":
-        LNG_CP.forEach(L => {
+      case "LNTX":  
+      LNG_CP.forEach(L => {
           if (L.RID == RID)
             L.text = VALUE as string
         })
@@ -593,22 +593,86 @@ export default function Create_Survey_V2 () {
   }
 
   /* 
+  `generatePayload`
+  ---------------
+  Transforms the QuestionObject[] state to API compatible
+  format. Returns the final payload to be sent
+  */
+  function generatePayload ():CreateSurveyPayload {
+    var questions:QuestionObject[] = MultiQuestionComposer();
+    var payloadQuestion:QuestionPayload[] = [];
+
+    questions.forEach((question:QuestionObject, index:number) => {
+      var Q_Text:LangPayload[] = []
+      var Ops:ChoicePayload[] = []
+      var Ops_lang:LangPayload[] = []
+      var Shps:ShowPatternPayload[] = []
+
+      question.QuestionText.forEach(QT => Q_Text.push({langId: QT.langId, text: QT.text}))
+      question.ShowPatterns?.forEach(SHPT => Shps.push({questionId: SHPT.IfQues, answerId: SHPT.IfAns}))
+      question.Choices?.forEach(CH => {
+        Ops_lang = []
+        CH.ChoiceText.forEach(CH_LANG => Ops_lang.push({langId: CH_LANG.langId, text: CH_LANG.text}))
+        Ops.push({_id: CH.RID, text: Ops_lang})
+      })
+
+      payloadQuestion.push({
+        _id: question.RID,
+        hasShowPattern: question.hasShowPattern,
+        ptrnCount: question.ShowPatterns?.length ?? 0,
+        showIf: Shps,
+        options: Ops,
+        questionText: Q_Text,
+        inputType: question.inputType,
+        mandatory: question.required,
+        exp_min: (question.expectedMin ?? 0) as number,
+        exp_max: (question.expectedMax ?? 10000) as number,
+        number: index + 1,
+      })
+    })
+
+    return {
+      surveyName: surveyName,
+      description: "",
+      questions: payloadQuestion
+    }
+  }
+
+  /* 
+  `validatePayload`
+  ---------------
+  Validating if the question list is correct
+  Returns boolean
+  */
+  function validatePayload ():boolean {
+    if (surveyName == "") return false;
+    if (QuestionComposer(QUESTION_STORE[0].RID).QuestionText[0].text == "") return false;
+    return true
+  }
+
+  /* 
   `createSurveyHandler`
   ---------------
   Sends the Question Objects to the API
   */
   async function createSurveyHandler (projId: string) {
     setBtnLoading(true);
-    // var res = await CreateSurvey(projId, new FinalPayload(surveyName, questionsData));
-    // if (res.code == 200) {
-    //   setCriticalpage('');
-    //   navigate('/dashboard/projects', {state: true});
-    // } else {
-    //   console.log(res.data);
-    //   setBtnLoading(false);
-    //   Notif?.setNotification({code:res.code, type: "ERROR", message: res.data, id:1})
-    // }
-    //console.log(new FinalPayload(surveyName, questionsData));
+    console.log(generatePayload());
+    try {
+      var res = await CreateSurvey(projId, generatePayload());
+      if (res.code == 200) {
+        setCriticalpage('');
+        navigate('/dashboard/projects', {state: true});
+      } else {
+        console.log(res.data);
+        setBtnLoading(false);
+        Notif?.setNotification({code:res.code, type: "ERROR", message: res.data, id:1})
+      }
+    } catch (error) {
+      console.log(error)
+      Notif?.setNotification({code:500, type: "ERROR", message: "Server Erro", id:1})
+      setBtnLoading(false);
+    }
   }
 
   return (
@@ -707,7 +771,7 @@ export default function Create_Survey_V2 () {
           <Button size="sm" variant="secondary" className="mt-3 float-start ms-4" onClick={() => setCollapse(!collapse)}>
             <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Preview" : "Preview Survey"}</Sb_Text>
           </Button>
-          <Button variant="primary" className="mt-3 float-end" onClick={() => createSurveyHandler(params.pid as string)} disabled={btnLoading}>
+          <Button variant="primary" className="mt-3 float-end" onClick={() => validatePayload() ? createSurveyHandler(params.pid as string) : null} disabled={btnLoading || !validatePayload()}>
             {
               btnLoading ? <Sb_Loader/> : <Sb_Text font={16} color="--lightGrey">Create Survey</Sb_Text>
             }

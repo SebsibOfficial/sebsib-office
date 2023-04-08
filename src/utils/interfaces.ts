@@ -70,3 +70,38 @@ export interface ChoiceStorage {
 export interface LooseObject {
   [key: string]: any
 }
+
+export interface ChoicePayload {
+  _id: string,
+  text: LangPayload[],
+}
+
+export interface LangPayload {
+  langId: string,
+  text: string,
+}
+
+export interface ShowPatternPayload {
+  questionId: string,
+  answerId: string
+}
+
+export interface QuestionPayload {
+  _id: string,
+  hasShowPattern: boolean,
+  ptrnCount: number,
+  showIf: ShowPatternPayload[],
+  options: ChoicePayload[],
+  questionText: LangPayload[],
+  inputType: string,
+  mandatory: boolean,
+  exp_min: number,
+  exp_max: number,
+  number: number,
+}
+
+export interface CreateSurveyPayload {
+  description: string,
+  surveyName: string,
+  questions: QuestionPayload[]
+}

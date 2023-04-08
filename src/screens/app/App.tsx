@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import Add_Modify_Member from "../Add_Member/Add_Member";
 import Create_Project from "../Create_Project/Create_Project";
-import Create_Survey from "../Create_Survey/Create_Survey";
 import Dashboard, { Dashboard_Landing } from "../Dashboard/Dashboard";
 import Login from "../Login/Login";
 import Members, { Members_Landing } from "../Members/Members";
@@ -106,7 +105,6 @@ function App() {
                   <Route index element={<Projects_Landing />} />
                   <Route path="create-project" element={<Create_Project />} />
                   <Route path="create-survey" element={<Survey_Choice />} />
-                  {/* <Route path="create-survey/:pid" element={<Create_Survey />} /> */}
                   <Route path="edit-survey/:sid" element={<Edit_Survey />} />
                   <Route path="create-new-survey/:pid" element={<Create_Survey_V2 />} />
                   <Route path="create-online-survey/:pid" element={<Create_Online_Survey />} />
