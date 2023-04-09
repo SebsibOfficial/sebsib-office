@@ -7,10 +7,10 @@ import Sb_Question, { ActionType, Payload } from "../../components/Sb_Question/S
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
 import { CriticalContext, useCritical } from '../../states/CriticalContext';
-import { CreateSurvey } from "../../utils/api";
+import { EditSurvey, GetQuestionListForSurvey } from "../../utils/api";
 import { generateId, translateIds } from "../../utils/helpers";
 import Sb_Question_V2 from "../../components/Sb_Question_V2/Sb_Question_V2";
-import { ChoiceI, ChoiceStorage, LangStorage, LangVariantI, LooseObject, QuestionObject, QuestionStorage, ShowPatternI, ShowPatternStorage } from "../../utils/interfaces";
+import { ChoiceI, ChoicePayload, ChoiceStorage, CreateSurveyPayload, LangPayload, LangStorage, LangVariantI, LooseObject, QuestionObject, QuestionPayload, QuestionStorage, ShowPatternI, ShowPatternPayload, ShowPatternStorage } from "../../utils/interfaces";
 
 /* eslint-disable */
 // @ts-ignore
@@ -50,75 +50,6 @@ export default function Edit_Survey () {
   const {page, setCriticalpage} = useCritical();
   const [collapse, setCollapse] = useState(false);
 
-  var DummyResponse:any = 
-  {
-    _id: "ID",
-    name: "Dummy Survey",
-    description: "",
-    pic: "",
-    questions: [
-      {
-        _id: "ID2",
-        hasShowPattern: true,
-        PtrnCount: 0,
-        showIf: [
-          {
-            questionId: "ID5",
-            answerId: "ID6"
-          },
-          {
-            questionId: "ID7",
-            answerId: "ID8"
-          },
-        ],
-        options: [
-          {
-            _id: "ID3",
-            text: [
-              {
-                langId: "en",
-                text: "Choice 1"
-              }
-            ]
-          },
-          {
-            _id: "ID4",
-            text: [
-              {
-                langId: "en",
-                text: "Choice 2"
-              },
-              {
-                langId: "am",
-                text: "Choice 2 AMhraic"
-              }
-            ]
-          }
-        ],
-        questionText: [
-          {
-            langId: "en",
-            text: "Question Text"
-          },
-          {
-            langId: "am",
-            text: "Question Text amharic"
-          }
-        ],
-        inputType: "624558d1a263f17689cdc5bd",
-        mandatory: false,
-        Expected_Min: 0,
-        Expected_Max: 10000
-      }
-    ],
-    createdOn: "20230321",
-    link: "",
-    status: "STARTED",
-    type: "REGULAR",
-  }
-
-  var RESP = assignRID(DummyResponse)
-
   // Empty question storage
   const [QUESTION_STORE, SET_QUESTION_STORE] = useState<QuestionStorage[]>([])
   // Choice storage
@@ -136,10 +67,17 @@ export default function Edit_Survey () {
   },[surveyName])
 
   useEffect(() => {
-    // 1. Set Survey Name & Id
-    setSurveyName(DummyResponse.name)
-    setSurveyId(DummyResponse._id)
-    destructQuestionResp(RESP)
+    GetQuestionListForSurvey(params.sid as string).then(res => {
+      if (res.code == 200) {
+        setSurveyName(res.data.name)
+        setSurveyId(res.data._id)
+        destructQuestionResp(assignRID(res.data))
+      }
+      else
+        console.log(res.data)
+    }).catch(error => {
+      console.log(error)
+    })
   }, [])
 
   /*------------- METHODS -------------- */
@@ -148,20 +86,28 @@ export default function Edit_Survey () {
   function assignRID (RESP:any) {
     var LocalResp:any[] = RESP.questions
 
-    LocalResp.forEach(Q => {
-      (Q.options as any[]).forEach(O => {
-        (O.text as any[]).forEach(T => {
+    LocalResp.map(Q => {
+      var questionText_temp:any[] = (Q.questionText as any[]);
+      var showPtrn_temp:any[] = (Q.showIf as any[]);
+
+      (Q.options as any[]).map(O => {
+        (O.text as any[]).map(T => {
           T.RID = "RND_"+(Math.random() * 1000)
         })
+        O.RID = O._id;
+        delete O._id;
       });
 
-      (Q.questionText as any[]).forEach(QT => {
+      questionText_temp.map(QT => {
         QT.RID = "RND_"+(Math.random() * 1000)
       });
 
-      (Q.showIf as any[]).forEach(SH => {
+      showPtrn_temp.map(SH => {
         SH.RID = "RND_"+(Math.random() * 1000)
       })
+
+      Q.questionText = questionText_temp;
+      Q.showIf = showPtrn_temp;
     })
 
     return LocalResp
@@ -251,7 +197,6 @@ export default function Edit_Survey () {
     // 4. Load Question store
     SET_QUESTION_STORE(getQuestionStore(RESP_WITH_ID))
   }
-
 
   /* 
   `handleOnAction`
@@ -761,23 +706,87 @@ export default function Edit_Survey () {
     scrollingElement.scrollTop = scrollingElement.scrollHeight;
   }
 
+   /* 
+  `generatePayload`
+  ---------------
+  Transforms the QuestionObject[] state to API compatible
+  format. Returns the final payload to be sent
+  */
+  function generatePayload ():CreateSurveyPayload {
+    var questions:QuestionObject[] = MultiQuestionComposer();
+    var payloadQuestion:QuestionPayload[] = [];
+
+    questions.forEach((question:QuestionObject, index:number) => {
+      var Q_Text:LangPayload[] = []
+      var Ops:ChoicePayload[] = []
+      var Ops_lang:LangPayload[] = []
+      var Shps:ShowPatternPayload[] = []
+
+      question.QuestionText.forEach(QT => Q_Text.push({langId: QT.langId, text: QT.text}))
+      question.ShowPatterns?.forEach(SHPT => Shps.push({questionId: SHPT.IfQues, answerId: SHPT.IfAns}))
+      question.Choices?.forEach(CH => {
+        Ops_lang = []
+        CH.ChoiceText.forEach(CH_LANG => Ops_lang.push({langId: CH_LANG.langId, text: CH_LANG.text}))
+        Ops.push({_id: CH.RID, text: Ops_lang})
+      })
+
+      payloadQuestion.push({
+        _id: question.RID,
+        hasShowPattern: question.hasShowPattern,
+        ptrnCount: question.ShowPatterns?.length ?? 0,
+        showIf: Shps,
+        options: Ops,
+        questionText: Q_Text,
+        inputType: question.inputType,
+        mandatory: question.required,
+        exp_min: (question.expectedMin ?? 0) as number,
+        exp_max: (question.expectedMax ?? 10000) as number,
+        number: index + 1,
+      })
+    })
+
+    return {
+      surveyName: surveyName,
+      description: "",
+      questions: payloadQuestion
+    }
+  }
+
   /* 
-  `createSurveyHandler`
+  `validatePayload`
+  ---------------
+  Validating if the question list is correct
+  Returns boolean
+  */
+  function validatePayload ():boolean {
+    if (surveyName == "") return false;
+    if (QuestionComposer(QUESTION_STORE[0].RID).QuestionText[0].text == "") return false;
+    return true
+  }
+
+  /* 
+  `editSurveyHandler`
   ---------------
   Sends the Question Objects to the API
   */
-  async function createSurveyHandler (projId: string) {
+  async function editSurveyHandler (surveyId: string) {
     setBtnLoading(true);
-    // var res = await CreateSurvey(projId, new FinalPayload(surveyName, questionsData));
-    // if (res.code == 200) {
-    //   setCriticalpage('');
-    //   navigate('/dashboard/projects', {state: true});
-    // } else {
-    //   console.log(res.data);
-    //   setBtnLoading(false);
-    //   Notif?.setNotification({code:res.code, type: "ERROR", message: res.data, id:1})
-    // }
-    //console.log(new FinalPayload(surveyName, questionsData));
+    try {
+      var res = await EditSurvey(surveyId, generatePayload());
+      if (res.code == 200) {
+        setCriticalpage('');
+        console.log(res.data)
+        navigate('/dashboard/projects/view-survey/'+surveyId, {state: {name: surveyName}});
+      } else {
+        console.log(res.data);
+        setBtnLoading(false);
+        Notif?.setNotification({code:res.code, type: "ERROR", message: res.data, id:1})
+      }
+    } catch (error) {
+      console.log(error)
+      Notif?.setNotification({code:500, type: "ERROR", message: "Server Erro", id:1})
+      setBtnLoading(false);
+    }
   }
 
   return (
@@ -876,9 +885,9 @@ export default function Edit_Survey () {
           <Button size="sm" variant="secondary" className="mt-3 float-start ms-4" onClick={() => setCollapse(!collapse)}>
             <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Preview" : "Preview Survey"}</Sb_Text>
           </Button>
-          <Button variant="primary" className="mt-3 float-end" onClick={() => createSurveyHandler(params.pid as string)} disabled={btnLoading}>
+          <Button variant="primary" className="mt-3 float-end" onClick={() => validatePayload() ? editSurveyHandler(params.sid as string) : null} disabled={btnLoading || !validatePayload()}>
             {
-              btnLoading ? <Sb_Loader/> : <Sb_Text font={16} color="--lightGrey">Create Survey</Sb_Text>
+              btnLoading ? <Sb_Loader/> : <Sb_Text font={16} color="--lightGrey">Save Changes</Sb_Text>
             }
           </Button>
         </Col>

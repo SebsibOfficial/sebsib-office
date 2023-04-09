@@ -294,9 +294,17 @@ export async function GetQuestionListForSurvey(id: string): Promise<ResponseInte
 }
 
 export async function UpdateSurveyStatus(sid: string, status: "STARTED" | "STOPPED"):Promise<ResponseInterface>{
-  await WAIT(2000)
   try {
     var result = await axios.patch('patch/upadatestatus/'+status+'/'+sid);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data.message}
+  }
+}
+
+export async function EditSurvey(sid: string, body: CreateSurveyPayload):Promise<ResponseInterface>{
+  try {
+    var result = await axios.patch('patch/editsurvey/'+sid, body);
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data.message}
