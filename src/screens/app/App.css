@@ -35,3 +35,14 @@
 .colored-spinner {
   border-top-color: 2px solid var(--primary) !important;
 }    
+
+.form-control-sm {
+  font-size: 12px !important;
+}
+.form-control:focus, .form-select:focus {
+  box-shadow: none !important;
+  border-color: var(--primary) !important;
+}
+.form-select-sm {
+  font-size: 12px !important;
+}

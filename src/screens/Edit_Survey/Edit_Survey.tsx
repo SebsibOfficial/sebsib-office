@@ -633,8 +633,10 @@ export default function Edit_Survey () {
   function MultiQuestionComposer (): QuestionObject [] {
     var MultiQ:QuestionObject[] = []
 
-    QUESTION_STORE.forEach(QS => {
-      MultiQ.push(QuestionComposer(QS.RID))
+    QUESTION_STORE.forEach((QS, index) => {
+      var Q_temp = QuestionComposer(QS.RID);
+      Q_temp.number = index+1;
+      MultiQ.push(Q_temp)
     })
 
     return MultiQ

@@ -1,6 +1,5 @@
 import axios from "axios";
-import { FinalPayloadOnline } from "../screens/Create_Online_Survey/Create_Online_Survey";
-import { CreateSurveyPayload } from "./interfaces";
+import { CreateOnlineSurveyPayload, CreateSurveyPayload } from "./interfaces";
 export class ResponseInterface {
   constructor(code: number, data: any) {
     this.code = code;
@@ -275,7 +274,7 @@ export async function GetSurveyListForViewer(id: string): Promise<ResponseInterf
   }
 }
 
-export async function CreateOnlineSurvey(pid: string, body: FinalPayloadOnline):Promise<ResponseInterface>{
+export async function CreateOnlineSurvey(pid: string, body: CreateOnlineSurveyPayload):Promise<ResponseInterface>{
   try {
     var result = await axios.post('post/createonlinesurvey/'+pid, body);
     return {code: result.status, data: result.data};

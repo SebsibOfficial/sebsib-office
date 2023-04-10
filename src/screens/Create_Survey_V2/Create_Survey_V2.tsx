@@ -519,8 +519,10 @@ export default function Create_Survey_V2 () {
   function MultiQuestionComposer (): QuestionObject [] {
     var MultiQ:QuestionObject[] = []
 
-    QUESTION_STORE.forEach(QS => {
-      MultiQ.push(QuestionComposer(QS.RID))
+    QUESTION_STORE.forEach((QS, index) => {
+      var Q_temp = QuestionComposer(QS.RID);
+      Q_temp.number = index+1;
+      MultiQ.push(Q_temp)
     })
 
     return MultiQ

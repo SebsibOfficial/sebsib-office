@@ -9,6 +9,7 @@ import Sb_Text from '../Sb_Text/Sb_Text'
 import './Sb_Question_V2.css'
 
 export default function Sb_Question_V2 (props: QuestionComponent) {
+  const online = props.online ? props.online : false;
   // Check if the language has been added for a question or choice
   function isThisLangOk (langs: LangVariantI[], checkFor: string):boolean {
     for (let index = 0; index < langs.length; index++) {
@@ -82,13 +83,16 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
             }
             </Col>
           </Row>
-          <Row>
-            <Col className='justify-content-center mb-3' style={{'cursor':'pointer', 'transform':'scale(0.9)', 'display': props.question.QuestionText.length == 4 ? 'none' : 'flex'}} 
-            onClick={() => props.question.QuestionText.length < 4 ? props.onAction(props.question.RID, "ADD", "LNG", "WHL") : null}>
-              <FontAwesomeIcon icon={faPlusCircle} style={{'marginRight':'0.5rem', 'color':'var(--primary)'}}/>
-              <Sb_Text>Add Question Language</Sb_Text>
-            </Col>
-          </Row>
+          {
+            !online && 
+            <Row>
+              <Col className='justify-content-center mb-3' style={{'cursor':'pointer', 'transform':'scale(0.9)', 'display': props.question.QuestionText.length == 4 ? 'none' : 'flex'}} 
+              onClick={() => props.question.QuestionText.length < 4 ? props.onAction(props.question.RID, "ADD", "LNG", "WHL") : null}>
+                <FontAwesomeIcon icon={faPlusCircle} style={{'marginRight':'0.5rem', 'color':'var(--primary)'}}/>
+                <Sb_Text>Add Question Language</Sb_Text>
+              </Col>
+            </Row>
+          }
         </Col>
         
         
@@ -107,18 +111,23 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
                     <option value={"TEXT"}>Text</option>
                     <option value={"MULTI-SELECT"}>Multi Select</option>
                     <option value={"NUMBER"}>Number</option>
-                    <option value={"GEO-POINT"}>Geo Point</option>
                     <option value={"DATE"}>Date</option>
-                    <option value={"TIME"}>Time</option>
+                    <option value={"GEO-POINT"}>Geo Point</option>
                     <option value={"FILE"}>File Upload</option>
-                    <option value={"PHOTO"}>Photo Capture</option>
-                    <option value={"MULTI-NUMBER"}>Multiple Number Input</option>
-                    <option value={"MULTI-GEO-POINT"}>Multiple Geo Point Input</option>
-                    <option value={"MULTI-DATE"}>Multiple Date Input</option>
-                    <option value={"MULTI-TIME"}>Multiple Time Input</option>
-                    <option value={"MULTI-FILE"}>Multiple File Upload</option>
-                    <option value={"MULTI-PHOTO"}>Multiple Photo Captures</option>
-                    <option value={"MULTI-TEXT"}>Multiple Text Input</option>
+                    {
+                      !online && 
+                      <>
+                        <option value={"TIME"}>Time</option>                   
+                        <option value={"PHOTO"}>Photo Capture</option>
+                        <option value={"MULTI-NUMBER"}>Multiple Number Input</option>
+                        <option value={"MULTI-GEO-POINT"}>Multiple Geo Point Input</option>
+                        <option value={"MULTI-DATE"}>Multiple Date Input</option>
+                        <option value={"MULTI-TIME"}>Multiple Time Input</option>
+                        <option value={"MULTI-FILE"}>Multiple File Upload</option>
+                        <option value={"MULTI-PHOTO"}>Multiple Photo Captures</option>
+                        <option value={"MULTI-TEXT"}>Multiple Text Input</option>
+                      </>
+                    }
                 </Form.Select>
               </Form.Group>
             </Col>
@@ -139,7 +148,6 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
                 <Col>
                   <Row>
                     <Col>
-                    {console.log(props.question.Choices?.length)}
                       <Row>
                         <Col>
                           <Form.Group className="mb-3" style={{'position':'relative'}} controlId="exampleForm.ControlInput1">
@@ -184,13 +192,17 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
                           }
                         </Col>
                       </Row>
-                      <Row>
-                        <Col className='justify-content-center mb-3'  style={{'cursor':'pointer', 'transform':'scale(0.9)', 'display': C.ChoiceText.length == 4 ? 'none' : 'flex'}} 
-                        onClick={() => C.ChoiceText.length < 4 ? props.onAction(C.RID, "ADD", "LNG", "WHL") : null}>
-                          <FontAwesomeIcon icon={faPlusCircle} style={{'marginRight':'0.5rem', 'color':'var(--primary)'}}/>
-                          <Sb_Text>Add Choice Language</Sb_Text>
-                        </Col>
-                      </Row>              
+                      {
+                        !online &&
+                        <Row>
+                          <Col className='justify-content-center mb-3'  style={{'cursor':'pointer', 'transform':'scale(0.9)', 'display': C.ChoiceText.length == 4 ? 'none' : 'flex'}} 
+                          onClick={() => C.ChoiceText.length < 4 ? props.onAction(C.RID, "ADD", "LNG", "WHL") : null}>
+                            <FontAwesomeIcon icon={faPlusCircle} style={{'marginRight':'0.5rem', 'color':'var(--primary)'}}/>
+                            <Sb_Text>Add Choice Language</Sb_Text>
+                          </Col>
+                        </Row>
+                      }
+              
                     </Col>
                   </Row>
                 </Col>
@@ -263,26 +275,25 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
                               <option value="">Choose..</option>
                               {
                                 props.otherQuestions
-                                .filter(OQ => OQ.inputType === "CHOICE" && OQ.RID !== props.question.RID)
+                                .filter(OQ => (OQ.inputType === "CHOICE" || OQ.inputType === "MULTI-SELECT") && OQ.RID !== props.question.RID)
                                 .map((OQ, index) => (
-                                  <option key={index} value={OQ.RID}>Question #{index+1}</option>
+                                  <option key={index} value={OQ.RID}>Question #{OQ.number}</option>
                                 ))
                               }
                             </Form.Select>
                           </Form.Group>
                           <Form.Group>
-                            <Form.Label><Sb_Text font={12}>If Answer</Sb_Text></Form.Label>
+                            <Form.Label><Sb_Text font={12}>Answer Is</Sb_Text></Form.Label>
                             <Form.Select size='sm' value={SHP.IfAns} onChange={(e) => props.onAction(SHP.RID, "MODIF", "SPT", "IFANS", e.target.value)}>
-                              {console.log("SHP", SHP)}
                               <option value="">Choose..</option>
                               {
                               
-                              props.otherQuestions.filter((OQ) => OQ.inputType === "CHOICE" && SHP.IfQues == OQ.RID).length != 0 &&                              
+                              props.otherQuestions.filter((OQ) => (OQ.inputType === "CHOICE" || OQ.inputType === "MULTI-SELECT") && SHP.IfQues == OQ.RID).length != 0 &&                              
                               <>
                                 {                                                          
-                                  props.otherQuestions.filter((OQ) => OQ.inputType === "CHOICE" && SHP.IfQues == OQ.RID)[0].Choices
+                                  props.otherQuestions.filter((OQ) => (OQ.inputType === "CHOICE" || OQ.inputType === "MULTI-SELECT") && SHP.IfQues == OQ.RID)[0].Choices
                                   ?.map((OQC, index) => (
-                                    <option key={index} value={OQC.RID}>Question #{index+1}</option>
+                                    <option key={index} value={OQC.RID}>Choice #{index+1}</option>
                                   ))
                                 }
                               </>
@@ -293,12 +304,15 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
                       </Row>
                       ))
                     }
-                  <Row>
-                    <Col className='d-flex justify-content-center m-3'  style={{'cursor':'pointer'}} onClick={() => props.onAction(props.question.RID, "ADD", "SPT", "WHL")}>
-                      <FontAwesomeIcon icon={faPlusCircle} style={{'marginRight':'0.5rem', 'color':'var(--primary)'}}/>
-                      <Sb_Text>Add Show Pattern</Sb_Text>
-                    </Col>
-                  </Row>
+                    {
+                      !online &&
+                      <Row>
+                        <Col className='d-flex justify-content-center m-3'  style={{'cursor':'pointer'}} onClick={() => props.onAction(props.question.RID, "ADD", "SPT", "WHL")}>
+                          <FontAwesomeIcon icon={faPlusCircle} style={{'marginRight':'0.5rem', 'color':'var(--primary)'}}/>
+                          <Sb_Text>Add Show Pattern</Sb_Text>
+                        </Col>
+                      </Row>
+                    }
                 </Col>
               </>
             }

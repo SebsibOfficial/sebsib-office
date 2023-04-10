@@ -24,11 +24,13 @@ export interface QuestionObject {
   expectedMax?: number
   QuestionText: LangVariantI [],
   Choices?: ChoiceI [],
-  ShowPatterns?: ShowPatternI []
+  ShowPatterns?: ShowPatternI [],
+  number?: number
 }
 
 export interface QuestionComponent {
   number: number,
+  online?: boolean,
   question: QuestionObject,
   otherQuestions: QuestionObject[],
   onAction: (RID: string, ACTION: "ADD" | "DEL" | "MODIF", 
@@ -104,4 +106,28 @@ export interface CreateSurveyPayload {
   description: string,
   surveyName: string,
   questions: QuestionPayload[]
+}
+
+export interface OnlineQuestionPayload {
+  _id: string,
+  showPattern: {
+    hasShow: boolean,
+    showIfQues: string,
+    ansIs: string
+  },
+  options: {
+    _id: string,
+    text: string
+  }[],
+  questionText: string,
+  inputType: string,
+  mandatory: boolean,
+  number: number
+}
+
+export interface CreateOnlineSurveyPayload {
+  description: string,
+  surveyName: string,
+  filePath: string,
+  questions: OnlineQuestionPayload[]
 }
