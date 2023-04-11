@@ -762,7 +762,8 @@ export default function Edit_Survey () {
   */
   function validatePayload ():boolean {
     if (surveyName == "") return false;
-    if (QuestionComposer(QUESTION_STORE[0].RID).QuestionText[0].text == "") return false;
+    if (QUESTION_STORE.length > 0)
+      if (QuestionComposer(QUESTION_STORE[0].RID).QuestionText[0].text == "") return false;
     return true
   }
 

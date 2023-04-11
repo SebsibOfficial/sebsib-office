@@ -796,9 +796,9 @@ export default function View_Survey () {
     DATA_MD.push(mode)
 
     // Get Average/Mean
-    DATA_AVG.push(RAW_RES.reduce((a,b) => (a + b) / RAW_RES.length))
+    RAW_RES.length > 0 ? DATA_AVG.push(RAW_RES.reduce((a,b) => (a + b) / RAW_RES.length)) : null
     // Get Range
-    DATA_RNG.push(RAW_RES.sort((a,b) => b - a)[0] - RAW_RES.sort((a,b) => b - a)[RAW_RES.length - 1])
+    RAW_RES.length > 0 ? DATA_RNG.push(RAW_RES.sort((a,b) => b - a)[0] - RAW_RES.sort((a,b) => b - a)[RAW_RES.length - 1]) : null
 
     ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend );
     

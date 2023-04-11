@@ -112,11 +112,11 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
                     <option value={"MULTI-SELECT"}>Multi Select</option>
                     <option value={"NUMBER"}>Number</option>
                     <option value={"DATE"}>Date</option>
-                    <option value={"GEO-POINT"}>Geo Point</option>
                     <option value={"FILE"}>File Upload</option>
                     {
                       !online && 
                       <>
+                        <option value={"GEO-POINT"}>Geo Point</option>
                         <option value={"TIME"}>Time</option>                   
                         <option value={"PHOTO"}>Photo Capture</option>
                         <option value={"MULTI-NUMBER"}>Multiple Number Input</option>

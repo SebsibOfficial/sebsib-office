@@ -687,6 +687,7 @@ export default function Create_Online_Survey () {
       var res = await CreateOnlineSurvey(projId, generatePayload());
       if (res.code == 200) {
         setCriticalpage('');
+        setGenLink(res.data.link as string)
         setSuccessCreation(true);
       } else {
         console.log(res.data);

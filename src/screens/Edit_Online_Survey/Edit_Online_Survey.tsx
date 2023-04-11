@@ -136,13 +136,14 @@ export default function Edit_Online_Survey () {
     var STR:LangStorage[] = []
 
     LocalResp.forEach(Q => {
-      (Q.options as any[]).forEach(O => {
-        (O.text as any[]).forEach(T => {
+      (Q.options)?.forEach(O => {
+        console.log(O);
+        (O.ChoiceText).forEach(T => {
           STR.push(T as LangStorage)
         })
       });
 
-      (Q.questionText as any[]).forEach(QT => {
+      (Q.questionText).forEach(QT => {
         STR.push(QT as LangStorage)
       })
     })
@@ -155,10 +156,10 @@ export default function Edit_Online_Survey () {
     var STR:ChoiceStorage[] = []
 
     LocalResp.forEach(Q => {
-      (Q.options as any[]).forEach(O => {
+      (Q.options)?.forEach(O => {
         var L_RID:string[] = [];
-        (O.text as any[]).forEach(T => L_RID.push(T.RID));
-        STR.push({RID: (O._id as string), Choice: L_RID})
+        (O.ChoiceText).forEach(T => L_RID.push(T.RID));
+        STR.push({RID: (O.RID as string), Choice: L_RID})
       });
     })
 
@@ -173,9 +174,9 @@ export default function Edit_Online_Survey () {
       var C_RID:string[] = [];
       var QT_RID:string[] = [];
       var SHPT_RID:string[] = [];
-      (Q.options as any[]).forEach(O => C_RID.push(O._id));
-      (Q.questionText as any[]).forEach(QT => QT_RID.push(QT.RID));
-      (Q.showIf as any[]).forEach(SH => SHPT_RID.push(SH.RID));
+      (Q.options)?.forEach(O => C_RID.push(O.RID));
+      (Q.questionText).forEach(QT => QT_RID.push(QT.RID));
+      (Q.showIf)?.forEach(SH => SHPT_RID.push(SH.RID));
       STR.push(
         {RID: Q.RID, 
         required: Q.required, 
@@ -198,8 +199,8 @@ export default function Edit_Online_Survey () {
 
     LocalResp.forEach(Q => {
       console.log(Q);
-      (Q.showIf as any[]).forEach(SH => {
-        STR.push({RID: (SH.RID as string), IfQues: SH.questionId, IfAns: SH.answerId})
+      (Q.showIf)?.forEach(SH => {
+        STR.push({RID: (SH.RID as string), IfQues: SH.IfQues, IfAns: SH.IfAns})
       });
     })
 
