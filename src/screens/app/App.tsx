@@ -38,6 +38,7 @@ import Create_Online_Survey from "../Create_Online_Survey/Create_Online_Survey";
 import Create_Survey_V2 from "../Create_Survey_V2/Create_Survey_V2";
 import Edit_Survey from "../Edit_Survey/Edit_Survey";
 import Shared from "../Shared/Shared";
+import Edit_Online_Survey from "../Edit_Online_Survey/Edit_Online_Survey";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
@@ -106,6 +107,7 @@ function App() {
                   <Route path="create-project" element={<Create_Project />} />
                   <Route path="create-survey" element={<Survey_Choice />} />
                   <Route path="edit-survey/:sid" element={<Edit_Survey />} />
+                  <Route path="edit-online-survey/:sid" element={<Edit_Online_Survey />} />
                   <Route path="create-new-survey/:pid" element={<Create_Survey_V2 />} />
                   <Route path="create-online-survey/:pid" element={<Create_Online_Survey />} />
                   <Route path="view-survey/:sid" element={<View_Survey />} />

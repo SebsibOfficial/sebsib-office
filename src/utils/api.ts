@@ -309,3 +309,12 @@ export async function EditSurvey(sid: string, body: CreateSurveyPayload):Promise
     return {code: error.response.status, data: error.response.data.message}
   }
 }
+
+export async function EditOnlineSurvey(sid: string, body: CreateOnlineSurveyPayload):Promise<ResponseInterface>{
+  try {
+    var result = await axios.patch('patch/editonlinesurvey/'+sid, body);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data.message}
+  }
+}

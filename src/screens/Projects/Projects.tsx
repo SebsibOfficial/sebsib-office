@@ -76,8 +76,9 @@ export function Projects_Landing () {
       const prj_id = prj_arr[index]._id;
       // Get the surveys in the project
       var surv_res = await GetSurveyListByProject(prj_id);
-      var srv_arr_resp = surv_res.data;
+      var srv_arr_resp:any[] = surv_res.data;
       var srv_arr:SurveyMember[] = [];
+      srv_arr_resp = srv_arr_resp.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime())
       for (let j = 0; j < srv_arr_resp.length; j++) {
         const survey_obj = srv_arr_resp[j];
         srv_arr.push({_id: survey_obj._id, name: survey_obj.name})

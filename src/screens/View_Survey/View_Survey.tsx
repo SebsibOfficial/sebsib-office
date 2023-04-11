@@ -409,6 +409,7 @@ export default function View_Survey () {
   useEffect(() => {
     GetSurvey(params.sid as string).then(res => {
       if (res.code == 200) {
+        console.log(res.data)
         setSurveyType(res.data.type);
         setSurveyStatus(res.data.status);
         setSurveyLink(res.data.link);
@@ -963,8 +964,9 @@ export default function View_Survey () {
                 <th>#</th>
                 <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Enumrator</th>
                 <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Sent From</th>
+                {console.log(questionsForDisplay)}
                 <th>Date</th>
-                {
+                { 
                   questionsForDisplay.map(((question, index) => (
                      <th key={index}>{(question as Question).questionText ?? (question as Option).text ?? question}</th>
                   )))

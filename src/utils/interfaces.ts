@@ -28,6 +28,19 @@ export interface QuestionObject {
   number?: number
 }
 
+export interface QuestionObjectForConversion {
+  RID: string,
+  required: boolean,
+  hasShowPattern: boolean,
+  inputType: string,
+  expectedMin?: number,
+  expectedMax?: number
+  questionText: LangVariantI [],
+  options?: ChoiceI [],
+  showIf?: ShowPatternI [],
+  number?: number
+}
+
 export interface QuestionComponent {
   number: number,
   online?: boolean,

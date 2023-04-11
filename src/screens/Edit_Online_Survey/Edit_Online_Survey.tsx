@@ -7,16 +7,15 @@ import Sb_Question, { ActionType, Payload } from "../../components/Sb_Question/S
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
 import { CriticalContext, useCritical } from '../../states/CriticalContext';
-import { CreateOnlineSurvey, CreateSurvey } from "../../utils/api";
+import { EditOnlineSurvey, EditSurvey, GetQuestionListForSurvey } from "../../utils/api";
 import { generateId, translateIds } from "../../utils/helpers";
 import Sb_Question_V2 from "../../components/Sb_Question_V2/Sb_Question_V2";
-import './Create_Online_Survey.css'
-import { ChoiceI, ChoicePayload, ChoiceStorage, CreateOnlineSurveyPayload, CreateSurveyPayload, LangPayload, LangStorage, LangVariantI, LooseObject, OnlineQuestionPayload, QuestionObject, QuestionPayload, QuestionStorage, ShowPatternI, ShowPatternPayload, ShowPatternStorage } from "../../utils/interfaces";
+import { ChoiceI, ChoicePayload, ChoiceStorage, CreateOnlineSurveyPayload, CreateSurveyPayload, LangPayload, LangStorage, LangVariantI, LooseObject, OnlineQuestionPayload, QuestionObject, QuestionObjectForConversion, QuestionPayload, QuestionStorage, ShowPatternI, ShowPatternPayload, ShowPatternStorage } from "../../utils/interfaces";
 
 /* eslint-disable */
 // @ts-ignore
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { faCheckCircle, faShareAlt, faFileUpload } from "@fortawesome/free-solid-svg-icons";
+import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 /* eslint-enable */
 
@@ -37,48 +36,32 @@ interface StateInterface {
   state: {name: string},
 }
 
-export default function Create_Online_Survey () {
+export default function Edit_Online_Survey () {
   let params = useParams();
   let location = useLocation();
   let navigate = useNavigate();
   const state = useLocation() as StateInterface;
   const Notif = useContext(NotifContext);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
   
   /*############# STATES ############### */
   /*#################################### */
 
   const [surveyName, setSurveyName] = useState("");
+  const [surveyId, setSurveyId] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
   const {page, setCriticalpage} = useCritical();
   const [collapse, setCollapse] = useState(false);
-  const [succesCreation, setSuccessCreation] = useState(false);
-  const [genLink, setGenLink] = useState("")
   const [fileNameDisp, setFileName] = useState("")
   const [fileObj, setFileObj] = useState();
   const [surveyDesc, setSurveyDesc] = useState("")
 
-  // Initially generated RID for Choices and Questions
-  var intialQuestion = generateId();
-  var intialQuestionLang = generateId();
-  var intialChoice = generateId();
-  var initalChoiceLang = generateId();
   // Empty question storage
-  const [QUESTION_STORE, SET_QUESTION_STORE] = useState<QuestionStorage[]>([
-    {
-      RID: intialQuestion,
-      required: false,
-      hasShowPattern: false,
-      ShowPatterns: [],
-      inputType: "CHOICE",
-      QuestionText: [intialQuestionLang],
-      Choices: [intialChoice]
-    }
-  ])
+  const [QUESTION_STORE, SET_QUESTION_STORE] = useState<QuestionStorage[]>([])
   // Choice storage
-  const [CHOICE_STORE, SET_CHOICE_STORE] = useState<ChoiceStorage[]>([{RID: intialChoice, Choice:[initalChoiceLang]}])
+  const [CHOICE_STORE, SET_CHOICE_STORE] = useState<ChoiceStorage[]>([])
   // Language object storage
-  const [LNG_STORE, SET_LNG_STORE] = useState<LangStorage[]>([{RID: intialQuestionLang, langId: "en", text: ""}, {RID: initalChoiceLang, langId: "en", text: ""}])
+  const [LNG_STORE, SET_LNG_STORE] = useState<LangStorage[]>([])
   // Showpattern object storage
   const [SHPTRN_STORE, SET_SHPTRN_STORE] = useState<ShowPatternStorage[]>([])
 
@@ -89,8 +72,151 @@ export default function Create_Online_Survey () {
     }
   },[surveyName])
 
+  useEffect(() => {
+    GetQuestionListForSurvey(params.sid as string).then(res => {
+      if (res.code == 200) {
+        console.log(res.data)
+        setSurveyName(res.data.name)
+        setSurveyId(res.data._id)
+        setSurveyDesc(res.data.description)
+        destructQuestionResp(assignRID(res.data))
+      }
+      else
+        console.log(res.data)
+    }).catch(error => {
+      console.log(error)
+    })
+  }, [])
+
   /*------------- METHODS -------------- */
   /*------------------------------------ */
+
+  function assignRID (RESP:any):QuestionObjectForConversion[] {
+    var LocalResp:any[] = RESP.questions
+    var TemplateQuestion:QuestionObjectForConversion;
+    var AssignedQuestions:QuestionObjectForConversion[] = []
+
+    LocalResp.forEach(Q => {
+      TemplateQuestion = {
+        RID: "",
+        required: false,
+        hasShowPattern: false,
+        inputType: "",
+        expectedMin: 0,
+        expectedMax: 10000,
+        questionText: [],
+        options: [],
+        showIf: [],
+        number: 0
+      }
+      TemplateQuestion.RID = Q._id;
+      TemplateQuestion.questionText = [{RID: "RND_"+(Math.random() * 1000), langId: "en", text: Q.questionText}]
+      TemplateQuestion.required = Q.mandatory;
+      TemplateQuestion.hasShowPattern = Q.hasShowPattern;
+      TemplateQuestion.inputType = Q.inputType;
+      TemplateQuestion.number = Q.number;
+      var options:ChoiceI[] = [];      
+      for (let index = 0; index < (Q.options as []).length; index++) {
+        const o:any = (Q.options as [])[index];
+        options.push({
+          RID: o._id,
+          ChoiceText: [{RID: "RND_"+(Math.random() * 1000), langId: "en", text: o.text}]
+        })
+      }
+      TemplateQuestion.options = options;
+      TemplateQuestion.showIf = [{RID: "RND_"+(Math.random() * 1000), IfQues: Q.questionId, IfAns: Q.answerId}]
+      AssignedQuestions.push(TemplateQuestion);
+    })
+
+    return AssignedQuestions;
+  }
+
+  function getLangStore (RESP:QuestionObjectForConversion[]):LangStorage[] {
+    var LocalResp:QuestionObjectForConversion[] = RESP
+    var STR:LangStorage[] = []
+
+    LocalResp.forEach(Q => {
+      (Q.options as any[]).forEach(O => {
+        (O.text as any[]).forEach(T => {
+          STR.push(T as LangStorage)
+        })
+      });
+
+      (Q.questionText as any[]).forEach(QT => {
+        STR.push(QT as LangStorage)
+      })
+    })
+
+    return STR
+  }
+
+  function getChoiceStore (RESP:QuestionObjectForConversion[]):ChoiceStorage[] {
+    var LocalResp:QuestionObjectForConversion[] = RESP
+    var STR:ChoiceStorage[] = []
+
+    LocalResp.forEach(Q => {
+      (Q.options as any[]).forEach(O => {
+        var L_RID:string[] = [];
+        (O.text as any[]).forEach(T => L_RID.push(T.RID));
+        STR.push({RID: (O._id as string), Choice: L_RID})
+      });
+    })
+
+    return STR
+  }
+
+  function getQuestionStore (RESP:QuestionObjectForConversion[]):QuestionStorage[] {
+    var LocalResp:QuestionObjectForConversion[] = RESP
+    var STR:QuestionStorage[] = []
+
+    LocalResp.forEach(Q => {
+      var C_RID:string[] = [];
+      var QT_RID:string[] = [];
+      var SHPT_RID:string[] = [];
+      (Q.options as any[]).forEach(O => C_RID.push(O._id));
+      (Q.questionText as any[]).forEach(QT => QT_RID.push(QT.RID));
+      (Q.showIf as any[]).forEach(SH => SHPT_RID.push(SH.RID));
+      STR.push(
+        {RID: Q.RID, 
+        required: Q.required, 
+        hasShowPattern: Q.hasShowPattern, 
+        QuestionText: QT_RID, 
+        Choices: C_RID, 
+        ShowPatterns: SHPT_RID,
+        inputType: translateIds("ID", Q.inputType) as string,
+        expectedMin: Q.expectedMin,
+        expectedMax: Q.expectedMax
+      })
+    })
+
+    return STR
+  }
+
+  function getShowPatternStore (RESP:QuestionObjectForConversion[]):ShowPatternStorage[] {
+    var LocalResp:QuestionObjectForConversion[] = RESP
+    var STR:ShowPatternStorage[] = []
+
+    LocalResp.forEach(Q => {
+      console.log(Q);
+      (Q.showIf as any[]).forEach(SH => {
+        STR.push({RID: (SH.RID as string), IfQues: SH.questionId, IfAns: SH.answerId})
+      });
+    })
+
+    return STR
+  }
+
+  function destructQuestionResp (RESP_WITH_ID: QuestionObjectForConversion[]) {
+    // 1. Load Language Store
+    SET_LNG_STORE(getLangStore(RESP_WITH_ID))
+    // 2. Load Choice Store
+    SET_CHOICE_STORE(getChoiceStore(RESP_WITH_ID))
+    // 3. Load Show pattern store
+    SET_SHPTRN_STORE(getShowPatternStore(RESP_WITH_ID))
+    // 4. Load Question store
+    SET_QUESTION_STORE(getQuestionStore(RESP_WITH_ID))
+
+  }
 
   /* 
   `handleOnAction`
@@ -119,12 +245,12 @@ export default function Create_Online_Survey () {
         break;
     }
   }
-  
+
   /* 
   `handleFileChange`
   ---------------
-  Takes the RID of a Choice and Returns the Choice Object
-  Returns ChoiceI
+  Gets then sets the file name and object
+  Returns void
   */
   function handleFileChange (e:any) {
     const fileObj = e.target.files && e.target.files[0];
@@ -446,8 +572,8 @@ export default function Create_Online_Survey () {
         })
         SET_LNG_STORE(LNG_CP)
         break;
-      case "LNTX":  
-      LNG_CP.forEach(L => {
+      case "LNTX":
+        LNG_CP.forEach(L => {
           if (L.RID == RID)
             L.text = VALUE as string
         })
@@ -617,7 +743,7 @@ export default function Create_Online_Survey () {
     scrollingElement.scrollTop = scrollingElement.scrollHeight;
   }
 
-  /* 
+   /* 
   `generatePayload`
   ---------------
   Transforms the QuestionObject[] state to API compatible
@@ -629,25 +755,26 @@ export default function Create_Online_Survey () {
 
     questions.forEach((question:QuestionObject, index:number) => {
       var Q_Text:LangPayload[] = []
-      var Ops:ChoicePayload[] = []
-      var choices:{_id: string, text: string}[] = []
+      var Ops:{_id: string, text: string}[] = []
+      var Ops_lang:LangPayload[] = []
       var Shps:ShowPatternPayload[] = []
 
       question.QuestionText.forEach(QT => Q_Text.push({langId: QT.langId, text: QT.text}))
       question.ShowPatterns?.forEach(SHPT => Shps.push({questionId: SHPT.IfQues, answerId: SHPT.IfAns}))
-      choices = []
       question.Choices?.forEach(CH => {
-        CH.ChoiceText.forEach(CH_LANG => CH_LANG.langId == "en" ? choices.push({_id: CH.RID, text: CH_LANG.text}) : null)
+        Ops_lang = []
+        CH.ChoiceText.forEach(CH_LANG => Ops_lang.push({langId: CH_LANG.langId, text: CH_LANG.text}))
+        Ops.push({_id: CH.RID, text: Ops_lang[0].text as string})
       })
-
+      console.log(question.ShowPatterns)
       payloadQuestion.push({
         _id: question.RID,
         showPattern: {
           hasShow: question.hasShowPattern,
-          showIfQues: (Shps[0]?.questionId) ?? "",
-          ansIs: (Shps[0]?.answerId) ?? ""
+          showIfQues: (question.ShowPatterns?.length ?? 0 > 1) ? question.ShowPatterns?.[0].IfQues ?? "" : "",
+          ansIs: (question.ShowPatterns?.length ?? 0 > 1) ? question.ShowPatterns?.[0].IfAns ?? "" : ""
         },
-        options: choices,
+        options: Ops,
         questionText: Q_Text[0].text,
         inputType: question.inputType,
         mandatory: question.required,
@@ -671,23 +798,25 @@ export default function Create_Online_Survey () {
   */
   function validatePayload ():boolean {
     if (surveyName == "") return false;
-    if (QuestionComposer(QUESTION_STORE[0].RID).QuestionText[0].text == "") return false;
+    if (QUESTION_STORE.length > 0)
+      if (QuestionComposer(QUESTION_STORE[0].RID).QuestionText[0].text == "") return false;
     return true
   }
 
   /* 
-  `createSurveyHandler`
+  `editSurveyHandler`
   ---------------
   Sends the Question Objects to the API
   */
-  async function createSurveyHandler (projId: string) {
+  async function editSurveyHandler (surveyId: string) {
     setBtnLoading(true);
-    console.log(generatePayload());
+
     try {
-      var res = await CreateOnlineSurvey(projId, generatePayload());
+      var res = await EditOnlineSurvey(surveyId, generatePayload());
       if (res.code == 200) {
         setCriticalpage('');
-        setSuccessCreation(true);
+        console.log(res.data)
+        navigate('/dashboard/projects/view-survey/'+surveyId, {state: {name: surveyName}});
       } else {
         console.log(res.data);
         setBtnLoading(false);
@@ -699,181 +828,135 @@ export default function Create_Online_Survey () {
       setBtnLoading(false);
     }
   }
-  
-  /* 
-  `onFinishHandler`
-  ---------------
-  Sends the Question Objects to the API
-  */
-  function onFinishHandler () {
-    navigate('/dashboard/projects', {state: true});
-  }
 
   return (
-    <>
-      {succesCreation ? 
-      <>
-        <Col>
-          <Sb_Alert>Your survey has successfully been created, Hurray!! You can now share this link to anyone and they can fill in your survey.
-          </Sb_Alert>
-          <Row>
-            <Row>
-              <div className="d-flex mb-4">
-                <FontAwesomeIcon icon={faCheckCircle} style={{'color':'var(--yellow)', 'fontSize':'2em', 'marginRight':'0.5em'}}/>
-                <Sb_Text font={20}>Online Survey Created Successfully, Here is the link:</Sb_Text>
-              </div>
-              <div className="d-flex mb-4">
-                <div className="link-share-box">
-                  <FontAwesomeIcon icon={faShareAlt}/>
-                </div>
-                <div className="link-container">
-                  <Sb_Text font={16}>forms.sebsib.com/{genLink}</Sb_Text>
-                </div>
-              </div>
+    <Col>
+      <Sb_Alert>To create a survey first enter the survey name, then fill out the questions, choices and the question type. 
+        After creating a question you must <b>Confirm</b> it. When you want to create more question click the <b>New Question</b> button below the questions.
+        If you want to implement a Skip Pattern, tick the <b>Show Pattern</b> circle, select the question that this question depends on, then select what answer will show this question.
+        Click <b>Preview Survey</b> to see what your survey looks like. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
+        </Sb_Alert>
+      <Row>
+        <Col md="3">
+          <Form.Group className="mb-3" controlId="LoginEmail">
+              <Form.Label><Sb_Text font={16}>Survey Name</Sb_Text></Form.Label>
+              <Form.Control size="sm" type="text" placeholder="Name" value={surveyName}
+              onChange={(e) => setSurveyName(e.target.value)}/>
+					</Form.Group>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col md="5">
+          <Form.Group className="mb-3" controlId="LoginEmail">
+              <Form.Label><Sb_Text font={16}>Survey Thumbnail Image</Sb_Text></Form.Label>
               <div>
-                <Button variant="primary" onClick={() => onFinishHandler()}><Sb_Text color="--lightGrey" font={16}>Finish</Sb_Text></Button>
+              <input
+                type="file"
+                ref={inputRef}
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+              <div style={{'display':'flex','alignItems':'center'}}>
+                <Button onClick={() => inputRef.current?.click()} variant="secondary" size="sm" style={{'marginRight':'1em'}} >
+                  <FontAwesomeIcon icon={faFileUpload} style={{'marginRight':'10px'}}/>
+                  File Upload
+                </Button>
+                <Sb_Text>{fileNameDisp}</Sb_Text>
               </div>
-            </Row>
-          </Row>
-        </Col>
-      </> : 
-      <>
+            </div>
+          </Form.Group>
+        </Col>    
+      </Row>
+      <Row>
         <Col>
-          <Sb_Alert>To create a survey first enter the survey name, then fill out the questions, choices and the question type. 
-            After creating a question you must <b>Confirm</b> it. When you want to create more question click the <b>New Question</b> button below the questions.
-            If you want to implement a Skip Pattern, tick the <b>Show Pattern</b> circle, select the question that this question depends on, then select what answer will show this question.
-            Click <b>Preview Survey</b> to see what your survey looks like. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
-            </Sb_Alert>
-          <Row>
-            <Col md="3">
-              <Form.Group className="mb-3" controlId="LoginEmail">
-                  <Form.Label><Sb_Text font={16}>Project Name</Sb_Text></Form.Label>
-                  <Form.Select size="sm" placeholder="Name" disabled>
-                    <option value="">{state.state.name}</option>
-                  </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col md="3">
-              <Form.Group className="mb-3" controlId="LoginEmail">
-                  <Form.Label><Sb_Text font={16}>Survey Name</Sb_Text></Form.Label>
-                  <Form.Control size="sm" type="text" placeholder="Name" value={surveyName}
-                  onChange={(e) => setSurveyName(e.target.value)}/>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col md="5">
-              <Form.Group className="mb-3" controlId="LoginEmail">
-                  <Form.Label><Sb_Text font={16}>Survey Thumbnail Image</Sb_Text></Form.Label>
-                  <div>
-                  <input
-                    type="file"
-                    ref={inputRef}
-                    onChange={handleFileChange}
-                    style={{ display: 'none' }}
-                  />
-                  <div style={{'display':'flex','alignItems':'center'}}>
-                    <Button onClick={() => inputRef.current?.click()} variant="secondary" size="sm" style={{'marginRight':'1em'}} >
-                      <FontAwesomeIcon icon={faFileUpload} style={{'marginRight':'10px'}}/>
-                      File Upload
-                    </Button>
-                    <Sb_Text>{fileNameDisp}</Sb_Text>
-                  </div>
-                </div>
-              </Form.Group>
-            </Col>    
-          </Row>
-          <Row>
-            <Col>
-            <Form.Label><Sb_Text font={16}>Survey Description</Sb_Text></Form.Label>
-            <Form.Group>
-              <textarea name="question" id="" cols={75} rows={2} className="question-text-area" style={{'fontSize':'12px', 'padding':'1em'}}
-              onChange={(e) => setSurveyDesc(e.target.value)}></textarea>
-            </Form.Group>
-            </Col>
-          </Row>
-          
-          <Row className="mt-3">
-            <DragDropContext onDragEnd={handleOnDragEnd}>
-                <Droppable droppableId="characters">
-                  {(provided:any) => (
-                    <div className="characters" {...provided.droppableProps} ref={provided.innerRef}>
-                      {QUESTION_STORE.map((QST, index) => {
-                        return (
-                          <Draggable key={QST.RID} draggableId={QST.RID} index={index}>
-                            {(provided:any) => (
-                              <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                <Sb_Question_V2
-                                online
-                                key={index}
-                                number={index+1}
-                                question={QuestionComposer(QST.RID)} 
-                                otherQuestions={MultiQuestionComposer()} 
-                                onAction={(RID: string, ACTION: "ADD" | "DEL" | "MODIF", 
-                                OBJECT: "SPT" | "CHS" | "QTN" | "LNG",
-                                TARGET: "IFANS" | "IFQUES" | "REQ" | "HASSP" | "INPTY" | "EXMN" | "EXMX" | "LNID" | "LNTX" | "WHL",
-                                VALUE?: any) => handleOnAction(RID, ACTION, OBJECT, TARGET, VALUE)}/>
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
-            <Row>
-            <Col>          
-              <Collapse in={collapse}>
-                <Row className="form g-0 mb-4 p-4">
-                  {
-                    MultiQuestionComposer().map((question:QuestionObject, index:number) => (
-                      <Col md="6" className="pe-4 mb-4" key={index}>
-                        <Row className="question-form mb-2 pe-4">
-                          <Col>
-                            {(index + 1)+". "} <b style={{'color':'var(--primary)'}}>{(question.hasShowPattern ? "[Depends on a previous response]" : "")}</b> {question.QuestionText[0].text} 
-                            <b style={{'color':'var(--secondary)'}}>{(question.required ? " [Required]" : "")}</b>
-                          </Col>
-                        </Row>
-
-                        <Row className="answer-form g-0">
-                          {
-                            question.inputType == "CHOICE" || question.inputType == "MULTI-SELECT" ?
-                            question.Choices?.map((option:ChoiceI, letter:number) => (
-                              <Col className="an-answer mb-1" key={letter}>
-                                { String.fromCharCode(letter + 65)+". "+option.ChoiceText[0].text}
-                              </Col>
-                            )) :
-                            <Col className="an-answer mb-1 text-answer"></Col>
-                          }
-                        </Row>
-                      </Col>
-                    ))
-                  }
-                </Row>
-              </Collapse>
-            </Col>
-            </Row>
-          </Row>
-
-          <Row className="mt-3">
-            <Col>
-              <Button size="sm" variant="secondary" className="mt-3 float-start" onClick={() => handleNewQuestions()}>
-                <Sb_Text font={12} color="--lightGrey">New Question</Sb_Text>
-              </Button>
-              <Button size="sm" variant="secondary" className="mt-3 float-start ms-4" onClick={() => setCollapse(!collapse)}>
-                <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Preview" : "Preview Survey"}</Sb_Text>
-              </Button>
-              <Button variant="primary" className="mt-3 float-end" onClick={() => validatePayload() ? createSurveyHandler(params.pid as string) : null} disabled={btnLoading || !validatePayload()}>
-                {
-                  btnLoading ? <Sb_Loader/> : <Sb_Text font={16} color="--lightGrey">Create Survey</Sb_Text>
-                }
-              </Button>
-            </Col>
-          </Row>
+        <Form.Label><Sb_Text font={16}>Survey Description</Sb_Text></Form.Label>
+        <Form.Group>
+          <textarea name="question" id="" cols={75} rows={2} className="question-text-area" style={{'fontSize':'12px', 'padding':'1em'}}
+          onChange={(e) => setSurveyDesc(e.target.value)}></textarea>
+        </Form.Group>
         </Col>
-      </>}
-    </>
+      </Row>
+      <Row className="mt-3">
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="characters">
+              {(provided:any) => (
+                <div className="characters" {...provided.droppableProps} ref={provided.innerRef}>
+                  {QUESTION_STORE.map((QST, index) => {
+                    console.log(QST)
+                    return (
+                      <Draggable key={QST.RID} draggableId={QST.RID} index={index}>
+                        {(provided:any) => (
+                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <Sb_Question_V2
+                            online
+                            key={index}
+                            number={index+1}
+                            question={QuestionComposer(QST.RID)} 
+                            otherQuestions={MultiQuestionComposer()} 
+                            onAction={(RID: string, ACTION: "ADD" | "DEL" | "MODIF", 
+                            OBJECT: "SPT" | "CHS" | "QTN" | "LNG",
+                            TARGET: "IFANS" | "IFQUES" | "REQ" | "HASSP" | "INPTY" | "EXMN" | "EXMX" | "LNID" | "LNTX" | "WHL",
+                            VALUE?: any) => handleOnAction(RID, ACTION, OBJECT, TARGET, VALUE)}/>
+                          </div>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        <Row>
+        <Col>          
+          <Collapse in={collapse}>
+            <Row className="form g-0 mb-4 p-4">
+              {
+                MultiQuestionComposer().map((question:QuestionObject, index:number) => (
+                  <Col md="6" className="pe-4 mb-4" key={index}>
+                    <Row className="question-form mb-2 pe-4">
+                      <Col>
+                        {(index + 1)+". "} <b style={{'color':'var(--primary)'}}>{(question.hasShowPattern ? "[Depends on a previous response]" : "")}</b> {question.QuestionText[0].text} 
+                        <b style={{'color':'var(--secondary)'}}>{(question.required ? " [Required]" : "")}</b>
+                      </Col>
+                    </Row>
+
+                    <Row className="answer-form g-0">
+                      {
+                        question.inputType == "CHOICE" || question.inputType == "MULTI-SELECT" ?
+                        question.Choices?.map((option:ChoiceI, letter:number) => (
+                          <Col className="an-answer mb-1" key={letter}>
+                            { String.fromCharCode(letter + 65)+". "+option.ChoiceText[0].text}
+                          </Col>
+                        )) :
+                        <Col className="an-answer mb-1 text-answer"></Col>
+                      }
+                    </Row>
+                  </Col>
+                ))
+              }
+            </Row>
+          </Collapse>
+        </Col>
+        </Row>
+      </Row>
+
+      <Row className="mt-3">
+        <Col>
+          <Button size="sm" variant="secondary" className="mt-3 float-start" onClick={() => handleNewQuestions()}>
+            <Sb_Text font={12} color="--lightGrey">New Question</Sb_Text>
+          </Button>
+          <Button size="sm" variant="secondary" className="mt-3 float-start ms-4" onClick={() => setCollapse(!collapse)}>
+            <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Preview" : "Preview Survey"}</Sb_Text>
+          </Button>
+          <Button variant="primary" className="mt-3 float-end" onClick={() => validatePayload() ? editSurveyHandler(params.sid as string) : null} disabled={btnLoading || !validatePayload()}>
+            {
+              btnLoading ? <Sb_Loader/> : <Sb_Text font={16} color="--lightGrey">Save Changes</Sb_Text>
+            }
+          </Button>
+        </Col>
+      </Row>
+    </Col>
   )
 }
