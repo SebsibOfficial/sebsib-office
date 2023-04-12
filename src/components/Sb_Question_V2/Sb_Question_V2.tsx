@@ -218,7 +218,7 @@ export default function Sb_Question_V2 (props: QuestionComponent) {
               </>
             }
             {
-              props.question.inputType === "NUMBER" && 
+              props.question.inputType === "NUMBER" && !online &&
               <>
               <Row>
                 <Col>

@@ -16,6 +16,8 @@ import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Loader from "../../components/Sb_Loader";
 import { useAuth } from "../../states/AuthContext";
 import { Bar, Pie } from "react-chartjs-2";
+import { GetMemberList } from "../../utils/api";
+import { use } from "i18next";
 
 interface StateInterface {
   hash: string,
@@ -96,6 +98,7 @@ export default function View_Survey () {
   const [surveylink, setSurveyLink] = useState("");
   const {token, setAuthToken} = useAuth();
   const [statusbtnLoading, setStatusbtnLoading] = useState(false);
+  const [OrgMemberList, setOrgMemberList] = useState<{_id: string, name: string}[]>([]);
 
   const backgroundColor = [
     'rgb(211, 63, 73)',
@@ -191,7 +194,7 @@ export default function View_Survey () {
       else
         NewQuestionArray.push(IQ)
     })
-
+    console.log(NewQuestionArray)
     return NewQuestionArray
   }
 
@@ -289,7 +292,6 @@ export default function View_Survey () {
       
       NewAnswerArray = Array.from(NewAnswerArray, item => typeof item === 'undefined' ? '→' : item);
       
-      console.log(NewAnswerArray)
       var temp:ResponseExpanded = IR
       temp.answers = NewAnswerArray
       NewResponseArray.push(temp)
@@ -368,9 +370,21 @@ export default function View_Survey () {
       await filterResponses(res.data.responses);
       var RDQ = clone(res.data.questions);
       var RDR = clone(res.data.responses);
-      console.log(questions)
+
       setQuestionsForDisplay(ExpandQuestions(OrderQuestions(RDQ), ReOrderAnswers(OrderQuestions(RDQ), RDR)))
       setResponseForDisplay(ExpandAnswers(ExpandQuestions(OrderQuestions(RDQ), ReOrderAnswers(OrderQuestions(RDQ), RDR)), ReOrderAnswers(OrderQuestions(RDQ), RDR)))
+      // To get Enumrator name
+      var mem_res = await GetMemberList(decodeJWT(token as string).org);
+      if (mem_res.code == 200) {
+        var mem_list:{_id: string, name: string}[] = []
+        mem_res.data.forEach((m:any) => {
+          mem_list.push({
+            _id: m._id,
+            name: m.firstName+" "+m.lastName
+          })
+        })
+        setOrgMemberList(mem_list);
+      }
       setPageLoading(false);
     } else {
       console.log(res.data);
@@ -409,7 +423,6 @@ export default function View_Survey () {
   useEffect(() => {
     GetSurvey(params.sid as string).then(res => {
       if (res.code == 200) {
-        console.log(res.data)
         setSurveyType(res.data.type);
         setSurveyStatus(res.data.status);
         setSurveyLink(res.data.link);
@@ -476,7 +489,7 @@ export default function View_Survey () {
     rows.push(queses);
     responses.forEach((response:ResponseExpanded) => {
       let anses:any[] = [];
-      anses.push(response.enumratorName);
+      anses.push(OrgMemberList.filter(m => m._id == response.enumratorId)[0].name);
       anses.push(`https://maps.google.com/?q=${(response.geoPoint ?? '' as string).split(',')[0]},${(response.geoPoint ?? '' as string).split(',')[1]}`);
       anses.push(response.sentDate.toString().replace('T',' ').slice(0,16));
       response.answers.forEach((answer:Answer | string) => {
@@ -578,11 +591,14 @@ export default function View_Survey () {
   }
 
   function visualizeDate (question: Question):ReactChild {
+    var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+    "Jul", "Aug", "Sept", "Oct", "Nov", "Dec" ];
+
     var DATA_MNTH_RAW:string[] = []
     var DATA_YEAR_RAW:string[] = []
     var DATA_DAY_RAW:string[] = []
     var LABEL_YEAR:string[] = []
-    var LABEL_MNTH:string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    var LABEL_MNTH:string[] = []
     var LABEL_DAY:string[] = []
     var RAW_RES:string[] = []
 
@@ -612,14 +628,16 @@ export default function View_Survey () {
       YEAR_DATA.push(value as number)
     }    
     
-    for (const [key, value] of Object.entries(MNTH_FRQ)) 
+    for (const [key, value] of Object.entries(MNTH_FRQ)) {
+      LABEL_MNTH.push(months[Number(key) - 1])
       MNTH_DATA.push(value as number)
+    }
 
-    for (const [key, value] of Object.entries(DAY_FRQ))
+    for (const [key, value] of Object.entries(DAY_FRQ)) {
+      LABEL_DAY.push(key)  
       DAY_DATA.push(value as number)
+    }
     
-    for (let index = 1; index <= 31; index++) 
-      LABEL_DAY.push(index.toString())  
     
     const options = { plugins: { legend: { position: "top" as const } } };
 
@@ -639,7 +657,7 @@ export default function View_Survey () {
       datasets: [
         {
           label: "The Month",
-          data: YEAR_DATA,
+          data: MNTH_DATA,
           backgroundColor: backgroundColor[4],
         }
       ],
@@ -650,7 +668,7 @@ export default function View_Survey () {
       datasets: [
         {
           label: "The Day",
-          data: YEAR_DATA,
+          data: DAY_DATA,
           backgroundColor: backgroundColor[5],
         }
       ],
@@ -767,6 +785,15 @@ export default function View_Survey () {
     return (<div><p className="visual-question">{question?.questionText}</p><Bar options={options} data={data} /></div>)
   }
 
+  function getAverage(arr:number[]) {
+    var sum = 0;
+    for(var i = 0; i < arr.length; i++) {
+      sum += Number(arr[i]);
+    }
+  
+    return sum / arr.length;
+  }
+
   function visualizeNumber (question: Question):ReactChild {
     var LABELS:string[] = []
     var DATA:number[] = []
@@ -774,7 +801,7 @@ export default function View_Survey () {
     var DATA_RNG:number[] = []
     var DATA_MD:number[] = []
     var RAW_RES:number[] = []
-    
+
     for (let index = 0; index < responses.length; index++) {
       const resp = responses[index];
       for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
@@ -796,7 +823,7 @@ export default function View_Survey () {
     DATA_MD.push(mode)
 
     // Get Average/Mean
-    RAW_RES.length > 0 ? DATA_AVG.push(RAW_RES.reduce((a,b) => (a + b) / RAW_RES.length)) : null
+    RAW_RES.length > 0 ? DATA_AVG.push(getAverage(RAW_RES)) : null
     // Get Range
     RAW_RES.length > 0 ? DATA_RNG.push(RAW_RES.sort((a,b) => b - a)[0] - RAW_RES.sort((a,b) => b - a)[RAW_RES.length - 1]) : null
 
@@ -854,7 +881,7 @@ export default function View_Survey () {
   function expectedValDisp (questions: Question[], answer: Answer):string {
     for (let index = 0; index < questions.length; index++) {
       const q = questions[index];
-      if (q._id === answer.questionId) {
+      if (q._id === answer.questionId && surveyType == "REGULAR") {
         if ((answer.answer as number) > (q?.expectedMax ?? 0) || (answer.answer as number) < (q?.expectedMin ?? 0))
           return 'exceedRange CellWithComment'
         else
@@ -862,6 +889,35 @@ export default function View_Survey () {
       }
     }
     return 'OUT'
+  }
+
+  function GenDispCorrection (inputType: string, answer: any) {
+    if (typeof answer == "object"){
+      switch (translateIds("ID", inputType)) {
+        case "PHOTO":
+          return <><a href={process.env.REACT_APP_FILE_SERVER_URL+encryptPath((answer as Answer).answer)} target={'_blank'}>View Picture</a></>
+        case "GEO-POINT":
+          return <><a href={`https://maps.google.com/?q=${((answer as Answer).answer as string).split(',')[0]},${((answer as Answer).answer as string).split(',')[1]}`} target={'_blank'}>View on Maps</a></>
+        case "FILE":
+          return <><a href={process.env.REACT_APP_FILE_SERVER_URL+encryptPath((answer as Answer).answer)} target={'_blank'}>View File</a></>
+        case "MULTI-PHOTO":
+          return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
+            <a key={index} href={process.env.REACT_APP_FILE_SERVER_URL+encryptPath(ans)} target={'_blank'}>View Picture</a>
+          ))}</>)
+        case "MULTI-GEO-POINT":
+          return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
+            <a key={index} href={`https://maps.google.com/?q=${(ans as string).split(',')[0]},${(ans as string).split(',')[1]}`} target={'_blank'}>View on Google Maps</a>
+          ))}</>)
+        case "MULTI-FILE":
+          return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
+            <a key={index} href={process.env.REACT_APP_FILE_SERVER_URL+encryptPath(ans)} target={'_blank'}>View File</a>
+          ))}</>)
+        default:
+          return (<>{answer.answer}</>)
+      }
+    } else {
+      return answer;
+    }
   }
   return (
     pageLoading ? <Sb_Loader full/> :
@@ -964,7 +1020,6 @@ export default function View_Survey () {
                 <th>#</th>
                 <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Enumrator</th>
                 <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Sent From</th>
-                {console.log(questionsForDisplay)}
                 <th>Date</th>
                 { 
                   questionsForDisplay.map(((question, index) => (
@@ -978,20 +1033,21 @@ export default function View_Survey () {
                 responseForDisplay.slice(arSt, arEnd).map(((response, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>{response.enumratorName}</td>
-                    <td style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>
+                    { surveyType == "REGULAR" && <td >{OrgMemberList.filter(m => m._id == response.enumratorId)[0].name}</td>}
+                    { surveyType == "REGULAR" &&
+                    <td>
                       {
                         response.geoPoint != undefined ||  response.geoPoint != null ? 
                         <a href={`https://maps.google.com/?q=${(response.geoPoint as string).split(',')[0]},${(response.geoPoint as string).split(',')[1]}` ?? '-'} target={'_blank'}>View on Google Maps</a> :
                         "-"
                       }
-                    </td>
+                    </td> }
                     <td>{response.sentDate.toString().substring(0, 10)}</td>
                     {
                       response.answers.map((answer => (
                         <td key={Math.random()} style={{'whiteSpace':'pre', }} className={ translateIds("ID", (answer as Answer).inputType) === "NUMBER" ? expectedValDisp(questions, (answer as Answer)) : " "}>
                           <span className="CellComment">Outside Defined Range</span>
-                          {(answer as Answer).answer ?? answer}
+                          {GenDispCorrection((answer as Answer).inputType, answer)}
                         </td>
                       )))
                     }
