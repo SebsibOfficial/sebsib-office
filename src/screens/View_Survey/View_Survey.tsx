@@ -480,8 +480,8 @@ export default function View_Survey () {
     rows.push([state.state.name + ' Generated Report'])
     rows.push(["Generated on : "+new Date().toLocaleDateString()]);
     rows.push([])
-    queses.push("Enumrator Name");
-    queses.push("Sent From");
+    surveyType == "REGULAR" ? queses.push("Enumrator Name") : null;
+    surveyType == "REGULAR" ? queses.push("Sent From") : null;
     queses.push("Sent Date and Time");
     questions.forEach((question:(Question | Option | string)) => {
       queses.push((question as Question).questionText ?? (question as Option).text ?? question as string)
@@ -489,11 +489,11 @@ export default function View_Survey () {
     rows.push(queses);
     responses.forEach((response:ResponseExpanded) => {
       let anses:any[] = [];
-      anses.push(OrgMemberList.filter(m => m._id == response.enumratorId)[0].name);
-      anses.push(`https://maps.google.com/?q=${(response.geoPoint ?? '' as string).split(',')[0]},${(response.geoPoint ?? '' as string).split(',')[1]}`);
+      surveyType == "REGULAR" ? anses.push(OrgMemberList.filter(m => m._id == response.enumratorId)[0].name) : null;
+      surveyType == "REGULAR" ? anses.push(`https://maps.google.com/?q=${(response.geoPoint ?? '' as string).split(',')[0]},${(response.geoPoint ?? '' as string).split(',')[1]}`) : null
       anses.push(response.sentDate.toString().replace('T',' ').slice(0,16));
       response.answers.forEach((answer:Answer | string) => {
-        anses.push(((answer as Answer).answer ?? answer) === "" ? "-" : ((answer as Answer).answer ?? answer));
+        anses.push(((answer as Answer).answer ?? answer) === "" ? "-" : (GenExcelDispCorrection((answer as Answer).inputType, answer)));
       })
       rows.push(anses);
     })
@@ -914,6 +914,41 @@ export default function View_Survey () {
           ))}</>)
         default:
           return (<>{answer.answer}</>)
+      }
+    } else {
+      return answer;
+    }
+  }
+
+  function GenExcelDispCorrection (inputType: string, answer: any) {
+    if (typeof answer == "object"){
+      switch (translateIds("ID", inputType)) {
+        case "PHOTO":
+          return `${process.env.REACT_APP_FILE_SERVER_URL+encryptPath((answer as Answer).answer)}`
+        case "GEO-POINT":
+          return `https://maps.google.com/?q=${((answer as Answer).answer as string).split(',')[0]},${((answer as Answer).answer as string).split(',')[1]}`
+        case "FILE":
+          return `${process.env.REACT_APP_FILE_SERVER_URL+encryptPath((answer as Answer).answer)}`
+        case "MULTI-PHOTO":
+          var fileDisp = "";
+          (answer as Answer).answer.map((ans:any) => (
+            fileDisp = fileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+encryptPath(ans)+", \n")
+          ))
+          return fileDisp
+        case "MULTI-GEO-POINT":
+        var geoDisp = "";  
+        (ans:any) => (
+          geoDisp = geoDisp.concat(`https://maps.google.com/?q=${(ans as string).split(',')[0]},${(ans as string).split(',')[1]},\n`)
+        )
+        return geoDisp
+        case "MULTI-FILE":
+          var fileDisp = "";
+          (answer as Answer).answer.map((ans:any, index:number) => (
+            fileDisp = fileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+encryptPath(ans)+", \n")
+          ))
+          return fileDisp
+        default:
+          return (answer.answer)
       }
     } else {
       return answer;
