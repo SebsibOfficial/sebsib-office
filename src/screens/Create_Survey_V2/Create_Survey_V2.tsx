@@ -347,6 +347,20 @@ export default function Create_Survey_V2 () {
           SET_QUESTION_STORE(Q_COPY)
         }
 
+        if (!(VALUE as boolean)) {
+          // Remove Showpatterns from Questions
+          var Q_COPY = [...QUESTION_STORE]
+          var to_be_removed_shp:string[] = []
+          Q_COPY.forEach(Q => Q.RID === RID ? to_be_removed_shp = Q.ShowPatterns ?? [""] : null)
+          Q_COPY.forEach(Q => Q.RID === RID ? Q.ShowPatterns = [] : null)
+          SET_QUESTION_STORE(Q_COPY)
+
+          // Remove lingering patterns
+          var T_SH_STORE = [...SHPTRN_STORE]
+          T_SH_STORE.filter(SHP => !to_be_removed_shp.includes(SHP.RID))
+          SET_SHPTRN_STORE(T_SH_STORE)
+        }
+
         QN_CP.forEach(Q => {
           if (Q.RID == RID)
             Q.hasShowPattern = VALUE as boolean
