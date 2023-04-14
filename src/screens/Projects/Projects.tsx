@@ -21,15 +21,20 @@ interface Project {
   projectID: string,
   projectName: string,
   descr?: string,
-  surveys: SurveyMember[],
-  members: SurveyMember[]
+  surveys: SurveyItem[],
+  members: MemberItem[]
 }
 
-interface SurveyMember {
+interface MemberItem {
   _id: string,
   name: string
 }
 
+interface SurveyItem {
+  _id: string,
+  name: string,
+  type: "ONLINE" | "REGULAR" | "INCENTIVIZED"
+}
 interface EnumLoading {
   pid: string | null,
   show: boolean
@@ -77,17 +82,17 @@ export function Projects_Landing () {
       // Get the surveys in the project
       var surv_res = await GetSurveyListByProject(prj_id);
       var srv_arr_resp:any[] = surv_res.data;
-      var srv_arr:SurveyMember[] = [];
+      var srv_arr:SurveyItem[] = [];
       srv_arr_resp = srv_arr_resp.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime())
       for (let j = 0; j < srv_arr_resp.length; j++) {
         const survey_obj = srv_arr_resp[j];
-        srv_arr.push({_id: survey_obj._id, name: survey_obj.name})
+        srv_arr.push({_id: survey_obj._id, name: survey_obj.name, type: survey_obj.type})
       }
 
       // Get the members involved in the project
       var mem_res = await GetMemberList(decodeJWT(token as string).org);
       var mem_arr_resp = mem_res.data;
-      var mem_arr:SurveyMember[] = [];
+      var mem_arr:MemberItem[] = [];
       for (let k = 0; k < mem_arr_resp.length; k++) {
         const member_obj = mem_arr_resp[k];
         // NOT SHOW OWNER
@@ -123,7 +128,7 @@ export function Projects_Landing () {
   const [pageLoading, setPageLoading] = useState(true);
   const [enumLoading, setEnumLoading] = useState<EnumLoading>({pid: null, show: false});
   const [projects, setProjects] = useState<Project[]>([]);
-  const [membersToAdd, setMembersToAdd] = useState<SurveyMember[]>([]);
+  const [membersToAdd, setMembersToAdd] = useState<MemberItem[]>([]);
 
   let selectedMembers: {_id: string, name: string}[] = [];
   /*------------- METHODS -------------- */
@@ -204,7 +209,7 @@ export function Projects_Landing () {
   }
 
   async function AddmemberListRefresh  (projectID: string) {
-    var mta:SurveyMember[] = [];
+    var mta:MemberItem[] = [];
     // Get the members involved in the project
     var mem_res = await GetMemberList(decodeJWT(token as string).org);
     var mem_arr_resp = mem_res.data;
@@ -259,8 +264,8 @@ export function Projects_Landing () {
                           <Col className={project.surveys.length < 1 ? `d-none` : `d-flex mb-3 ms-3`}>
                             {
                               project.surveys.map((survey, index) => (
-                                <Sb_Main_Items key={index} id={survey._id} text={survey.name} type='SURVEY' 
-                                onClick={(id:string) => navigate(`view-survey/${id}`, { state:{name: survey.name, projectId: project.projectID} })}/>
+                                <Sb_Main_Items key={index} id={survey._id} text={survey.name} type={survey.type} 
+                                onClick={(id:string) => navigate(`view-survey/${id}`, { state:{name: survey.name, projectId: project.projectID, projectName: project.projectName} })}/>
                               ))
                             }
                           </Col>

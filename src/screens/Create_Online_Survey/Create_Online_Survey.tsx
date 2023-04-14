@@ -7,8 +7,8 @@ import Sb_Question, { ActionType, Payload } from "../../components/Sb_Question/S
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { NotifContext } from "../../states/NotifContext";
 import { CriticalContext, useCritical } from '../../states/CriticalContext';
-import { CreateOnlineSurvey, CreateSurvey } from "../../utils/api";
-import { generateId, translateIds } from "../../utils/helpers";
+import { CreateOnlineSurvey, CreateSurvey, SetSurveyPicture } from "../../utils/api";
+import { decodeJWT, encrypt, generateId, translateIds } from "../../utils/helpers";
 import Sb_Question_V2 from "../../components/Sb_Question_V2/Sb_Question_V2";
 import './Create_Online_Survey.css'
 import { ChoiceI, ChoicePayload, ChoiceStorage, CreateOnlineSurveyPayload, CreateSurveyPayload, LangPayload, LangStorage, LangVariantI, LooseObject, OnlineQuestionPayload, QuestionObject, QuestionPayload, QuestionStorage, ShowPatternI, ShowPatternPayload, ShowPatternStorage } from "../../utils/interfaces";
@@ -18,6 +18,8 @@ import { ChoiceI, ChoicePayload, ChoiceStorage, CreateOnlineSurveyPayload, Creat
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { faCheckCircle, faShareAlt, faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { useAuth } from "../../states/AuthContext";
 /* eslint-enable */
 
 export class FinalPayload {
@@ -44,6 +46,7 @@ export default function Create_Online_Survey () {
   const state = useLocation() as StateInterface;
   const Notif = useContext(NotifContext);
   const inputRef = useRef<HTMLInputElement>(null);
+  const {token, setAuthToken} = useAuth();
   
   /*############# STATES ############### */
   /*#################################### */
@@ -675,6 +678,66 @@ export default function Create_Online_Survey () {
     return true
   }
 
+  /*
+    `checkAndUploadFileType`
+    ------------------------
+    This method will upload the file selected by the user
+    It returns 1 if there is no issues, else returns 0.
+  */
+  const checkAndUploadFileType = async (shortSurveyId: string) => {
+    if (fileObj && validateFileType(fileObj)){
+      // Check file type
+      var nameOfFile = (fileObj as any).name as string
+      var ext = nameOfFile.split(".")[nameOfFile.split(".").length - 1] // Get extention
+      var formData = new FormData();
+      formData.append("file", fileObj); // Append the selected JS file object
+      var tm = new Date().getTime();
+      try {
+        // Send to file server
+        var resp = await axios({
+          method: 'post',
+          headers: {
+            secKey: encrypt(tm+'')
+          },
+          url: process.env.REACT_APP_FILE_SERVER_URL+"/file/upload-pic",
+          params: {
+            ext: ext,
+            project: state.state.name ?? '',
+            survey: shortSurveyId,
+            account: decodeJWT(token as string).shortOrgId ?? ''
+          },
+          data: formData,
+        })
+
+        if (resp.status === 200)
+          return resp.data;
+        else {
+          console.log(resp);
+          return 0
+        }
+      } catch (error) {
+        console.log(error);
+        return 0
+      }
+    }
+    return 1
+  }
+
+  /*
+    `validateFileType`
+    ------------------------
+    This method will validate if the file selected is fit for upload
+    It returns true if there is no issues, else returns false.
+  */
+  const validateFileType = (FileObject: any) => {
+    if (
+      ![
+        "image/jpeg",
+        "image/png",
+      ].includes(FileObject.type) || FileObject.size > 2000000)
+        return false
+    else return true
+  }
   /* 
   `createSurveyHandler`
   ---------------
@@ -688,6 +751,9 @@ export default function Create_Online_Survey () {
       if (res.code == 200) {
         setCriticalpage('');
         setGenLink(res.data.link as string)
+        var upload_res = await checkAndUploadFileType(res.data.shortSurveyId);
+        if (upload_res) await SetSurveyPicture(res.data.shortSurveyId, {pic: decodeJWT(token as string).shortOrgId+"/"+state.state.name+"/"+res.data.shortSurveyId+"/"+upload_res.fn})
+        else console.log(upload_res)
         setSuccessCreation(true);
       } else {
         console.log(res.data);
@@ -780,6 +846,7 @@ export default function Create_Online_Survey () {
                     </Button>
                     <Sb_Text>{fileNameDisp}</Sb_Text>
                   </div>
+                  <Sb_Text font={12} weight={300}>Images with aspect ratio of 3:1 are recommended</Sb_Text>
                 </div>
               </Form.Group>
             </Col>    

@@ -318,3 +318,12 @@ export async function EditOnlineSurvey(sid: string, body: CreateOnlineSurveyPayl
     return {code: error.response.status, data: error.response.data.message}
   }
 }
+interface ISetPic {pic: string}
+export async function SetSurveyPicture(shortSurveyId: string, body: ISetPic):Promise<ResponseInterface>{
+  try {
+    var result = await axios.patch('patch/setonlinesurveypic/'+shortSurveyId, body);
+    return {code: result.status, data: result.data};
+  } catch (error:any) {
+    return {code: error.response.status, data: error.response.data.message}
+  }
+}

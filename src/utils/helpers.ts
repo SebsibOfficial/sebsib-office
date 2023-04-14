@@ -5,6 +5,7 @@ import { createObjectID } from 'mongo-object-reader';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 import TYPES from './id-text.json';
+import CryptoJS from "crypto-es";
 
 interface Token {
   _id: string,
@@ -76,4 +77,16 @@ export function translateIds (from: "ID" | "TEXT", inp: string) {
       }
     }
   }
+}
+
+export function encrypt (str: string) {
+  const key = CryptoJS.enc.Utf8.parse(process.env.REACT_APP_PRIVATE_KEY);
+  const iv = CryptoJS.enc.Utf8.parse(process.env.REACT_APP_IV);
+
+  var cipher = CryptoJS.AES.encrypt(str, key, {
+    iv: iv,
+    mode: CryptoJS.mode.CTR,
+  });
+
+  return cipher.toString();
 }

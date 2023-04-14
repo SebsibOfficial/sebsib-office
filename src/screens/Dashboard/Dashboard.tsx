@@ -160,6 +160,7 @@ export default function Dashboard () {
 
 type MemberItem = { _id:string, name:string, defaultSelectValue?:"UNSELECTED" | "SELECTED"};
 type ProjectItem = {_id: string, name: string};
+type SurveyItem = {_id: string, name: string, type: "ONLINE" | "REGULAR" | "INCENTIVIZED"};
 type SurveyRow = {_id: string, project: string, survey: string, enumrator: string, date: string};
 
 export function Dashboard_Landing () {
@@ -175,7 +176,7 @@ export function Dashboard_Landing () {
   const [fullProjects, setFullProjects] = useState([]);
   const [projectLoading, setProjectLoading] = useState<boolean>(true);
   // ## SURVEY RELATED STATES
-  const [surveys, setSurveys] = useState<ProjectItem[]>([])
+  const [surveys, setSurveys] = useState<SurveyItem[]>([])
   const [surveyLoading, setSurveyLoading] = useState<boolean>(true);
   // ## RECENT SURVEY RELATED STATES
   const [recentSurveys, setRecentSurveys] = useState<SurveyRow[]>([]);
@@ -226,9 +227,9 @@ export function Dashboard_Landing () {
     GetSurveyListByOrg(decodeJWT(token as string).org).then((res:any) => {
       if (res.code == 200){
         var srv_arr = res.data;
-        var arr:ProjectItem[] = [];
+        var arr:SurveyItem[] = [];
         srv_arr.forEach((survey:any) => {
-          arr.push({_id: survey._id, name: survey.name})
+          arr.push({_id: survey._id, name: survey.name, type: survey.type})
         })
         arr.length = 6;
         setSurveys(arr);
@@ -243,14 +244,16 @@ export function Dashboard_Landing () {
     getRecentResp();
   }, [members, surveys])
 
-  function getProjectId (surveyId: string):string {
+  function getProjectId (surveyId: string):{id: string, name: string} {
     var id:string = "";
+    var name:string = "";
     fullProjects.forEach((project:any) => {
       if (project.surveysId.includes(surveyId)){
         id = project._id;
+        name = project.name;
       }
     })
-    return id;
+    return {id: id, name: name};
   }
   
   function getName(type:"S"|"M"|"P", firstArg: string, projectArr?: Array<any>):string {
@@ -350,8 +353,8 @@ export function Dashboard_Landing () {
                         surveyLoading ? <Sb_Loader/> : 
                         surveys.map((survey) => 
                           <Sb_Main_Items key={survey._id} id={survey._id} text={survey.name} 
-                          type='SURVEY' 
-                          onClick={(id) => navigate(`projects/view-survey/${survey._id}`, { state:{name: survey.name, projectId: getProjectId(survey._id)}})}/>) 
+                          type={survey.type} 
+                          onClick={(id) => navigate(`projects/view-survey/${survey._id}`, {state:{name: survey.name, projectId: getProjectId(survey._id).id, projectName: getProjectId(survey._id).name}})}/>) 
                       }
                       </Sb_Container>
                     </Col>
@@ -377,7 +380,7 @@ export function Dashboard_Landing () {
                             recentSurveys.slice(0,3).map(surv => (
                               <Sb_Row key={surv._id} id={surv._id} color='PURPLE' project={surv.project} 
                               survey={surv.survey} enumrator={surv.enumrator} date={surv.date}
-                              onView={(id) => navigate(`projects/view-survey/${id}`, { state:true })}/>
+                              onView={(id) => navigate(`projects/view-survey/${id}`, { state:{name: surv.survey, projectId: getProjectId(surv._id).id, projectName: getProjectId(surv._id).name}})}/>
                             )
                             )
                           }

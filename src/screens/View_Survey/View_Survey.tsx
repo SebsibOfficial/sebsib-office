@@ -24,7 +24,7 @@ interface StateInterface {
   key: string,
   pathname: string,
   search: string,
-  state: {name: string, projectId: string},
+  state: {name: string, projectId: string, projectName: string},
 }
 
 interface Answer {
@@ -895,14 +895,14 @@ export default function View_Survey () {
     if (typeof answer == "object"){
       switch (translateIds("ID", inputType)) {
         case "PHOTO":
-          return <><a href={process.env.REACT_APP_FILE_SERVER_URL+encryptPath((answer as Answer).answer)} target={'_blank'}>View Picture</a></>
+          return <><a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath((answer as Answer).answer)} target={'_blank'}>View Picture</a></>
         case "GEO-POINT":
           return <><a href={`https://maps.google.com/?q=${((answer as Answer).answer as string).split(',')[0]},${((answer as Answer).answer as string).split(',')[1]}`} target={'_blank'}>View on Maps</a></>
         case "FILE":
-          return <><a href={process.env.REACT_APP_FILE_SERVER_URL+encryptPath((answer as Answer).answer)} target={'_blank'}>View File</a></>
+          return <><a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath((answer as Answer).answer)} target={'_blank'}>View File</a></>
         case "MULTI-PHOTO":
           return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
-            <a key={index} href={process.env.REACT_APP_FILE_SERVER_URL+encryptPath(ans)} target={'_blank'}>View Picture</a>
+            <a key={index} href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath(ans)} target={'_blank'}>View Picture</a>
           ))}</>)
         case "MULTI-GEO-POINT":
           return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
@@ -910,7 +910,7 @@ export default function View_Survey () {
           ))}</>)
         case "MULTI-FILE":
           return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
-            <a key={index} href={process.env.REACT_APP_FILE_SERVER_URL+encryptPath(ans)} target={'_blank'}>View File</a>
+            <a key={index} href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath(ans)} target={'_blank'}>View File</a>
           ))}</>)
         default:
           return (<>{answer.answer}</>)
@@ -924,15 +924,15 @@ export default function View_Survey () {
     if (typeof answer == "object"){
       switch (translateIds("ID", inputType)) {
         case "PHOTO":
-          return `${process.env.REACT_APP_FILE_SERVER_URL+encryptPath((answer as Answer).answer)}`
+          return `${process.env.REACT_APP_FILE_SERVER_URL+"/file/static"+encryptPath((answer as Answer).answer)}`
         case "GEO-POINT":
           return `https://maps.google.com/?q=${((answer as Answer).answer as string).split(',')[0]},${((answer as Answer).answer as string).split(',')[1]}`
         case "FILE":
-          return `${process.env.REACT_APP_FILE_SERVER_URL+encryptPath((answer as Answer).answer)}`
+          return `${process.env.REACT_APP_FILE_SERVER_URL+"/file/static"+encryptPath((answer as Answer).answer)}`
         case "MULTI-PHOTO":
           var fileDisp = "";
           (answer as Answer).answer.map((ans:any) => (
-            fileDisp = fileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+encryptPath(ans)+", \n")
+            fileDisp = fileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+"/file/static"+encryptPath(ans)+", \n")
           ))
           return fileDisp
         case "MULTI-GEO-POINT":
@@ -944,7 +944,7 @@ export default function View_Survey () {
         case "MULTI-FILE":
           var fileDisp = "";
           (answer as Answer).answer.map((ans:any, index:number) => (
-            fileDisp = fileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+encryptPath(ans)+", \n")
+            fileDisp = fileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+"/file/static"+encryptPath(ans)+", \n")
           ))
           return fileDisp
         default:
@@ -968,10 +968,11 @@ export default function View_Survey () {
           onClick={() => setCollapse(!collapse)}>
             <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Questionnaire" : "View Questionnaire"}</Sb_Text>
           </Button>
+          {console.log(state.state.projectName)}
           {
             translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" &&
             <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
-            onClick={() => navigate( surveyType === "REGULAR" ? "/dashboard/projects/edit-survey/"+params.sid : "/dashboard/projects/edit-online-survey/"+params.sid, {state: true})}>
+            onClick={() => navigate( surveyType === "REGULAR" ? "/dashboard/projects/edit-survey/"+params.sid : "/dashboard/projects/edit-online-survey/"+params.sid, {state: {name: state.state.projectName}})}>
               <Sb_Text font={12} color="--lightGrey">Edit Survey</Sb_Text>
             </Button>
           }
