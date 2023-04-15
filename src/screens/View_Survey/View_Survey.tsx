@@ -9,15 +9,16 @@ import { NotifContext } from "../../states/NotifContext";
 import { DeleteSurvey, GetMember, GetResponseList, GetSurvey, UpdateSurveyStatus } from "../../utils/api";
 import './View_Survey.css';
 import { translateIds, decodeJWT } from "../../utils/helpers";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement, PointElement, LineElement } from 'chart.js';
 import * as XLSX from "sheetjs-style";
 import CryptoJS from "crypto-es";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
 import Sb_Loader from "../../components/Sb_Loader";
 import { useAuth } from "../../states/AuthContext";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar, Line, Pie } from "react-chartjs-2";
 import { GetMemberList } from "../../utils/api";
 import { use } from "i18next";
+import { VisualizeNumber } from "./VisualizeNumber";
 
 interface StateInterface {
   hash: string,
@@ -34,7 +35,7 @@ interface Answer {
   answer: any
 }
 
-interface Response {
+export interface Response {
   _id: string,
   shortSurveyId: string,
   surveyId: string,
@@ -63,7 +64,7 @@ interface Option {
   text: string
 }
 
-interface Question {
+export interface Question {
   _id: string;
   questionText: string;
   options: Option[];
@@ -559,7 +560,8 @@ export default function View_Survey () {
       case "DATE":
         return visualizeDate(question);
       case "NUMBER":
-        return visualizeNumber(question);
+        return <VisualizeNumber question={question} responses={responses} />
+        //return visualizeNumber(question);
     
       default:
         return (<></>)
@@ -657,7 +659,7 @@ export default function View_Survey () {
       DAY_DATA.push(value as number)
     }
     
-    
+    ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend );
     const options = { plugins: { legend: { position: "top" as const } } };
 
     const data_year = {
@@ -820,6 +822,8 @@ export default function View_Survey () {
     var DATA_RNG:number[] = []
     var DATA_MD:number[] = []
     var RAW_RES:number[] = []
+    var FOR_TIME_SERIES:{time: Date, value: number}[] = []
+    var dispMode = "TIME";
 
     for (let index = 0; index < responses.length; index++) {
       const resp = responses[index];
@@ -827,6 +831,18 @@ export default function View_Survey () {
         const answer = resp.answers[ANS_INDX];
         if (answer.questionId === question?._id)
           RAW_RES.push(answer.answer as number)
+      }
+    }
+
+    for (let index = 0; index < responses.length; index++) {
+      const resp = responses[index];
+      for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
+        const answer = resp.answers[ANS_INDX];
+        if (answer.questionId === question?._id)
+          FOR_TIME_SERIES.push({
+            time: resp.sentDate,
+            value: answer.answer as number
+          })
       }
     }
 
@@ -846,7 +862,7 @@ export default function View_Survey () {
     // Get Range
     RAW_RES.length > 0 ? DATA_RNG.push(RAW_RES.sort((a,b) => b - a)[0] - RAW_RES.sort((a,b) => b - a)[RAW_RES.length - 1]) : null
 
-    ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend );
+    ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement );
     
     const options = { plugins: { legend: { position: "top" as const } } };
 
@@ -856,6 +872,17 @@ export default function View_Survey () {
         {
           label: "Count",
           data: DATA,
+          backgroundColor: backgroundColor[2],
+        }
+      ],
+    };
+
+    const time_series_data = {
+      labels: FOR_TIME_SERIES.map<string>((FTS) => new Date(FTS.time).toISOString().split('T')[0]),
+      datasets: [
+        {
+          label: "Count",
+          data: FOR_TIME_SERIES.map<number>((FTS) => FTS.value),
           backgroundColor: backgroundColor[2],
         }
       ],
@@ -884,15 +911,27 @@ export default function View_Survey () {
 
     return (
       <div>
-        <Row>
-          <div>
-            <p className="visual-question">{question?.questionText}</p>
-            <Bar options={options} data={data} />
-          </div>
-        </Row>
-        <Row>
-            <Bar options={options} data={data_meta} />
-        </Row>
+        { dispMode !== "PLAIN" && 
+        <>
+          <Row>
+            <div>
+              <p className="visual-question">{question?.questionText}</p>
+              <Line options={options} data={time_series_data} />
+            </div>
+          </Row>
+        </>}
+        { dispMode === "PLAIN" && 
+        <>
+          <Row>
+            <div>
+              <p className="visual-question">{question?.questionText}</p>
+              <Bar options={options} data={data} />
+            </div>
+          </Row>
+          <Row>
+              <Bar options={options} data={data_meta} />
+          </Row>
+        </>}
       </div>
     )
   }
