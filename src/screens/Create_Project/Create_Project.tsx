@@ -81,9 +81,10 @@ export default function Create_Project () {
     // Add owner
     if (decodeJWT(token as string).role == '623cc24a8b7ab06011bd1e60')
       selectedMembers.push(decodeJWT(token as string)._id)
-		var res = await CreateProject(projectname, selectedMembers);
+		var res = await CreateProject(projectname, selectedMembers, projectDesc);
 		if (res.code == 200){
-			navigate('/dashboard/projects', {state: true});
+			//navigate('/dashboard/projects', {state: true});
+      navigate('/dashboard/projects', {state: {code: res.code, type: "OK", message: "Project Created", id:1}})
 		}
 		else {
 			setBtnLoading(false);

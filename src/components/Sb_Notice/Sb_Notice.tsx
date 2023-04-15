@@ -31,7 +31,7 @@ export default function Sb_Notice (props:Props) {
         <Sb_Card>
             <div className='d-flex'>
                 <FontAwesomeIcon icon={icon} className={'sb-notice-icon '+classType}/>                
-                <Sb_Text font={16}>{`${props.message} ${props.type === 'ERROR' ? "(" + props.code + ")" : ""}`}</Sb_Text>
+                <Sb_Text font={16} weight={300}>{`${props.message} ${props.type === 'ERROR' ? "(" + props.code + ")" : ""}`}</Sb_Text>
                 <FontAwesomeIcon className="sb-notice-close" icon={faTimes} onClick = {() => props.clickClose(props.id)}/>
             </div>
         </Sb_Card>

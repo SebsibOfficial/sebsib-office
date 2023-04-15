@@ -12,11 +12,18 @@ import Sb_Main_Items from "../../components/Sb_Main_Items/Sb_Main_Item";
 import Sb_Modal from "../../components/Sb_Modal/Sb_Modal";
 import Sb_Text from "../../components/Sb_Text/Sb_Text";
 import { useAuth } from "../../states/AuthContext";
-import { NotifContext } from "../../states/NotifContext";
+import { NotifContext, NotifInterface } from "../../states/NotifContext";
 import { AddMemberToProject, DeleteProject, GetMemberList, GetProjectList, GetSurveyListByProject, RemoveMemberFromProject } from "../../utils/api";
 import { decodeJWT, generateId } from "../../utils/helpers";
 import "./Projects.css";
 
+interface StateInterface {
+  hash: string,
+  key: string,
+  pathname: string,
+  search: string,
+  state: NotifInterface,
+}
 interface Project {
   projectID: string,
   projectName: string,
@@ -69,9 +76,26 @@ export default function Projects () {
 
 export function Projects_Landing () {
   let navigate = useNavigate();
+  let location = useLocation();
   const {token, setAuthToken} = useAuth();
   const Notif = useContext(NotifContext);
-  
+  const state = useLocation() as StateInterface;
+
+  useEffect(() => {
+    if (!location.state){
+       return navigate("/404");
+    }
+    else {
+      state.state.message != undefined && state.state.message != '' 
+      ? Notif?.setNotification({code: state.state.code, type: state.state.type, message: state.state.message, id:1}) 
+      : '';
+    }
+  },[location.state]);
+
+  useEffect(() => {
+    state.state = {type: undefined, message: '', id: 0};
+  },[])
+
   async function init() {
     var arr:Project[] = [];
     // Populate the Projects
@@ -79,6 +103,7 @@ export function Projects_Landing () {
     var prj_arr = proj_res.data;
     for (let index = 0; index < prj_arr.length; index++) {
       const prj_id = prj_arr[index]._id;
+      const prj_desc = prj_arr[index].description;
       // Get the surveys in the project
       var surv_res = await GetSurveyListByProject(prj_id);
       var srv_arr_resp:any[] = surv_res.data;
@@ -103,6 +128,7 @@ export function Projects_Landing () {
       arr.push({
         projectID: prj_id,
         projectName: prj_arr[index].name,
+        descr: prj_desc,
         surveys: srv_arr,
         members: mem_arr
       })
@@ -246,7 +272,7 @@ export function Projects_Landing () {
               </Row>
               <Row>
                 <Col md="8" className="mb-3" style={{'display': project.descr == "" || project.descr == null || project.descr == undefined ? 'none': ''}}>
-                  <Sb_Text>{project.descr}</Sb_Text>
+                  <Sb_Text weight={300}>{project.descr}</Sb_Text>
                 </Col>
               </Row>
               <Row>
@@ -261,7 +287,7 @@ export function Projects_Landing () {
                           </Col>
                         </Row>
                         <Row>
-                          <Col className={project.surveys.length < 1 ? `d-none` : `d-flex mb-3 ms-3`}>
+                          <Col className={project.surveys.length < 1 ? `d-none` : `d-flex mb-3 ms-3 flex-wrap`}>
                             {
                               project.surveys.map((survey, index) => (
                                 <Sb_Main_Items key={index} id={survey._id} text={survey.name} type={survey.type} 

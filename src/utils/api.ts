@@ -186,9 +186,9 @@ export async function DeleteProject(id: string):Promise<ResponseInterface>{
   }
 }
 
-export async function CreateProject(name: string, enums: string[]):Promise<ResponseInterface>{
+export async function CreateProject(name: string, enums: string[], description: string):Promise<ResponseInterface>{
   try {
-    var result = await axios.post('post/createproject', {projectName: name, enumrators: enums});
+    var result = await axios.post('post/createproject', {projectName: name, enumrators: enums, description: description});
     return {code: result.status, data: result.data};
   } catch (error:any) {
     return {code: error.response.status, data: error.response.data.message}

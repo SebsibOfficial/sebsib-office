@@ -773,7 +773,8 @@ export default function Create_Online_Survey () {
   Sends the Question Objects to the API
   */
   function onFinishHandler () {
-    navigate('/dashboard/projects', {state: true});
+    //navigate('/dashboard/projects', {state: true});
+    navigate('/dashboard/projects', {state: {code: 200, type: "OK", message: "Online Survey Created", id:1}})
   }
 
   return (

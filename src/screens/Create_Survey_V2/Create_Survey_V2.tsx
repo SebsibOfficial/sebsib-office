@@ -678,7 +678,7 @@ export default function Create_Survey_V2 () {
       var res = await CreateSurvey(projId, generatePayload());
       if (res.code == 200) {
         setCriticalpage('');
-        navigate('/dashboard/projects', {state: true});
+        navigate('/dashboard/projects', {state: {code: res.code, type: "OK", message: "Survey Created", id:1}})
       } else {
         console.log(res.data);
         setBtnLoading(false);

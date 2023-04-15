@@ -412,7 +412,9 @@ export default function View_Survey () {
 
     GetSurvey(location.pathname.slice(location.pathname.length - 24, location.pathname.length)).then(res => {
       if (res.code == 200){
+        console.log(res.data)
         setShortSurveyId(res.data.shortSurveyId as string);
+        setSurveyDesc(res.data.description as string)
       }
     })
   }
@@ -813,127 +815,6 @@ export default function View_Survey () {
     }
   
     return sum / arr.length;
-  }
-
-  function visualizeNumber (question: Question):ReactChild {
-    var LABELS:string[] = []
-    var DATA:number[] = []
-    var DATA_AVG:number[] = []
-    var DATA_RNG:number[] = []
-    var DATA_MD:number[] = []
-    var RAW_RES:number[] = []
-    var FOR_TIME_SERIES:{time: Date, value: number}[] = []
-    var dispMode = "TIME";
-
-    for (let index = 0; index < responses.length; index++) {
-      const resp = responses[index];
-      for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
-        const answer = resp.answers[ANS_INDX];
-        if (answer.questionId === question?._id)
-          RAW_RES.push(answer.answer as number)
-      }
-    }
-
-    for (let index = 0; index < responses.length; index++) {
-      const resp = responses[index];
-      for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
-        const answer = resp.answers[ANS_INDX];
-        if (answer.questionId === question?._id)
-          FOR_TIME_SERIES.push({
-            time: resp.sentDate,
-            value: answer.answer as number
-          })
-      }
-    }
-
-    var mode:number = 0
-    // Get frequency
-    const ValFreqObj = ValueFrequency(RAW_RES.sort(((a,b) => a - b)).map(r => r.toString()));
-    for (const [key, value] of Object.entries(ValFreqObj)) {
-      LABELS.push(key);
-      DATA.push(value as number);
-      (value as number) >= mode ? mode = value as number : null;
-    }
-    // Get Mode
-    DATA_MD.push(mode)
-
-    // Get Average/Mean
-    RAW_RES.length > 0 ? DATA_AVG.push(getAverage(RAW_RES)) : null
-    // Get Range
-    RAW_RES.length > 0 ? DATA_RNG.push(RAW_RES.sort((a,b) => b - a)[0] - RAW_RES.sort((a,b) => b - a)[RAW_RES.length - 1]) : null
-
-    ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement );
-    
-    const options = { plugins: { legend: { position: "top" as const } } };
-
-    const data = {
-      labels: LABELS,
-      datasets: [
-        {
-          label: "Count",
-          data: DATA,
-          backgroundColor: backgroundColor[2],
-        }
-      ],
-    };
-
-    const time_series_data = {
-      labels: FOR_TIME_SERIES.map<string>((FTS) => new Date(FTS.time).toISOString().split('T')[0]),
-      datasets: [
-        {
-          label: "Count",
-          data: FOR_TIME_SERIES.map<number>((FTS) => FTS.value),
-          backgroundColor: backgroundColor[2],
-        }
-      ],
-    };
-
-    const data_meta = {
-      labels: [""],
-      datasets: [
-        {
-          label: "Average",
-          data: DATA_AVG,
-          backgroundColor: backgroundColor[3],
-        },
-        {
-          label: "Range",
-          data: DATA_RNG,
-          backgroundColor: backgroundColor[4],
-        },
-        {
-          label: "Mode",
-          data: DATA_MD,
-          backgroundColor: backgroundColor[5],
-        },
-      ],
-    };
-
-    return (
-      <div>
-        { dispMode !== "PLAIN" && 
-        <>
-          <Row>
-            <div>
-              <p className="visual-question">{question?.questionText}</p>
-              <Line options={options} data={time_series_data} />
-            </div>
-          </Row>
-        </>}
-        { dispMode === "PLAIN" && 
-        <>
-          <Row>
-            <div>
-              <p className="visual-question">{question?.questionText}</p>
-              <Bar options={options} data={data} />
-            </div>
-          </Row>
-          <Row>
-              <Bar options={options} data={data_meta} />
-          </Row>
-        </>}
-      </div>
-    )
   }
 
   function expectedValDisp (questions: Question[], answer: Answer):string {

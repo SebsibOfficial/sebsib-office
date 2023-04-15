@@ -3,6 +3,7 @@
     background-color: var(--lightPurple);
     display: flex;
     border-radius: 3px;
+    flex-wrap: wrap;
 }
 .HORIZONTAL-THICK {
     border-top: 6px solid var(--primary);

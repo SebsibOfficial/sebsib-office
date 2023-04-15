@@ -31,11 +31,6 @@ export default function Sb_Row (props:Props) {
         </Col>
         <Col>
           <Sb_Container color={props.color} thin className='justify-content-center p-2'>
-            <Sb_Text weight={500}>Enumrator</Sb_Text>
-          </Sb_Container>
-        </Col>
-        <Col>
-          <Sb_Container color={props.color} thin className='justify-content-center p-2'>
             <Sb_Text weight={500}>Date</Sb_Text>
           </Sb_Container>
         </Col>
@@ -60,11 +55,6 @@ export default function Sb_Row (props:Props) {
         <Col>
           <Sb_Container color={props.color} thin className='justify-content-center p-2'>
             <Sb_Text>{props.survey}</Sb_Text>
-          </Sb_Container>
-        </Col>
-        <Col>
-          <Sb_Container color={props.color} thin className='justify-content-center p-2'>
-            <Sb_Text>{props.enumrator}</Sb_Text>
           </Sb_Container>
         </Col>
         <Col>
