@@ -174,14 +174,20 @@ export default function View_Survey () {
           NewQuestionArray.push(O)
         })
       }
-      else if (translateIds("ID", IQ.inputType) === "MULTI-TEXT") {
+      else if (translateIds("ID", IQ.inputType) === "MULTI-TEXT" 
+      || translateIds("ID", IQ.inputType) === "MULTI-GEO-POINT"
+      || translateIds("ID", IQ.inputType) === "MULTI-DATE"
+      || translateIds("ID", IQ.inputType) === "MULTI-NUMBER"
+      || translateIds("ID", IQ.inputType) === "MULTI-TIME"
+      || translateIds("ID", IQ.inputType) === "MULTI-PHOTO"
+      || translateIds("ID", IQ.inputType) === "MULTI-FILE") {
         var largestCount = 0
         for (let indexANS = 0; indexANS < OIR_CPY.length; indexANS++) {
           const IR = OIR_CPY[indexANS];
           for (let indexEA = 0; indexEA < IR.answers.length; indexEA++) {
             const IA = IR.answers[indexEA];
             console.log(IA.answer)
-            if ((IA.answer as []).length > largestCount && (typeof IA.answer === "object"))
+            if ((IA.answer as []).length > largestCount && (typeof IA.answer === "object") && IQ._id === IA.questionId)
               largestCount = (IA.answer as []).length
           }
           console.log("----------")
@@ -242,27 +248,40 @@ export default function View_Survey () {
             }
           })
         }
-        else if (translateIds("ID", IRA.inputType) === "MULTI-TEXT" || translateIds("ID", IRA.inputType) === "MULTI-NUMBER") {
+        else if (translateIds("ID", IRA.inputType) === "MULTI-TEXT" 
+        || translateIds("ID", IRA.inputType) === "MULTI-NUMBER"
+        || translateIds("ID", IRA.inputType) === "MULTI-FILE"
+        || translateIds("ID", IRA.inputType) === "MULTI-PHOTO"
+        || translateIds("ID", IRA.inputType) === "MULTI-GEO-POINT"
+        || translateIds("ID", IRA.inputType) === "MULTI-DATE"
+        || translateIds("ID", IRA.inputType) === "MULTI-TIME") {
           NewAnswerArray.push("→");
-          var push_count = 0; // How many responses were pushed
+          var push_count = 0; // How many answers were pushed
           (IRA.answer as []).forEach(IRA_ANS => {
             NewAnswerArray.push(IRA_ANS)
             push_count += 1;
           })
-          // The length of the response gap (Input1, Input2...) for multi-text
+          /*
+            To identify what the length of the Expanded question is, so as to fill remaining gaps
+            if the response size does not match. The below code loops through the expanded questions (EQ_CPY)
+            starting from where the response answer (IRA) is located and counts how many columns the a 
+            question has (Q_LENGTH)
+          */
           var Q_LENGTH = 0;
           EQ_CPY.forEach((EQ, index) => {
             if ((EQ as Question).questionText){
               if ((EQ as Question)._id === IRA.questionId) {
                 for (let INNER_INDEX = index; INNER_INDEX < EQ_CPY.length; INNER_INDEX++) {
                   const element = EQ_CPY[INNER_INDEX];
-                  if ((element as Question)._id)
+                  if ((element as Question)._id && (element as Question)._id != IRA.questionId) {
                     Q_LENGTH = INNER_INDEX - index - 1;
+                    break;
+                  }
                 }
               }
             }
           })
-
+          // Q_LENGTH - push_count is how what the gap difference is so we fill it by ""
           for (let index = 0; index < Q_LENGTH - push_count; index++) {
             NewAnswerArray.push("")
           }
@@ -900,23 +919,21 @@ export default function View_Survey () {
           return <><a href={`https://maps.google.com/?q=${((answer as Answer).answer as string).split(',')[0]},${((answer as Answer).answer as string).split(',')[1]}`} target={'_blank'}>View on Maps</a></>
         case "FILE":
           return <><a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath((answer as Answer).answer)} target={'_blank'}>View File</a></>
-        case "MULTI-PHOTO":
-          return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
-            <a key={index} href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath(ans)} target={'_blank'}>View Picture</a>
-          ))}</>)
-        case "MULTI-GEO-POINT":
-          return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
-            <a key={index} href={`https://maps.google.com/?q=${(ans as string).split(',')[0]},${(ans as string).split(',')[1]}`} target={'_blank'}>View on Google Maps</a>
-          ))}</>)
-        case "MULTI-FILE":
-          return (<> {(answer as Answer).answer.map((ans:any, index:number) => (
-            <a key={index} href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath(ans)} target={'_blank'}>View File</a>
-          ))}</>)
         default:
           return (<>{answer.answer}</>)
       }
     } else {
-      return answer;
+      if ((answer as string).charAt((answer as string).length - 4) == "." || (answer as string).charAt((answer as string).length - 5) == ".") {
+        return <><a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath(answer)} target={'_blank'}>View File</a></>
+      }
+      else if (
+        (answer as string).replace(/[^\W_]+/g, '').replace(/ /g,'').trim().charAt(0) == "." && 
+        (answer as string).replace(/[^\W_]+/g, '').replace(/ /g,'').trim().charAt(1) == "," &&
+        (answer as string).replace(/[^\W_]+/g, '').replace(/ /g,'').trim().charAt(2) == "."
+      )
+        return <><a href={`https://maps.google.com/?q=${answer.split(',')[0]},${answer.split(',')[1]}`} target={'_blank'}>View on Maps</a></>
+      else
+        return answer;
     }
   }
 
