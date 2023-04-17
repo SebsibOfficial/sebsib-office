@@ -106,11 +106,18 @@ export function VisualizeNumber (props: Props) {
   };
 
   const time_series_data = {
-    labels: FOR_TIME_SERIES.map<string>((FTS) => new Date(FTS.time).toISOString().split('T')[0]),
+    labels: FOR_TIME_SERIES
+    .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
+    .map<string>((FTS) => new Date(FTS.time)
+    .toISOString().split('T')[0]
+    .split('-').map((item) => item.length == 4 ? item.substring(2) : item)
+    .reverse()
+    .join("/")
+    ),
     datasets: [
       {
         label: "Value",
-        data: FOR_TIME_SERIES.map<number>((FTS) => FTS.value),
+        data: FOR_TIME_SERIES.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()).map<number>((FTS) => FTS.value),
         backgroundColor: backgroundColor[3],
         borderColor: backgroundColor[3]
       }
