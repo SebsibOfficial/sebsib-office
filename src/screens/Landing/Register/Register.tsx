@@ -178,19 +178,13 @@ export default function Register() {
               required>
                 <option value="">{t('register.package_type')}</option>
                 <option value="FREE TRIAL">Free Trial</option>
-                <option value="STANDARD">
-                  Standard
-                </option>
-                <option value="premium" disabled>
+                <option value="PREMIUM">
                   Premium
-                </option>
-                <option value="enterprise" disabled>
-                  Enterprise
                 </option>
               </Form.Select>
             </Form.Group>
             {
-              pkg == 'FREE TRIAL' || pkg == '' ? '' :
+              pkg == 'FREE TRIAL' || pkg != 'FREE TRIAL' ? '' :
               <>
               <div key={`inline-radio`} className="mb-2 mt-3 radio_price">
                 <div style={{'display':'flex','alignItems':'center'}}>

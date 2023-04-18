@@ -50,7 +50,7 @@ export function Card_Comp(props: Props) {
           }
           <li className="card_list_item">{props.data.dayCount}</li>
         </ul>
-        <div className="card_title">{ props.annual ? props.data.priceAnnual : props.data.price}</div>
+        <div className="card_title">{ props.data.pkgName == "Free Trail" ? "FREE" : "CONTACT US"}</div>
       </div>
     </div>
     <div className="card_desc">

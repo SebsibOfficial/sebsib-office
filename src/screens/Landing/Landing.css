@@ -154,11 +154,11 @@ nav a {
   font-family: 'Teko';
   font-weight: 400;
   font-size: 3em;
-  text-decoration: underline;
+  /* text-decoration: underline; */
   color: var(--lightGrey);
   text-decoration-thickness: from-font;
   margin: 1em;
-  text-decoration-line: underline;
+  /* text-decoration-line: underline; */
   text-underline-offset: 5px;
 }
 #intro {
@@ -173,6 +173,17 @@ nav a {
   display: block;
   text-align: center;
 }
+#third-and-half {
+  background-color: var(--lightGrey);
+  padding: 4em 2em;
+  display: block;
+  text-align: center;
+  color: var(--secondary);
+}
+#third-and-half .sub_title, #third-and-half .ficon, #third-and-half .arrow, #third-and-half .desc, #third-and-half > #title{
+  color: var(--secondary) !important;
+}
+
 .steps {
   margin-top: 7em;
   display: flex;

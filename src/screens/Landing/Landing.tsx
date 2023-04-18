@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAndroid, faFacebook, faGooglePlay, faInstagram, faLinkedin, faTelegram, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faClipboardList, faIdBadge, faLayerGroup, faLongArrowAltRight, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faClipboardList, faIdBadge, faLayerGroup, faLongArrowAltRight, faShareAlt, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "react-bootstrap";
 
 export default function Landing() {
@@ -65,7 +65,7 @@ export default function Landing() {
       </section>
       <section id="third">
         <div id="title">
-          <p>HOW SEBSIB WORKS</p>
+          <p>HOW SEBSIB WORKS ON THE FEILD</p>
         </div>
         <div className="steps">
           <div className="step">
@@ -102,6 +102,51 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faLayerGroup} className="ficon"/>
             <p className="sub_title">COLLECT</p>
+            <p className="desc">Finally the fun begins, Download the app and enter your sebsib credentials. After your in, download the 
+            survey and gather responses as much as you like and send it to the website
+            </p>
+          </div>
+          <div className="arrow">
+            <FontAwesomeIcon icon={faLongArrowAltRight}/>
+          </div>
+          <div className="step">
+            <FontAwesomeIcon icon={faTable} className="ficon"/>
+            <p className="sub_title">VIEW</p>
+            <p className="desc">Now that your data is gathered you can view it on the website or download it in an 
+            excel format to do additional analysis
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="third-and-half">
+        <div id="title">
+          <p>HOW SEBSIB WORKS ONLINE</p>
+        </div>
+        <div className="steps">
+          <div className="step">
+            <FontAwesomeIcon icon={faIdBadge} className="ficon"/>
+            <p className="sub_title">REGISTER</p>
+            <p className="desc">First go to the register page,
+             and enter your details and organization name ( which might be just you ).
+              Also select the package that best suites you
+            </p>
+          </div>
+          <div className="arrow">
+            <FontAwesomeIcon icon={faLongArrowAltRight}/>
+          </div>
+          <div className="step">
+            <FontAwesomeIcon icon={faClipboardList} className="ficon"/>
+            <p className="sub_title">DESIGN</p>
+            <p className="desc">Then design your survey questions on your liking. The platform supports various input types
+             and has complex skipping patterns for your conditional questions
+            </p>
+          </div>
+          <div className="arrow">
+            <FontAwesomeIcon icon={faLongArrowAltRight}/>
+          </div>
+          <div className="step">
+            <FontAwesomeIcon icon={faShareAlt} className="ficon"/>
+            <p className="sub_title">SHARE</p>
             <p className="desc">Finally the fun begins, Download the app and enter your sebsib credentials. After your in, download the 
             survey and gather responses as much as you like and send it to the website
             </p>
