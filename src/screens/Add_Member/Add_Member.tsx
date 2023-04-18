@@ -234,7 +234,7 @@ export default function Add_Modify_Member(props:Props) {
     pageLoading ? <Sb_Loader full/> :
     <Col>
       <Row className="mb-4">
-      <Sb_Alert>Enter the enumrator name, email, username and the projects they will be involved in, then click 
+      <Sb_Alert>Enter the name, email, username of the members. Select the projects Enumerators will be involved in or Select the surveys the viewer can view, then click 
         {props.pageType === 'ADD' ? <><b> Add Member</b> to create a new member</> : <><b> Save Changes</b> to save the new changes</>}   
       </Sb_Alert>
         <Col md="3" className="me-4">

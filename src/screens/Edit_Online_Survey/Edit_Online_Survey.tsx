@@ -896,10 +896,8 @@ export default function Edit_Online_Survey () {
 
   return (
     <Col>
-      <Sb_Alert>To create a survey first enter the survey name, then fill out the questions, choices and the question type. 
-        After creating a question you must <b>Confirm</b> it. When you want to create more question click the <b>New Question</b> button below the questions.
-        If you want to implement a Skip Pattern, tick the <b>Show Pattern</b> circle, select the question that this question depends on, then select what answer will show this question.
-        Click <b>Preview Survey</b> to see what your survey looks like. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
+      <Sb_Alert>To edit a survey modify the survey name, description and even the thumbnail pictures. The modify anything you need including rearranging the question. 
+        Click <b>Preview Survey</b> to see what your survey looks like and <b>New Question</b> to add new question. When you finish modifying your questions you can click on <b>Save Changes</b> to create the survey.
         </Sb_Alert>
       <Row>
         <Col md="3">

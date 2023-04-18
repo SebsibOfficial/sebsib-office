@@ -896,7 +896,10 @@ export default function View_Survey () {
     <>
     <Col className="veiw-survey">
       <Row className="g-0 mb-3" style={{'margin': 'auto'}}>
-        <Sb_Alert>This where you can view the gathered data, not only view but <b>Export</b> it to Excel also. You can <b>Delete</b> the survey and also view the questions and choices of the survey by clicking the <b>View Questionnaire</b> button</Sb_Alert>
+        <Sb_Alert>This where you can view the gathered data, not only view but <b>Export</b> it to Excel also. You can <b>Delete</b> the survey and also view the questions and choices of the survey by clicking the <b>View Questionnaire</b> button. 
+        You can click on <b>Edit Survey</b> to modify the survey and toggle the availabilty status of the survey to <b>Started or Stopped</b>.
+        {surveyType === "ONLINE" ? " For Online survey a link is generated, which can be shared to people to be filled" : ""}
+        </Sb_Alert>
         <Col>
           <Sb_Text font={32} weight={600}>{state.state.name}</Sb_Text><br></br><Sb_Text font={12}>ID: {shortSurveyId}</Sb_Text>
         </Col>

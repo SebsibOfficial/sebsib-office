@@ -147,8 +147,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faShareAlt} className="ficon"/>
             <p className="sub_title">SHARE</p>
-            <p className="desc">Finally the fun begins, Download the app and enter your sebsib credentials. After your in, download the 
-            survey and gather responses as much as you like and send it to the website
+            <p className="desc">After designing your survey, a link will be generated. You share this link to your respondents and gather some responses
             </p>
           </div>
           <div className="arrow">

@@ -807,11 +807,11 @@ export default function Create_Online_Survey () {
       </> : 
       <>
         <Col>
-          <Sb_Alert>To create a survey first enter the survey name, then fill out the questions, choices and the question type. 
-            After creating a question you must <b>Confirm</b> it. When you want to create more question click the <b>New Question</b> button below the questions.
-            If you want to implement a Skip Pattern, tick the <b>Show Pattern</b> circle, select the question that this question depends on, then select what answer will show this question.
-            Click <b>Preview Survey</b> to see what your survey looks like. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
-            </Sb_Alert>
+        <Sb_Alert>To create a survey first enter the survey name, description and thumbnail picture then fill out the questions. 
+        Choose the input type of the question (Choice, Multiple Select, Number, Plain Text, Date or File). If choice selected click <b>Add Choice</b> to add options.
+        If you want to implement a Skip Pattern, tick the <b>Show Pattern</b> circle, select the question that this question depends on, then select what answer will show this question.
+        Click <b>Preview Survey</b> to see what your survey looks like and <b>New Question</b> to add new question. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
+        </Sb_Alert>
           <Row>
             <Col md="3">
               <Form.Group className="mb-3" controlId="LoginEmail">

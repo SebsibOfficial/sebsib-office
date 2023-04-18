@@ -70,21 +70,21 @@ export default function Settings () {
       <Sb_Text font={16} weight={500}>Credentials</Sb_Text>
       <Sb_Container className="p-3 mt-2 mb-2">
         <div style={{'width':'70%'}}>
-          <Form.Group className="mb-3" controlId="AddMemberUsername">
+          <Form.Group className="mb-3" controlId="Orgname">
 						<Form.Label><Sb_Text font={16}>Organization Name</Sb_Text></Form.Label>
 						<Form.Control size="sm" type="text" placeholder="Your Organization Name" value={orgName} onChange={(e) => setOrgName(e.target.value)}/>
 					</Form.Group>
-          <Form.Group className="mb-3" controlId="AddMemberUsername">
+          <Form.Group className="mb-3" controlId="Email">
 						<Form.Label><Sb_Text font={16}>Email</Sb_Text></Form.Label>
 						<Form.Control size="sm" type="text" placeholder="Your Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
 					</Form.Group>
-          <Form.Group className="mb-3" controlId="AddMemberPassword">
+          <Form.Group className="mb-3" controlId="OldMemberPassword">
 						<Form.Label><Sb_Text font={16}>Old Password</Sb_Text></Form.Label>
 						<Form.Control size="sm" type="password" placeholder="Password" value={oldPass} onChange={(e) => setOldPass(e.target.value)}/>
 					</Form.Group>
-          <Form.Group className="mb-3" controlId="AddMemberPassword">
+          <Form.Group className="mb-3" controlId="NewMemberPassword">
 						<Form.Label><Sb_Text font={16}>New Password</Sb_Text></Form.Label>
-						<Form.Control size="sm" type="text" placeholder="Password" value={newPass} onChange={(e) => setNewPass(e.target.value)}/>
+						<Form.Control size="sm" type="password" placeholder="Password" value={newPass} onChange={(e) => setNewPass(e.target.value)}/>
 					</Form.Group>
         </div>
       </Sb_Container>

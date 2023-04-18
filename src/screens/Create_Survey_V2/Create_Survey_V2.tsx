@@ -693,10 +693,10 @@ export default function Create_Survey_V2 () {
 
   return (
     <Col>
-      <Sb_Alert>To create a survey first enter the survey name, then fill out the questions, choices and the question type. 
-        After creating a question you must <b>Confirm</b> it. When you want to create more question click the <b>New Question</b> button below the questions.
-        If you want to implement a Skip Pattern, tick the <b>Show Pattern</b> circle, select the question that this question depends on, then select what answer will show this question.
-        Click <b>Preview Survey</b> to see what your survey looks like. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
+      <Sb_Alert>To create a survey first enter the survey name, then fill out the questions in English. You can also add other languages by clicking on <b>Add Language</b>. 
+        Choose the input type of the question (Choice, number, text...etc). If choice selected click <b>Add Choice</b> to add options. If number selected enter the minimum and maximum acceptable value.
+        If you want to implement a Skip Pattern, tick the <b>Show Pattern</b> circle, select the question that this question depends on, then select what answer will show this question. You can add more show conditions.
+        Click <b>Preview Survey</b> to see what your survey looks like and <b>New Question</b> to add new question. When you finish creating your questions you can click on <b>Create Survey</b> to create the survey.
         </Sb_Alert>
       <Row>
         <Col md="3">
