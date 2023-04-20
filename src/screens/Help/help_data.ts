@@ -10,10 +10,11 @@ const helpData:HelpI[] = [
   {
     id: 'hlp_1',
     title: 'Definitions',
-    desc1: [`<ul class="c3 lst-kix_5wey96u3y2rc-1 start"> <li class="c5 li-bullet-0"><span class="c0">Member: A user in the Sebsib system. Can be either an Analyst or Enumerator.</span></li>
+    desc1: [`<ul class="c3 lst-kix_5wey96u3y2rc-1 start"> <li class="c5 li-bullet-0"><span class="c0">Member: A user in the Sebsib system. Can be either an Analyst, Enumerator or Viewer.</span></li>
     <li class="c5 li-bullet-0"><span class="c0">Owner: The user who controls the account/organization. Can create members</span></li>
     <li class="c5 li-bullet-0"><span class="c0">Analyst: A role that allows access to view the collected responses and  create surveys. Has only Sebsib Office / website access</span></li>
     <li class="c5 li-bullet-0"><span class="c0">Enumerator: A role that has access to the Sebsib Collect App. It can collect responses</span></li>
+    <li class="c5 li-bullet-0"><span class="c0">View: A role that can view collected survey data, is created by owners with view access to allowed surveys</span></li>
     <li class="c5 li-bullet-0"><span class="c0">Project: A collection of surveys. Has assigned enumerators who can access these surveys and collect responses</span></li>
     <li class="c5 li-bullet-0"><span class="c0">Survey: Simply the questionnaire that enumerators collect responses on.</span></li>
     <li class="c5 li-bullet-0"><span class="c0">Responses: The collected data from the enumerators</span></li>
@@ -23,190 +24,345 @@ const helpData:HelpI[] = [
   {
     id: 'hlp_2',
     title: 'Create Project',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Projects sidebar</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Enter the name of the Project</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Select the enumerators you want to be involved in the project. If you
-        don&rsquo;t have any enumerators you can create them. You don&rsquo;t necessarily need an enumerator, you can
-        use your credentials to access the Sebsib collect app to gather responses if you are an account owner.</span>
-    </li>
-    <li class="c1 li-bullet-0"><span class="c0">After you are done, click Create to create your project.</span></li>
-  </ol>`].join(''),
+    desc1: [`<p>
+    Project will hold all your related surveys together and enumerators who
+    have access to the surveys in it, they are basically like folders.
+    </p>
+    <ul type="disc">
+    </ul>
+    <ol start="1" type="1">
+        <li>
+            After signing in, click the projects tab on the left. Then click in
+            Create Project.
+        </li>
+        <li>
+            Enter the project name and the description of the project.
+        </li>
+        <li>
+            Then select the enumerators who will be collecting data on the surveys
+            in the project
+        </li>
+        <li>
+            Click Create Project to finish creating the project
+        </li>
+    </ol>`].join(''),
     img1: cp
   },
   {
     id: 'hlp_3',
-    title: 'Create Members',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Members sidebar</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">You will see all the members currently in your
-        account/organization</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Click on Create Member</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Enter the First &amp; Last name, email, password phone and role (Role
-        can be either Analyst: who only has access to Sebsib Office / website or Enumerator who only has access to
-        Sebsib Collect / Mobile app)</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Copy the password somewhere safe before you click Create</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Now click Create Member and hand over the credentials to you
-        enumerators</span></li>
-  </ol>`].join(''),
+    title: 'Create Online Survey',
+    desc1: [`<p>
+    There are two kinds of surveys you can create. Regular/Enumerator-based and
+    Online Surveys. Online surveys are survey that are done on the internet by
+    sharing links. Much like google forms.
+    </p>
+    <ul type="disc">
+    </ul>
+    <ol start="1" type="1">
+        <li>
+            After signing in, click on Projects then click on Create Survey in the
+            project you want to create the survey in.
+        </li>
+        <li>
+            Click on Online Survey
+        </li>
+        <li>
+            Enter the survey name you want to Identify it and to be shown to
+            respondents
+        </li>
+        <li>
+            You can upload a survey thumbnail that will be shown to respondents. NB
+            The image shows best if it is in 3:1 (width:3, height:1)
+        </li>
+        <li>
+            Enter the description on the survey, this will also be shown to the
+            respondents
+        </li>
+        <li>
+            Now enter the questions, Enter the question text in the left most field
+            (Question in English)
+        </li>
+        <li>
+            Then enter the input type. You have 6 options (Choice, Multi-Select,
+            Number, Text, Date and File Upload). If choice and Multi-select are
+            chosen, there will be a field to enter what the choices are.
+        </li>
+        <li>
+            If the question is a required, you can select the Required Checkbox
+            next to input type
+        </li>
+        <li>
+            If you want to have conditional display of question, select the Show
+            pattern checkbox. Then fill in the condition by select what question
+            this question depends on and the choice/option that will make this
+            question show up.
+        </li>
+        <li>
+            After you are done with these details, you can add another question be
+            clicking on the New Question button and repeat the above process.
+        </li>
+        <li>
+            If you are done with creating the survey, click on preview survey to
+            see the questionnaire version of the survey to confirm if everything is
+            alright
+        </li>
+        <li>
+            Then now you can click on Create Survey to finish creating the Online
+            Survey
+        </li>
+    </ol>`].join(''),
     img1: cm
   },
   {
     id: 'hlp_4',
-    title: 'Remove Enumerators From Projects',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on Projects sidebar</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Find the project you are looking for</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Select the enumerator you want to remove and click the &lt;&gt;
-        button</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Now the enumerator has no access to the surveys in the project</span>
+    title: 'Create Standard Survey',
+    desc1: [`<p>
+    There are two kinds of surveys you can create. Standard/Regular
+    (Enumerator-based) and Online Surveys. Standard/Regular (Enumerator-based)
+    are surveys which require the app to be collected. The will be downloaded
+    on the app and will work offline in remote areas.
+</p>
+<ul type="disc">
+</ul>
+<ol start="1" type="1">
+    <li>
+After signing in, click on Projects then click on        <strong>Create Survey</strong> in the project you want to create the
+        survey in.
     </li>
-  </ol>`].join(''),
+    <li>
+        Then click on <strong>Standard Survey</strong>
+    </li>
+    <li>
+        Enter the survey name you want to identify it with
+    </li>
+    <li>
+        Now enter the questions. Enter the question text in the left most field
+        (Question in English). If you want additional languages to display the
+        question text, click on <strong>Add Question language</strong> (which
+        supports Amharic, Oromiffa, Tigrigna)
+    </li>
+    <li>
+        Then enter the input type. You have 16 options.
+    </li>
+</ol>
+<p>
+    a) <strong>Choice</strong>: Only choose one among options, there will be a
+    field to enter the choice details
+</p>
+<p>
+    b) <strong>Multi-select</strong>: You can choose multiple among options,
+    there will be a field to enter the choice details
+</p>
+<p>
+    c) <strong>Text</strong>: The input will be any textual input
+</p>
+<p>
+    d) <strong>Number</strong>: The input will be numerical, there will be
+    field to specify expected maximum and minimum value
+</p>
+<p>
+    e) <strong>Date</strong>: The input will be of date type, YYYY-MM-DD
+</p>
+<p>
+    f) <strong>File Upload</strong>: The input will be a file that is uploaded
+    to a server
+</p>
+<p>
+    g) <strong>Geo-Point</strong>: The input is coordinates chosen on a map
+    (requires internet)
+</p>
+<p>
+    h) <strong>Time</strong>: The input will be a time input from a clock, will
+    be read in 24-hour
+</p>
+<p>
+    i) <strong>Photo Capture</strong>: The input will be a photo uploaded to
+    the server, captured by a camera
+</p>
+<p>
+    j)
+    <strong>
+        Multi-[Number, Text, Date, File Upload, Geo-Point, Time, Photo Capture]
+    </strong>
+    : These are the same as above options when one question needs multiple
+    inputs, usually used to capture tabular data
+</p>
+<ul type="disc">
+</ul>
+<ol start="6" type="1">
+    <li>
+        If the question is a required, you can select the Required Checkbox
+        next to input type
+    </li>
+    <li>
+        If you want to have conditional display of question, select the Show
+        pattern checkbox. Then fill in the condition by select what question
+        this question depends on and the choice/option that will make this
+question show up. If you want more complex patterns click on        <strong>Add Show Pattern </strong>to add another condition for the
+        question to show up.
+    </li>
+    <li>
+        After you are done with these details, you can add another question be
+        clicking on the New Question button and repeat the above process.
+    </li>
+    <li>
+        If you are done with creating the survey, click on preview survey to
+        see the questionnaire version of the survey to confirm if everything is
+        alright
+    </li>
+    <li>
+        Then now you can click on Create Survey to finish creating the Online
+        Survey
+    </li>
+</ol>`].join(''),
     img1: re
   },
   {
     id: 'hlp_5',
-    title: 'Editing Members',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on Member sidebar</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Member name you want to edit</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Change the contents you to your liking</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Click Save Changes to finish</span></li>
-  </ol>`].join(''),
+    title: 'View Survey',
+    desc1: [`<p>
+    1. After signing in, click on survey on the Dashboard or click on projects
+    and click on a survey there
+</p>
+<p>
+    2. Among the option, you can click on View Questionnaire to view the survey
+    questions as a plain questionnaire.
+</p>
+<p>
+    3. You can click on Edit survey to modify the survey
+</p>
+<p>
+    4. You can click on Download Excel to get the survey data in MS Excel
+    format
+</p>
+<p>
+    5. You can delete the survey by clicking on Delete Survey
+</p>
+<p>
+    6. You can stop data collection if you toggle the started switch to stopped
+</p>
+<p>
+    7. In online survey, a link is displayed under the name, you can share that
+    to respondents to fill in the survey.
+</p>
+`].join(''),
     img1: em
   },
   {
     id: 'hlp_6',
-    title: 'Creating Surveys',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Project sidebar</span></li>
-    <li class="c1 li-bullet-0"><span>Select a Project to add this survey on and click </span><span class="c6 c8">Create
-        Survey</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">You will see a screen with survey name field and a purple square with
-        fields in it</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Enter the survey name</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">The square represents a question, it has three main fields. </span></li>
-  </ol>
-  <ul class="c3 lst-kix_5wey96u3y2rc-3 start">
-    <li class="c2 li-bullet-0"><span class="c0">The question text (e.g what is you favorite color)</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">The input type (e.g choice, text, date, number&hellip;)</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">The show pattern (e.g Show this question if a previous question was
-        false)</span></li>
-  </ul>
-  <ol class="c3 lst-kix_5wey96u3y2rc-2" start="6">
-    <li class="c1 li-bullet-0"><span class="c0">Enter the question text</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Choose and Input type from the following:</span></li>
-  </ol>
-  <ul class="c3 lst-kix_5wey96u3y2rc-3 start">
-    <li class="c2 li-bullet-0"><span class="c0">Text: Free written inputs</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">Choice: Select on from the options</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">Multi-select: Select one or many from the options</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">Number: If you want Numerical data</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">Geo-point: If you want GPS locations</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">Date: If you want Date data from the calendar</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">Time: If you want time date from the clock</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">File: If you want to receive files</span></li>
-    <li class="c2 li-bullet-0"><span class="c0">Photo: if want photo data</span></li>
-    <li class="c2 li-bullet-0"><span>Multi-[date, geo-point, time, file, number, text]: if you want any of the options
-        in the bracket but want more than one per question. (e.g.1 </span><span
-        class="c6">Question:</span><span>&nbsp;At what times do you take these pills? </span><span
-        class="c6">Answer</span><span>: At 10:30 AM, 4 PM and 10 PM) (e.g.2 </span><span
-        class="c6">Question</span><span>: What were your last 3 summer harvests in quintals? </span><span
-        class="c6">Answer: </span><span class="c0">70, 80, 90 )</span></li>
-  </ul>
-  <ol class="c3 lst-kix_5wey96u3y2rc-2" start="8">
-    <li class="c1 li-bullet-0"><span>Set the </span><span class="c6">required </span><span class="c0">field if you
-        don&rsquo;t want the question to be skippable</span></li>
-    <li class="c1 li-bullet-0"><span>Set the Show pattern. The showing conditions of a question can only be determined
-        by previous questions whose input types are either choice or multi-select. So to specify which question click on
-      </span><span class="c6">Show If Question</span><span>&nbsp;then select which question, and specify an answer by
-        clicking on </span><span class="c6">Answer is</span><span class="c0">&nbsp;then selecting one of the
-        choices.(E.g Show if question #1 Answer is Choice #2)</span></li>
-    <li class="c1 li-bullet-0"><span>After setting all the above you must click on </span><span class="c6">Confirm
-      </span><span class="c0">to add the question to the list</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Next add another question by click on New Question from the bottom right
-        and repeat the above process</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Once you are done, click on Preview Survey to see what the
-        survey/questionnaire looks like.</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Click Create survey to create the survey</span></li>
-  </ol>`].join(''),
+    title: 'Create Members',
+    desc1: [`<p>
+    There are three types of members: Enumerators (Access the app only),
+    Analysts (Access all the projects and surveys) and Viewers (only view
+    allowed surveys).
+</p>
+<p>
+    1. After signing in, click on Members and click on Add Member
+</p>
+<p>
+    2. Enter First and Last name, Phone number, email, Password
+</p>
+<p>
+    3. On the role, select Enumerator, Analyst or Viewer
+</p>
+<p>
+    4. If the role selected is Enumerator, then on the right specify which
+    project they should be involved in.
+</p>
+<p>
+    5. If the role selected is Viewer, then on the right select which surveys
+    the can view
+</p>
+<p>
+    6. After that click on Add Member to finish
+</p>
+`].join(''),
   },
   {
     id: 'hlp_7',
-    title: 'Editing Account Settings',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on the &lt;&gt; icon bottom left of the screen. The 8 character
-        word is your organization ID</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Change the information to your liking. You can also clearly see your
-        organization ID </span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Click on Save Changes to finish</span></li>
-  </ol>`].join(''),
+    title: 'Edit Settings',
+    desc1: [`<p>
+    1. After signing in, click on the &lt;setting&gt; icon
+</p>
+<p>
+    2. Modify the details you want
+</p>
+<p>
+    3. Click Save Changes to finish
+</p>
+`].join(''),
     img1: su
   },
   {
     id: 'hlp_8',
-    title: 'Viewing and Downloading Data',
-    desc1: [` <ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Project sidebar the click on the survey you want view or
-        click on the survey directly from the dashboard</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">The table is the current gathered response. The column are the question
-        you created and each row it the response recorded</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Click on Preview Questionnaire to view the question clearly</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Download Excel to export the data to Microsoft Excel
-        (.xlsx) format</span></li>
-  </ol>`].join(''),
+    title: 'Add/Remove Enumerators from projects',
+    desc1: [`<p>
+    1. After signing in, click on Projects
+</p>
+<p>
+    2. If you want to Add Enumerators, Click on the button and select the
+    Enumerators you want to involve in the project.
+</p>
+<p>
+    3. If you want to remove Enumerators from the Project, click on the
+    &lt;remove&gt; icon next to the Enumerator to remove them,
+</p>
+`].join(''),
     img1: vs
   },
   {
     id: 'hlp_9',
-    title: 'Setting Up Sebsib Collect',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">When opening Sebsib Collect, you will see three buttons to fill forms,
-        download forms, and send forms. There is a &lt;&gt; icon at the top right screen. Click the &lt;&gt; icon</span>
-    </li>
-    <li class="c1 li-bullet-0"><span class="c0">Enter the enumerator email, password and Organization ID. If you are the
-        owner you can enter your credentials and the Organization ID. </span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Then click on Save to connect with Sebsib office.</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">The bar at the bottom will turn purple if you are successfully
-        connected.</span></li>
-  </ol>`].join(''),
+    title: 'To Edit a Survey or Member',
+    desc1: [`<p>
+    1. If you want to Edit Survey, Click on a survey, then click on Edit Survey
+</p>
+<p>
+    2. The modify the details you want to change, including rearranging
+    question order
+</p>
+<p>
+    3. When you are done, click on Save changes to finish
+</p>
+<p>
+    4. If you are editing a Member, Click on a Members, then click on their
+    name
+</p>
+<p>
+    5. Modify their information including their password, then click Save.
+</p>
+`].join(''),
   },
   {
     id: 'hlp_10',
-    title: 'Downloading Forms',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Download forms button. You must be connected to the
-        internet for this to work</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">You will see the list of forms to fill</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Select the forms and Click Download Selected Forms to store them on the
-        device for offline use.</span></li>
-  </ol>`].join(''),
-  },
-  {
-    id: 'hlp_11',
-    title: 'Filling out Forms',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Fill Forms button. You don&rsquo;t need the internet for
-        this one.</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">You will see a list of downloaded surveys</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Click the one you want to fill and proceed to fill out the
-        questions</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">When you finish, give it a label for identification when sending</span>
-    </li>
-    <li class="c1 li-bullet-0"><span class="c0">It is now stored locally and ready to be sent</span></li>
-  </ol>`].join(''),
-  },
-  {
-    id: 'hlp_12',
-    title: 'Sending Forms',
-    desc1: [`<ol class="c3 lst-kix_5wey96u3y2rc-2 start" start="1">
-    <li class="c1 li-bullet-0"><span class="c0">Click on the Send Forms button. You must be connected to the internet
-        for this to work</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">You will the all the form you filled, with the labels you
-        provided</span></li>
-    <li class="c1 li-bullet-0"><span class="c0">Select the Forms and Click Send the Selected Forms. They are now sent to
-        the Sebsib office for viewing</span></li>
-  </ol>`].join(''),
+    title: 'Sebsib Collect App Basics',
+    desc1: [`<p>
+    1. When opening the app for the first time you will see a screen to enter
+    credentials
+</p>
+<p>
+    2. Enter Enumerator or Owner email, password and Organization ID (found in
+    the settings screen on the web app, or bottom left of the Dashboard)
+</p>
+<p>
+    3. Once signed in you can see, four options, Fill, Send, Download and
+    Update forms.
+</p>
+<p>
+    4. First tap on Download forms to obtain/download the created survey/form
+    the server
+</p>
+<p>
+    5. Second tap on Fill forms and select the form you want fill/capture
+    responses on
+</p>
+<p>
+    6. Third tap on Send forms to send the selected responses to the server
+</p>
+<p>
+    7. If there was a change in the survey, you can tap on Update form to get
+    the latest form
+</p>
+`].join(''),
   },
   {
     id: 'hlp_13',

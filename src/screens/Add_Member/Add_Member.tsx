@@ -276,7 +276,7 @@ export default function Add_Modify_Member(props:Props) {
 					</Form.Group>
           <Form.Group className="mb-3" controlId="AddMemberPassword">
 						<Form.Label><Sb_Text font={16}>Password</Sb_Text></Form.Label><br></br>
-            <Form.Label><Sb_Text weight={300} font={12}>Do not forget this password, Copy it if you can</Sb_Text></Form.Label>
+            <Form.Label><Sb_Text weight={300} font={12}>Share this password to the members { memberRole != "MEMBER" ? ", They will be prompted to change it" : ""}</Sb_Text></Form.Label>
 						<Form.Control size="sm" type="text" placeholder="Password" value={memberPassword} onChange={(e) => setMemberPassword(e.target.value)}/>
 					</Form.Group>
           {
