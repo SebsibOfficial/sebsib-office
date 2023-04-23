@@ -908,11 +908,10 @@ export default function View_Survey () {
           onClick={() => setCollapse(!collapse)}>
             <Sb_Text font={12} color="--lightGrey">{collapse ? "Hide Questionnaire" : "View Questionnaire"}</Sb_Text>
           </Button>
-          {console.log(state.state.projectName)}
           {
             translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" &&
             <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
-            onClick={() => navigate( surveyType === "REGULAR" ? "/dashboard/projects/edit-survey/"+params.sid : "/dashboard/projects/edit-online-survey/"+params.sid, {state: {name: state.state.projectName}})}>
+            onClick={() => navigate( surveyType === "REGULAR" ? "/dashboard/projects/edit-survey/"+params.sid : "/dashboard/projects/edit-online-survey/"+params.sid, {state: {name: state.state.projectName, projectId: state.state.projectId}})}>
               <Sb_Text font={12} color="--lightGrey">Edit Survey</Sb_Text>
             </Button>
           }

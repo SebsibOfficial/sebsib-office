@@ -384,7 +384,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     </tr>
     <tr>
     <td>
-    <p>GET</p>
+    <p><b>GET</b></p>
     <p>Get all the responses from the survey</p>
     </td>
     <td>
@@ -396,7 +396,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     </tr>
     <tr>
     <td>
-    <p>GET</p>
+    <p><b>GET</b></p>
     <p>Get responses from the specified day</p>
     </td>
     <td>
@@ -408,7 +408,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     </tr>
     <tr>
     <td>
-    <p>GET</p>
+    <p><b>GET</b></p>
     <p>Get responses from the specified day and afterwards</p>
     </td>
     <td>
@@ -420,7 +420,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     </tr>
     <tr>
     <td>
-    <p>GET</p>
+    <p><b>GET</b></p>
     <p>Get responses in between the dates</p>
     </td>
     <td>
@@ -432,7 +432,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     </tr>
     <tr>
     <td>
-    <p>Get</p>
+    <p><b>GET</b></p>
     <p>Get all the responses from the survey in Excel</p>
     </td>
     <td>
@@ -444,6 +444,11 @@ question show up. If you want more complex patterns click on        <strong>Add 
     </tr>
     </tbody>
     </table>`].join(''),
+  },
+  {
+    id: "help_14",
+    title: "Call Support",
+    desc1: "You can call us at, +251920642556 or +251920747084 or +251919486919. We can guide you through the steps or fix it if there is an issue"
   }
 ]
 

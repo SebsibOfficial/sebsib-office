@@ -31,7 +31,7 @@ interface StateInterface {
   key: string,
   pathname: string,
   search: string,
-  state: {name: string},
+  state: {name: string, projectId: string},
 }
 
 export default function Edit_Survey () {
@@ -779,7 +779,7 @@ export default function Edit_Survey () {
       if (res.code == 200) {
         setCriticalpage('');
         console.log(res.data)
-        navigate('/dashboard/projects/view-survey/'+surveyId, {state: {name: surveyName}});
+        navigate('/dashboard/projects/view-survey/'+surveyId, {state: {name: surveyName, projectName: state.state.name, projectId: state.state.projectId}});
       } else {
         console.log(res.data);
         setBtnLoading(false);

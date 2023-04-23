@@ -34,7 +34,7 @@ interface StateInterface {
   key: string,
   pathname: string,
   search: string,
-  state: {name: string},
+  state: {name: string, projectId: string},
 }
 
 export default function Edit_Online_Survey () {
@@ -125,7 +125,7 @@ export default function Edit_Online_Survey () {
         })
       }
       TemplateQuestion.options = options;
-      TemplateQuestion.showIf = [{RID: "RND_"+(Math.random() * 1000), IfQues: Q.questionId, IfAns: Q.answerId}]
+      TemplateQuestion.showIf = [{RID: "RND_"+(Math.random() * 1000), IfQues: Q.showIf?.questionId ?? '', IfAns: Q.showIf?.answerId ?? ''}]
       AssignedQuestions.push(TemplateQuestion);
     })
 
@@ -881,7 +881,7 @@ export default function Edit_Online_Survey () {
         if (upload_res) await SetSurveyPicture(res.data.shortSurveyId, {pic: decodeJWT(token as string).shortOrgId+"/"+state.state.name.toUpperCase()+"/"+res.data.shortSurveyId+"/"+upload_res.fn})
         else console.log(upload_res)
         console.log(res.data)
-        navigate('/dashboard/projects/view-survey/'+surveyId, {state: {name: surveyName, projectName: state.state.name}});
+        navigate('/dashboard/projects/view-survey/'+surveyId, {state: {name: surveyName, projectName: state.state.name, projectId: state.state.projectId}});
       } else {
         console.log(res.data);
         setBtnLoading(false);

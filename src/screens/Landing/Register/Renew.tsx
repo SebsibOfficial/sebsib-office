@@ -31,6 +31,7 @@ export default function Register() {
   const [tranNo, setTranNo] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [errconfirm, setErrConfirm] = useState(false);
   const [modalState, setModalState] = useState(false);
   const [fetching, setFetching] = useState(false);
 
@@ -92,7 +93,8 @@ export default function Register() {
         console.log(translateIds("ID", result.data.packageId))
         setFetchedPkg(translateIds("ID", result.data.packageId) as string)
         setFetching(false)
-      } else {console.log(result.data); setFetching(false)}
+        setErrConfirm(false)
+      } else {console.log(result.data); setBtnLoading(false); setFetching(false); setErrConfirm(true)}
     })
   }
   return (
@@ -259,6 +261,13 @@ export default function Register() {
             onClick={() => setConfirm(false)}
           >
             <b>Thank you for renewing</b><br></br> We will contact you shortly
+          </div>
+          <div
+            className="error-confirm"
+            style={{display: errconfirm ? 'block' : 'none'}}
+            onClick={() => setConfirm(false)}
+          >
+            Can't find Organization ID, Please check input
           </div>
         </form>
       </section>

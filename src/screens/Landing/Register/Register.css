@@ -74,6 +74,19 @@
     margin-right: 0.5em;
     cursor: pointer;
   }
+  .error-confirm {
+    background-color: var(--DangerRed);
+    padding: 0.7em;
+    text-align: center;
+    color: white;
+    font-weight: 400;
+    border-radius: 5px;
+  }
+  .error-confirm span {
+    float: right;
+    margin-right: 0.5em;
+    cursor: pointer;
+  }
   .form-item {
     width: 100%;
     margin-right: 0.5em;
