@@ -10,6 +10,7 @@ import { useAuth } from "../../states/AuthContext";
 import { NotifContext } from "../../states/NotifContext";
 import { AddMember, EditMember, GetMember, GetMemberList, GetProjectList, GetSurveyListByOrg_PIVOT } from "../../utils/api";
 import { decodeJWT, translateIds } from "../../utils/helpers";
+import validator from "validator";
 
 interface Props {
   pageType: "ADD" | "EDIT"
@@ -193,6 +194,11 @@ export default function Add_Modify_Member(props:Props) {
     }
   }
 
+  function validateInput ():boolean {
+    if (!validator.isEmail(memberEmail)) return false
+    return true
+  }
+
   function saveAddButtonHandler () {
     setBtnLoading(true);
     if (props.pageType === 'ADD'){
@@ -272,7 +278,7 @@ export default function Add_Modify_Member(props:Props) {
           }
           <Form.Group className="mb-3" controlId="AddMemberEmail">
 						<Form.Label><Sb_Text font={16}>Email</Sb_Text></Form.Label>
-						<Form.Control size="sm" type="text" placeholder="Email" value={memberEmail} onChange={(e) => setMemberEmail(e.target.value)}/>
+						<Form.Control size="sm" type="email" placeholder="Email" value={memberEmail} onChange={(e) => setMemberEmail(e.target.value)}/>
 					</Form.Group>
           <Form.Group className="mb-3" controlId="AddMemberPassword">
 						<Form.Label><Sb_Text font={16}>Password</Sb_Text></Form.Label><br></br>
@@ -282,7 +288,7 @@ export default function Add_Modify_Member(props:Props) {
           {
              memberRole == "ANALYST" ? 
              <>
-              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
+              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => validateInput() ? saveAddButtonHandler() : null} disabled={!validateInput()}>
                 <Sb_Text font={12} color="--lightGrey">
                   {
                     btnLoading ? <Sb_Loader/> :<span>{props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}</span>
@@ -302,7 +308,7 @@ export default function Add_Modify_Member(props:Props) {
               <Sb_List 
               items={projects} 
               listType="PROJECT" compType='SELECT' onAction={(id, name, ac) => projectSelectHandler(id, ac)}/>
-              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
+              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => validateInput() ? saveAddButtonHandler() : null} disabled={!validateInput()}>
                 <Sb_Text font={12} color="--lightGrey">
                   {
                     btnLoading ? <Sb_Loader/> :<span>{props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}</span>
@@ -319,7 +325,7 @@ export default function Add_Modify_Member(props:Props) {
               <Sb_List 
               items={surveys} 
               listType="SURVEY" compType='SELECT' onAction={(id, name, ac) => surveySelectHandler(id, ac)}/>
-              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() => saveAddButtonHandler()}>
+              <Button className="mt-3" size="sm" style={{'float':'right'}} onClick={() =>  validateInput() ? saveAddButtonHandler() : null} disabled={!validateInput()}>
                 <Sb_Text font={12} color="--lightGrey">
                   {
                     btnLoading ? <Sb_Loader/> :<span>{props.pageType === 'ADD' ? 'Add Member' : 'Save Changes'}</span>

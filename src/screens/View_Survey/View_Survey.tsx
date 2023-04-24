@@ -838,7 +838,7 @@ export default function View_Survey () {
         case "GEO-POINT":
           return <><a href={`https://maps.google.com/?q=${((answer as Answer).answer as string).split(',')[0]},${((answer as Answer).answer as string).split(',')[1]}`} target={'_blank'}>View on Maps</a></>
         case "FILE":
-          return <><a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath((answer as Answer).answer)} target={'_blank'}>View File</a></>
+          return <>{ (answer as Answer).answer !== "" && <a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath((answer as Answer).answer)} target={'_blank'}>View File</a>}</>
         default:
           return (<>{answer.answer}</>)
       }

@@ -35,7 +35,7 @@ export default function Visitor () {
           {
             SurveyList.map((S, index) => (
               <Col key={index} style={{'cursor':'pointer'}} onClick={() => navigate('/dashboard/shared-surveys/view-survey/'+S._id, { state: {name: S.name} })} md="3">
-                <div className="survey_type" style={{'minHeight':'180px'}}>
+                <div className="survey_type" style={{'minHeight':'180px', 'marginBottom':'1em'}}>
                   <FontAwesomeIcon icon={faFileInvoice} style={{'fontSize':'3em','marginBottom':'0.25em','color':'white'}}/><br></br>
                   <Sb_Text font={20} weight={900} align="center" color="--lightGrey">{S.name}</Sb_Text>
                 </div>

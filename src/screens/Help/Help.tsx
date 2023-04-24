@@ -62,7 +62,7 @@ export default function Help () {
           {
             helpData.map((help, index) => (
               help.id == 'hlp_13' && decodeJWT(token as string).pkgId == '623d73a051e8bcb894b3f7df' ? 'Upgrade your Package to have access to Sebsib Shelf' :
-              <Sb_Help key={index} id={help.id} title={help.title} desc1={help.desc1}  img1={help.img1} desc2={help.desc2}  img2={help.img2}/>
+              <Sb_Help key={index} id={help.id} title={help.title} desc1={help.desc1}  vid={help.vid} desc2={help.desc2}/>
             ))
           }
         </Col>

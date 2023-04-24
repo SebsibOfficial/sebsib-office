@@ -1,10 +1,4 @@
 import { Props as HelpI } from "../../components/Sb_Help/Sb_Help";
-import cm from '../../assets/help/create_member.gif';
-import cp from '../../assets/help/create_project.gif';
-import em from '../../assets/help/edit_member.gif';
-import re from '../../assets/help/remove_enum.gif';
-import su from '../../assets/help/setting_update.gif';
-import vs from '../../assets/help/view_survey.gif';
 
 const helpData:HelpI[] = [
   {
@@ -19,7 +13,7 @@ const helpData:HelpI[] = [
     <li class="c5 li-bullet-0"><span class="c0">Survey: Simply the questionnaire that enumerators collect responses on.</span></li>
     <li class="c5 li-bullet-0"><span class="c0">Responses: The collected data from the enumerators</span></li>
     <li class="c5 li-bullet-0"><span class="c0">Forms are surveys that are not filled yet. They may be used interchangeably </span></li>
-  </ul>`].join(''),
+    </ul>`].join(''),
   },
   {
     id: 'hlp_2',
@@ -46,7 +40,7 @@ const helpData:HelpI[] = [
             Click Create Project to finish creating the project
         </li>
     </ol>`].join(''),
-    img1: cp
+    vid: "tMMf_cWrh48"
   },
   {
     id: 'hlp_3',
@@ -111,7 +105,7 @@ const helpData:HelpI[] = [
             Survey
         </li>
     </ol>`].join(''),
-    img1: cm
+    vid: "X-e55Mwh5P4"
   },
   {
     id: 'hlp_4',
@@ -121,101 +115,101 @@ const helpData:HelpI[] = [
     (Enumerator-based) and Online Surveys. Standard/Regular (Enumerator-based)
     are surveys which require the app to be collected. The will be downloaded
     on the app and will work offline in remote areas.
-</p>
-<ul type="disc">
-</ul>
-<ol start="1" type="1">
-    <li>
-After signing in, click on Projects then click on        <strong>Create Survey</strong> in the project you want to create the
-        survey in.
-    </li>
-    <li>
-        Then click on <strong>Standard Survey</strong>
-    </li>
-    <li>
-        Enter the survey name you want to identify it with
-    </li>
-    <li>
-        Now enter the questions. Enter the question text in the left most field
-        (Question in English). If you want additional languages to display the
-        question text, click on <strong>Add Question language</strong> (which
-        supports Amharic, Oromiffa, Tigrigna)
-    </li>
-    <li>
-        Then enter the input type. You have 16 options.
-    </li>
-</ol>
-<p>
-    a) <strong>Choice</strong>: Only choose one among options, there will be a
-    field to enter the choice details
-</p>
-<p>
-    b) <strong>Multi-select</strong>: You can choose multiple among options,
-    there will be a field to enter the choice details
-</p>
-<p>
-    c) <strong>Text</strong>: The input will be any textual input
-</p>
-<p>
-    d) <strong>Number</strong>: The input will be numerical, there will be
-    field to specify expected maximum and minimum value
-</p>
-<p>
-    e) <strong>Date</strong>: The input will be of date type, YYYY-MM-DD
-</p>
-<p>
-    f) <strong>File Upload</strong>: The input will be a file that is uploaded
-    to a server
-</p>
-<p>
-    g) <strong>Geo-Point</strong>: The input is coordinates chosen on a map
-    (requires internet)
-</p>
-<p>
-    h) <strong>Time</strong>: The input will be a time input from a clock, will
-    be read in 24-hour
-</p>
-<p>
-    i) <strong>Photo Capture</strong>: The input will be a photo uploaded to
-    the server, captured by a camera
-</p>
-<p>
-    j)
-    <strong>
-        Multi-[Number, Text, Date, File Upload, Geo-Point, Time, Photo Capture]
-    </strong>
-    : These are the same as above options when one question needs multiple
-    inputs, usually used to capture tabular data
-</p>
-<ul type="disc">
-</ul>
-<ol start="6" type="1">
-    <li>
-        If the question is a required, you can select the Required Checkbox
-        next to input type
-    </li>
-    <li>
-        If you want to have conditional display of question, select the Show
-        pattern checkbox. Then fill in the condition by select what question
-        this question depends on and the choice/option that will make this
-question show up. If you want more complex patterns click on        <strong>Add Show Pattern </strong>to add another condition for the
-        question to show up.
-    </li>
-    <li>
-        After you are done with these details, you can add another question be
-        clicking on the New Question button and repeat the above process.
-    </li>
-    <li>
-        If you are done with creating the survey, click on preview survey to
-        see the questionnaire version of the survey to confirm if everything is
-        alright
-    </li>
-    <li>
-        Then now you can click on Create Survey to finish creating the Online
-        Survey
-    </li>
-</ol>`].join(''),
-    img1: re
+    </p>
+    <ul type="disc">
+    </ul>
+    <ol start="1" type="1">
+        <li>
+    After signing in, click on Projects then click on        <strong>Create Survey</strong> in the project you want to create the
+            survey in.
+        </li>
+        <li>
+            Then click on <strong>Standard Survey</strong>
+        </li>
+        <li>
+            Enter the survey name you want to identify it with
+        </li>
+        <li>
+            Now enter the questions. Enter the question text in the left most field
+            (Question in English). If you want additional languages to display the
+            question text, click on <strong>Add Question language</strong> (which
+            supports Amharic, Oromiffa, Tigrigna)
+        </li>
+        <li>
+            Then enter the input type. You have 16 options.
+        </li>
+    </ol>
+    <p>
+        a) <strong>Choice</strong>: Only choose one among options, there will be a
+        field to enter the choice details
+    </p>
+    <p>
+        b) <strong>Multi-select</strong>: You can choose multiple among options,
+        there will be a field to enter the choice details
+    </p>
+    <p>
+        c) <strong>Text</strong>: The input will be any textual input
+    </p>
+    <p>
+        d) <strong>Number</strong>: The input will be numerical, there will be
+        field to specify expected maximum and minimum value
+    </p>
+    <p>
+        e) <strong>Date</strong>: The input will be of date type, YYYY-MM-DD
+    </p>
+    <p>
+        f) <strong>File Upload</strong>: The input will be a file that is uploaded
+        to a server
+    </p>
+    <p>
+        g) <strong>Geo-Point</strong>: The input is coordinates chosen on a map
+        (requires internet)
+    </p>
+    <p>
+        h) <strong>Time</strong>: The input will be a time input from a clock, will
+        be read in 24-hour
+    </p>
+    <p>
+        i) <strong>Photo Capture</strong>: The input will be a photo uploaded to
+        the server, captured by a camera
+    </p>
+    <p>
+        j)
+        <strong>
+            Multi-[Number, Text, Date, File Upload, Geo-Point, Time, Photo Capture]
+        </strong>
+        : These are the same as above options when one question needs multiple
+        inputs, usually used to capture tabular data
+    </p>
+    <ul type="disc">
+    </ul>
+    <ol start="6" type="1">
+        <li>
+            If the question is a required, you can select the Required Checkbox
+            next to input type
+        </li>
+        <li>
+            If you want to have conditional display of question, select the Show
+            pattern checkbox. Then fill in the condition by select what question
+            this question depends on and the choice/option that will make this
+    question show up. If you want more complex patterns click on        <strong>Add Show Pattern </strong>to add another condition for the
+            question to show up.
+        </li>
+        <li>
+            After you are done with these details, you can add another question be
+            clicking on the New Question button and repeat the above process.
+        </li>
+        <li>
+            If you are done with creating the survey, click on preview survey to
+            see the questionnaire version of the survey to confirm if everything is
+            alright
+        </li>
+        <li>
+            Then now you can click on Create Survey to finish creating the Online
+            Survey
+        </li>
+    </ol>`].join(''),
+    vid: "2C9kONqxHn8"
   },
   {
     id: 'hlp_5',
@@ -246,7 +240,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     to respondents to fill in the survey.
 </p>
 `].join(''),
-    img1: em
+    vid: "WmPNH0cTv54"
   },
   {
     id: 'hlp_6',
@@ -277,6 +271,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     6. After that click on Add Member to finish
 </p>
 `].join(''),
+vid:"U6-rujCyZ5s"
   },
   {
     id: 'hlp_7',
@@ -291,7 +286,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     3. Click Save Changes to finish
 </p>
 `].join(''),
-    img1: su
+    vid: "_44T9TeSJwM"
   },
   {
     id: 'hlp_8',
@@ -308,7 +303,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     &lt;remove&gt; icon next to the Enumerator to remove them,
 </p>
 `].join(''),
-    img1: vs
+    vid: "jGZwxA5Db9o"
   },
   {
     id: 'hlp_9',
@@ -331,6 +326,7 @@ question show up. If you want more complex patterns click on        <strong>Add 
     5. Modify their information including their password, then click Save.
 </p>
 `].join(''),
+vid:"bsVF8sa6Ilc"
   },
   {
     id: 'hlp_10',

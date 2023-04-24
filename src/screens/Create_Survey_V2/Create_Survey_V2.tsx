@@ -634,9 +634,9 @@ export default function Create_Survey_V2 () {
 
       payloadQuestion.push({
         _id: question.RID,
-        hasShowPattern: question.hasShowPattern,
+        hasShowPattern: Shps.filter(SHP => SHP.answerId != '' && SHP.questionId != '').length > 0 ? question.hasShowPattern : false,
         ptrnCount: question.ShowPatterns?.length ?? 0,
-        showIf: Shps,
+        showIf: Shps.filter(SHP => SHP.answerId != '' && SHP.questionId != ''),
         options: Ops,
         questionText: Q_Text,
         inputType: question.inputType,
