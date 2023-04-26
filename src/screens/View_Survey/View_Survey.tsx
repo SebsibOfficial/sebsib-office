@@ -216,6 +216,15 @@ export default function View_Survey () {
     return temp;
   }
 
+  function ZeroOrArrow (index:number, Q_ARR: (Question | Option | string)[]) {
+    for (let i = 0; i < Q_ARR.length; i++) {
+      const element = Q_ARR[i];
+      if ((element  as Question).questionText && index == i)
+        return "→"
+    }
+    return "0"
+  }
+
   /* WORKS */
   /* ------------*/
   const ExpandAnswers = (ExpanadedQuestions: (Question | Option | string)[], OrderedInputResponses: Response[]) => {
@@ -244,8 +253,6 @@ export default function View_Survey () {
             if ((EQ as Option).text) {
               if ((EQ as Option)._id === IRA.answer)
                 NewAnswerArray[index] = "1"
-              else
-                NewAnswerArray[index] = "0"
             }
           })
         }
@@ -310,7 +317,7 @@ export default function View_Survey () {
         }
       }
       
-      NewAnswerArray = Array.from(NewAnswerArray, item => typeof item === 'undefined' ? '→' : item);
+      NewAnswerArray = Array.from(NewAnswerArray, (item, index) => typeof item === 'undefined' ? ZeroOrArrow(index, EQ_CPY) : item);
       
       var temp:ResponseExpanded = IR
       temp.answers = NewAnswerArray
