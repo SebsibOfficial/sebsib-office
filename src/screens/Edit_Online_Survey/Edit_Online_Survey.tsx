@@ -935,7 +935,7 @@ export default function Edit_Online_Survey () {
         <Col>
         <Form.Label><Sb_Text font={16}>Survey Description</Sb_Text></Form.Label>
         <Form.Group>
-          <textarea name="question" id="" cols={75} rows={2} className="question-text-area" style={{'fontSize':'12px', 'padding':'1em'}}
+          <textarea name="question" id="" cols={75} rows={2} className="question-text-area" style={{'fontSize':'12px', 'padding':'1em'}} value={surveyDesc}
           onChange={(e) => setSurveyDesc(e.target.value)}></textarea>
         </Form.Group>
         </Col>
