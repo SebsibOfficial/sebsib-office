@@ -57,7 +57,7 @@ export function VisualizeNumber (props: Props) {
     const resp = props.responses[index];
     for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
       const answer = resp.answers[ANS_INDX];
-      if (answer.questionId === props.question?._id)
+      if (answer.questionId === props.question?._id && answer.answer != "" && answer.answer)
         RAW_RES.push(answer.answer as number)
     }
   }
@@ -66,7 +66,7 @@ export function VisualizeNumber (props: Props) {
     const resp = props.responses[index];
     for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
       const answer = resp.answers[ANS_INDX];
-      if (answer.questionId === props.question?._id)
+      if (answer.questionId === props.question?._id && answer.answer != "" && answer.answer)
         FOR_TIME_SERIES.push({
           time: resp.sentDate,
           value: answer.answer as number
