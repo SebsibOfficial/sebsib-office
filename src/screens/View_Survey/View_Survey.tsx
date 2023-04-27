@@ -234,20 +234,33 @@ export default function View_Survey () {
 
     for (let Rindex = 0; Rindex < OrderedInputResponses.length; Rindex++) {
       const IR = OrderedInputResponses[Rindex];
+      
+      // Initialize the Array
       NewAnswerArray = []
+      for (let j = 0; j < EQ_CPY.length; j++) {
+        if ((EQ_CPY[j] as Question).questionText && (translateIds("ID", (EQ_CPY[j] as Question).inputType) === "MULTI-SELECT" || translateIds("ID", (EQ_CPY[j] as Question).inputType) === "CHOICE"))
+          NewAnswerArray.push("→")
+        else
+          NewAnswerArray.push("-")        
+      }
+
       for (let indexIR = 0; indexIR < IR.answers.length; indexIR++) {
         const IRA = IR.answers[indexIR];
         
         if (translateIds("ID", IRA.inputType) === "MULTI-SELECT"){
-          (IRA.answer as []).forEach(IRA_ANS => {
-            EQ_CPY.forEach((EQ, index) => {
-              if ((EQ as Option).text) {
-                if ((EQ as Option)._id === IRA_ANS)
-                  NewAnswerArray[index] = "1"
-              }
+          if (IRA.answer != '') {
+            (IRA.answer as []).forEach(IRA_ANS => {
+              EQ_CPY.forEach((EQ, index) => {
+                if ((EQ as Option).text) {
+                  if ((EQ as Option)._id === IRA_ANS)
+                    NewAnswerArray[index] = "1"
+                }
+              })
             })
-          })
+          }
+
         }
+        // CHOICE CASE
         else if (translateIds("ID", IRA.inputType) === "CHOICE") {
           EQ_CPY.forEach((EQ, index) => {
             if ((EQ as Option).text) {
@@ -317,6 +330,11 @@ export default function View_Survey () {
         }
       }
       
+      EQ_CPY.forEach((EQ, index) => {
+        if ((EQ as Option).text && NewAnswerArray[index] == "-")
+          NewAnswerArray.splice(index, 1, "0")
+      })
+
       NewAnswerArray = Array.from(NewAnswerArray, (item, index) => typeof item === 'undefined' ? ZeroOrArrow(index, EQ_CPY) : item);
       
       var temp:ResponseExpanded = IR
@@ -586,7 +604,7 @@ export default function View_Survey () {
       const resp = responses[index];
       for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
         const answer = resp.answers[ANS_INDX];
-        if (answer.questionId === question?._id)
+        if (answer.questionId === question?._id && answer.answer != "" && answer.answer)
           RAW_RES.push(answer.answer as string)
       }
     }
@@ -640,7 +658,7 @@ export default function View_Survey () {
       const resp = responses[index];
       for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
         const answer = resp.answers[ANS_INDX];
-        if (answer.questionId === question?._id){
+        if (answer.questionId === question?._id && answer.answer != "" && answer.answer){
           RAW_RES.push((answer.answer as string).substring(0,10))
           DATA_MNTH_RAW.push((answer.answer as string).substring(5,7))
           DATA_YEAR_RAW.push((answer.answer as string).substring(0,4))
@@ -731,7 +749,7 @@ export default function View_Survey () {
       const resp = responses[index];
       for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
         const answer = resp.answers[ANS_INDX];
-        if (answer.questionId === question?._id){
+        if (answer.questionId === question?._id && answer.answer != "" && answer.answer){
           RAW_RES.push(Number((answer.answer as string).substring(0, 2)))
         }
       }
@@ -786,7 +804,7 @@ export default function View_Survey () {
       const resp = responses[index];
       for (let ANS_INDX = 0; ANS_INDX < resp.answers.length; ANS_INDX++) {
         const answer = resp.answers[ANS_INDX];
-        if (answer.questionId === question?._id)
+        if (answer.questionId === question?._id && answer.answer != "" && answer.answer)
           RAW_RES = RAW_RES.concat(answer.answer as [])
       }
     }
