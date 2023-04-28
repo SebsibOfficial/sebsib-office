@@ -969,7 +969,7 @@ export default function View_Survey () {
           </Col>
           
           {
-            translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" &&
+            translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" && surveyType != "REGULAR" &&
             <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
               <Sb_Text font={16}>{surveyStatus == "STARTED"? "Started" : "Stopped"}</Sb_Text>
               <label className="switch">
