@@ -74,13 +74,14 @@ export function VisualizeNumber (props: Props) {
     }
   }
 
-  var mode:number = 0
+  var highest_count:number = 0
+  let mode = 0
   // Get frequency
   const ValFreqObj = ValueFrequency(RAW_RES.sort(((a,b) => a - b)).map(r => r.toString()));
   for (const [key, value] of Object.entries(ValFreqObj)) {
     LABELS.push(key);
     DATA.push(value as number);
-    (value as number) >= mode ? mode = value as number : null;
+    if ((value as number) >= highest_count) { highest_count = value as number; mode = Number(key)} else null;
   }
   // Get Mode
   DATA_MD.push(mode)
