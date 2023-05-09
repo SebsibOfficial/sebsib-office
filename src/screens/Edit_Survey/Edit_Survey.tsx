@@ -140,7 +140,7 @@ export default function Edit_Survey () {
       (Q.options as any[]).forEach(O => {
         var L_RID:string[] = [];
         (O.text as any[]).forEach(T => L_RID.push(T.RID));
-        STR.push({RID: (O._id as string), Choice: L_RID})
+        STR.push({RID: (O.RID as string), Choice: L_RID})
       });
     })
 
@@ -155,7 +155,7 @@ export default function Edit_Survey () {
       var C_RID:string[] = [];
       var QT_RID:string[] = [];
       var SHPT_RID:string[] = [];
-      (Q.options as any[]).forEach(O => C_RID.push(O._id));
+      (Q.options as any[]).forEach(O => C_RID.push(O.RID));
       (Q.questionText as any[]).forEach(QT => QT_RID.push(QT.RID));
       (Q.showIf as any[]).forEach(SH => SHPT_RID.push(SH.RID));
       STR.push(
@@ -166,8 +166,8 @@ export default function Edit_Survey () {
         Choices: C_RID, 
         ShowPatterns: SHPT_RID,
         inputType: translateIds("ID", Q.inputType) as string,
-        expectedMin: Q.Expected_Min,
-        expectedMax: Q.Expected_Max
+        expectedMin: Q.exp_min,
+        expectedMax: Q.exp_max
       })
     })
 
@@ -734,9 +734,9 @@ export default function Edit_Survey () {
 
       payloadQuestion.push({
         _id: question.RID,
-        hasShowPattern: question.hasShowPattern,
+        hasShowPattern: Shps.filter(SHP => SHP.answerId != '' && SHP.questionId != '').length > 0 ? question.hasShowPattern : false,
         ptrnCount: question.ShowPatterns?.length ?? 0,
-        showIf: Shps,
+        showIf: Shps.filter(SHP => SHP.answerId != '' && SHP.questionId != ''),
         options: Ops,
         questionText: Q_Text,
         inputType: question.inputType,
