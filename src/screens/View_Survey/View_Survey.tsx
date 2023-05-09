@@ -10,6 +10,7 @@ import { DeleteSurvey, GetMember, GetResponseList, GetSurvey, UpdateSurveyStatus
 import './View_Survey.css';
 import { translateIds, decodeJWT } from "../../utils/helpers";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement, PointElement, LineElement } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as XLSX from "sheetjs-style";
 import CryptoJS from "crypto-es";
 import Sb_Alert from "../../components/Sb_ALert/Sb_Alert";
@@ -633,9 +634,23 @@ export default function View_Survey () {
         legend: {
           position: "right" as const
         },
+        datalabels: {
+          formatter: function(value:any, context:any) {
+            console.log(context.dataset)
+            let sum = (context.dataset.data as []).reduce((partialSum, a) => partialSum + a, 0);
+            let percentage = (value * 100 / sum).toFixed(2) + "%";
+            return percentage;
+          },
+          color: '#fff',
+          font: {
+            size: 14,
+            weight: 'bold',
+          }
+        }
       }
     }
-    return (<div><p className="visual-question">{question?.questionText}</p><Pie data={data} options={options}/></div>)
+    // @ts-ignore
+    return (<div><p className="visual-question">{question?.questionText}</p><Pie data={data} options={options} plugins={[ChartDataLabels]}/></div>)
   }
 
   function visualizeDate (question: Question):ReactChild {
@@ -926,7 +941,7 @@ export default function View_Survey () {
         {surveyType === "ONLINE" ? " For Online survey a link is generated, which can be shared to people to be filled" : ""}
         </Sb_Alert>
         <Col>
-          <Sb_Text font={32} weight={600}>{state.state.name}</Sb_Text><br></br><Sb_Text font={12}>ID: {shortSurveyId}</Sb_Text>
+          <Sb_Text font={32} weight={600}>{state.state.name}</Sb_Text><br></br><Sb_Text font={12}>ID: {shortSurveyId} · <i>{responses.length} Responses</i></Sb_Text>
         </Col>
         <Col className='text-end'>
           <Button style={{'marginRight': '2em'}} variant="secondary" size="sm" 
