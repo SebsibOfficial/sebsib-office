@@ -21,6 +21,7 @@ import { GetMemberList, GetProjectList, GetRecentResponseList, GetSurveyListByOr
 import { decodeJWT, translateIds, validRoutes } from '../../utils/helpers';
 import './Dashboard.css';
 import Sb_Modal from '../../components/Sb_Modal/Sb_Modal';
+import { useRem } from '../../states/RememberContext';
 
 export default function Dashboard () {
   let location = useLocation();
@@ -29,7 +30,7 @@ export default function Dashboard () {
   const {token, setAuthToken} = useAuth();
   const {page, setCriticalpage} = useCritical();
   const [modalState, setModalState] = useState(false);
-
+  const {rem, setRem} = useRem();
   // Prevents routing from the URL
   useEffect(() => {
     if (!location.state){
@@ -39,7 +40,11 @@ export default function Dashboard () {
       return navBack("/login", {state: true});
     }
   },[location.state]);
-  
+
+  window.addEventListener("beforeunload", (ev) => {
+    if (!rem) setAuthToken('');
+  });
+
   function capitalizeFirst (str:string):string {
     var splitStr = str.toLowerCase().split(' ');
     for (var i = 0; i < splitStr.length; i++) {

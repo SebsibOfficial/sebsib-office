@@ -11,7 +11,7 @@ import { AuthContext, useAuth } from '../../states/AuthContext';
 import './Login.css';
 import Sb_Loader from '../../components/Sb_Loader';
 import { translateIds } from '../../utils/helpers';
-
+import { useRem } from '../../states/RememberContext';
 interface StateInterface {
 	hash: string,
 	key: string,
@@ -28,6 +28,7 @@ export default function Login() {
   let navigate = useNavigate();
 
 	const {token, setAuthToken} = useAuth();
+  const {rem, setRem} = useRem();
 
   // Prevents routing from the URL
   useEffect(() => {
@@ -126,9 +127,12 @@ export default function Login() {
 											</Form.Group>
 											{/* LOL autoComplete="off doesn't work anymore, this is a work around" */}
 											<input type="text" autoComplete='on' style={{'display':'none'}} /> 
-											<Button size="sm" onClick={() => loginHandler()} disabled = {btnloading}>
-												{ btnloading ? <Sb_Loader/> : <Sb_Text font={12} color="--lightGrey">Log In</Sb_Text>}												
-											</Button>
+											<div className='d-flex rem-class justify-content-between align-items-baseline'>
+                        <Button size="sm" onClick={() => loginHandler()} disabled = {btnloading}>
+                          { btnloading ? <Sb_Loader/> : <Sb_Text font={12} color="--lightGrey">Log In</Sb_Text>}												
+                        </Button>
+                        <Form><Form.Check label="Remember Me" onChange={(e) => e.target.checked ? setRem(true) : setRem(false)}/></Form>
+                      </div>
 										</div>
 									</div>
 								</Sb_Card>

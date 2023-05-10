@@ -39,9 +39,11 @@ import Create_Survey_V2 from "../Create_Survey_V2/Create_Survey_V2";
 import Edit_Survey from "../Edit_Survey/Edit_Survey";
 import Shared from "../Shared/Shared";
 import Edit_Online_Survey from "../Edit_Online_Survey/Edit_Online_Survey";
+import { RemContext, useRem } from "../../states/RememberContext";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
+  const [rem, setRem] = useState(false);
   const [page, setCriticalpage] = useState<string>("");
   const { t } = useTranslation();
 
@@ -76,62 +78,64 @@ function App() {
 
   return (
     <div className="parent-screen">
-      <AuthContext.Provider value={{ token, setAuthToken }}>
-        <CriticalContext.Provider value={{ page, setCriticalpage }}>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <div>
-                  <Outlet />
-                </div>
-              }
-            >
-              {/* <Route index element={<div>Hello<br></br><Link to={toWhere()} state={true}>Login</Link></div>}/> */}
-              <Route index element={<Landing />} />
-              <Route path="pricing" element={<Pricing />}></Route>
-              <Route path="register" element={<Register />}></Route>
-              <Route path="renewal" element={<Renew />}></Route>
-              <Route path="contact" element={<div>Contact</div>}></Route>
+      <RemContext.Provider value={{rem, setRem}}>
+        <AuthContext.Provider value={{ token, setAuthToken }}>
+          <CriticalContext.Provider value={{ page, setCriticalpage }}>
+            <Routes>
               <Route
-                path="dashboard"
+                path="/"
                 element={
-                  <NotifProvider>
-                    <Dashboard />
-                  </NotifProvider>
+                  <div>
+                    <Outlet />
+                  </div>
                 }
               >
-                <Route index element={<Dashboard_Landing />}></Route>
-                <Route path="projects" element={<Projects />}>
-                  <Route index element={<Projects_Landing />} />
-                  <Route path="create-project" element={<Create_Project />} />
-                  <Route path="create-survey" element={<Survey_Choice />} />
-                  <Route path="edit-survey/:sid" element={<Edit_Survey />} />
-                  <Route path="edit-online-survey/:sid" element={<Edit_Online_Survey />} />
-                  <Route path="create-new-survey/:pid" element={<Create_Survey_V2 />} />
-                  <Route path="create-online-survey/:pid" element={<Create_Online_Survey />} />
-                  <Route path="view-survey/:sid" element={<View_Survey />} />
+                {/* <Route index element={<div>Hello<br></br><Link to={toWhere()} state={true}>Login</Link></div>}/> */}
+                <Route index element={<Landing />} />
+                <Route path="pricing" element={<Pricing />}></Route>
+                <Route path="register" element={<Register />}></Route>
+                <Route path="renewal" element={<Renew />}></Route>
+                <Route path="contact" element={<div>Contact</div>}></Route>
+                <Route
+                  path="dashboard"
+                  element={
+                    <NotifProvider>
+                      <Dashboard />
+                    </NotifProvider>
+                  }
+                >
+                  <Route index element={<Dashboard_Landing />}></Route>
+                  <Route path="projects" element={<Projects />}>
+                    <Route index element={<Projects_Landing />} />
+                    <Route path="create-project" element={<Create_Project />} />
+                    <Route path="create-survey" element={<Survey_Choice />} />
+                    <Route path="edit-survey/:sid" element={<Edit_Survey />} />
+                    <Route path="edit-online-survey/:sid" element={<Edit_Online_Survey />} />
+                    <Route path="create-new-survey/:pid" element={<Create_Survey_V2 />} />
+                    <Route path="create-online-survey/:pid" element={<Create_Online_Survey />} />
+                    <Route path="view-survey/:sid" element={<View_Survey />} />
+                  </Route>
+                  <Route path="members" element={<Members />}>
+                    <Route index element={<Members_Landing />} />
+                    <Route path="add-member" element={<Add_Modify_Member pageType="ADD" />}/>
+                    <Route path="edit-member/:id" element={<Add_Modify_Member pageType="EDIT" />}/>
+                  </Route>
+                  <Route path="shared-surveys" element={<Shared />}></Route>
+                  <Route path="shared-surveys/view-survey/:sid" element={<View_Survey />}></Route>
+                  <Route path="settings" element={<Settings />}></Route>
+                  <Route path="help" element={<Help />}></Route>
                 </Route>
-                <Route path="members" element={<Members />}>
-                  <Route index element={<Members_Landing />} />
-                  <Route path="add-member" element={<Add_Modify_Member pageType="ADD" />}/>
-                  <Route path="edit-member/:id" element={<Add_Modify_Member pageType="EDIT" />}/>
-                </Route>
-                <Route path="shared-surveys" element={<Shared />}></Route>
-                <Route path="shared-surveys/view-survey/:sid" element={<View_Survey />}></Route>
-                <Route path="settings" element={<Settings />}></Route>
-                <Route path="help" element={<Help />}></Route>
+                <Route path="login" element={<Login />} />
+                <Route path="changepassword" element={<Change />} />
+                <Route path="forgotpassword" element={<Forgot />} />
+                <Route path="blogs" element={<Blogs />} />
+                <Route path="blogs/:id" element={<SingleBlog />} />
+                <Route path="*" element={<NotFound />} />
               </Route>
-              <Route path="login" element={<Login />} />
-              <Route path="changepassword" element={<Change />} />
-              <Route path="forgotpassword" element={<Forgot />} />
-              <Route path="blogs" element={<Blogs />} />
-              <Route path="blogs/:id" element={<SingleBlog />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </CriticalContext.Provider>
-      </AuthContext.Provider>
+            </Routes>
+          </CriticalContext.Provider>
+        </AuthContext.Provider>
+      </RemContext.Provider>
     </div>
   );
 }

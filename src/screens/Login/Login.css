@@ -28,3 +28,20 @@
   align-items: center;
   margin-bottom: 1rem;
 }
+.rem-class {
+  font-size: 12px;
+  font-family: 'HelveticaNeue';
+}
+.rem-class .form-select-sm {
+  font-size: 12px !important;
+}
+.rem-class .form-check-input:checked {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+.rem-class .form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(81, 81, 118, 0.25) !important;
+}
+.rem-class .form-check-input::before {
+  content: none;
+}
