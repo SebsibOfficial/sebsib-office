@@ -180,8 +180,11 @@ nav a {
   text-align: center;
   color: var(--secondary);
 }
-#third-and-half .sub_title, #third-and-half .ficon, #third-and-half .arrow, #third-and-half .desc, #third-and-half > #title{
+#third-and-half .sub_title, #third-and-half .ficon, #third-and-half .desc, #third-and-half > #title{
   color: var(--secondary) !important;
+}
+#third-and-half .arrow {
+  color: #acacac !important;
 }
 
 .steps {
@@ -357,15 +360,21 @@ footer a {
   #third {
     height: fit-content;
   }
+  #third-and-half {
+    height: fit-content;
+  }
   .steps {
     flex-direction: column;
     margin-top: 3em;
-    width: 100%;
+    width: 100%;  
   }
   .step {
     width: 100%;
   }
   #third .arrow {
+    transform: rotate(90deg);
+  }
+  #third-and-half .arrow {
     transform: rotate(90deg);
   }
   /* ######### */
