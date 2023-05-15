@@ -57,6 +57,7 @@ interface ResponseExpanded {
   geoPoint?: string,
   sentDate: Date,
   name: string,
+  responseTime?: number,
   answers: (Answer | string) []
 }
 
@@ -71,8 +72,8 @@ export interface Question {
   options: Option[];
   inputType: string;
   hasShowPattern: boolean;
-  expectedMin?: number;
-  expectedMax?: number;
+  exp_min?: number;
+  exp_max?: number;
   number: number
 }
 
@@ -861,7 +862,7 @@ export default function View_Survey () {
     for (let index = 0; index < questions.length; index++) {
       const q = questions[index];
       if (q._id === answer.questionId && surveyType == "REGULAR") {
-        if ((answer.answer as number) > (q?.expectedMax ?? 0) || (answer.answer as number) < (q?.expectedMin ?? 0))
+        if ((answer.answer as number) > (q?.exp_max ?? 0) || (answer.answer as number) < (q?.exp_min ?? 0))
           return 'exceedRange CellWithComment'
         else
           return 'IN'
@@ -1036,6 +1037,7 @@ export default function View_Survey () {
                 <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Enumrator</th>
                 <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Sent From</th>
                 <th>Date</th>
+                <th style={{'display': surveyType == "REGULAR" ? 'none' : ''}}>Response Time</th>
                 { 
                   questionsForDisplay.map(((question, index) => (
                      <th key={index}>{(question as Question).questionText ?? (question as Option).text ?? question}</th>
@@ -1057,10 +1059,12 @@ export default function View_Survey () {
                         "-"
                       }
                     </td> }
-                    <td>{response.sentDate.toString().substring(0, 10)}</td>
+                    <td>{(response.sentDate.toString().substring(0, 10)).split("-").reverse().join("-")}</td>
+                    <td style={{'display': surveyType == "REGULAR" ? 'none' : ''}}>{Math.floor((response.responseTime ?? 0)/60)} min {(response.responseTime ?? 0) % 60} sec</td>
                     {
                       response.answers.map((answer => (
                         <td key={Math.random()} style={{'whiteSpace':'pre', }} className={ translateIds("ID", (answer as Answer).inputType) === "NUMBER" ? expectedValDisp(questions, (answer as Answer)) : " "}>
+                          {console.log(expectedValDisp(questions, (answer as Answer)))}
                           <span className="CellComment">Outside Defined Range</span>
                           {GenDispCorrection((answer as Answer).inputType, answer)}
                         </td>
