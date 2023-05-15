@@ -43,7 +43,7 @@ import { RemContext, useRem } from "../../states/RememberContext";
 
 function App() {
   const [token, setAuthToken] = useLocalStorageState<string>("token");
-  const [rem, setRem] = useState(false);
+  const [rem, setRem] = useLocalStorageState<boolean>("rm");
   const [page, setCriticalpage] = useState<string>("");
   const { t } = useTranslation();
 
