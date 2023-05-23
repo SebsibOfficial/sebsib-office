@@ -240,7 +240,9 @@ export default function View_Survey () {
       // Initialize the Array
       NewAnswerArray = []
       for (let j = 0; j < EQ_CPY.length; j++) {
-        if ((EQ_CPY[j] as Question).questionText && (translateIds("ID", (EQ_CPY[j] as Question).inputType) === "MULTI-SELECT" || translateIds("ID", (EQ_CPY[j] as Question).inputType) === "CHOICE"))
+        if ((EQ_CPY[j] as Question).questionText && (translateIds("ID", (EQ_CPY[j] as Question).inputType) === "MULTI-SELECT" 
+        || translateIds("ID", (EQ_CPY[j] as Question).inputType) === "CHOICE")
+        || translateIds("ID", (EQ_CPY[j] as Question).inputType)?.substring(0,5) === "MULTI")
           NewAnswerArray.push("→")
         else
           NewAnswerArray.push("-")        
@@ -278,12 +280,20 @@ export default function View_Survey () {
         || translateIds("ID", IRA.inputType) === "MULTI-GEO-POINT"
         || translateIds("ID", IRA.inputType) === "MULTI-DATE"
         || translateIds("ID", IRA.inputType) === "MULTI-TIME") {
-          NewAnswerArray.push("→");
+          
           var push_count = 0; // How many answers were pushed
-          (IRA.answer as []).forEach(IRA_ANS => {
-            NewAnswerArray.push(IRA_ANS)
-            push_count += 1;
-          })
+          
+          EQ_CPY.forEach((EQ, index) => { // Loop through each "Question Column"
+            if ((EQ as Question).questionText) { // If the column is the Question
+              if ((EQ as Question)._id == IRA.questionId) { // Check if the Question Object has an ID of the Answer Object's question ID
+                (IRA.answer as []).forEach((IRA_ANS, ans_index) => { // Loop through the answers in the Answer Object
+                  NewAnswerArray[index+ans_index+1] = IRA_ANS // Kepp Replace the empty spots with answers next to the question (index+1)
+                  push_count += 1;
+                })
+              }
+            }
+          });
+          
           /*
             To identify what the length of the Expanded question is, so as to fill remaining gaps
             if the response size does not match. The below code loops through the expanded questions (EQ_CPY)
@@ -884,7 +894,7 @@ export default function View_Survey () {
           return (<>{answer.answer}</>)
       }
     } else {
-      if ((answer as string).charAt((answer as string).length - 4) == "." || (answer as string).charAt((answer as string).length - 5) == ".") {
+      if (((answer as string).charAt((answer as string).length - 4) == "." || (answer as string).charAt((answer as string).length - 5) == ".") && (answer as string).includes("/")) {
         return <><a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath(answer)} target={'_blank'}>View File</a></>
       }
       else if (
