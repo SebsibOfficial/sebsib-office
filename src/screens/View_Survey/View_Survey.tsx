@@ -649,13 +649,12 @@ export default function View_Survey () {
           formatter: function(value:any, context:any) {
             console.log(context.dataset)
             let sum = (context.dataset.data as []).reduce((partialSum, a) => partialSum + a, 0);
-            let percentage = (value * 100 / sum).toFixed(2) + "%";
-            return percentage;
+            let percentage = (value * 100 / sum).toFixed(0) + "%";
+            return (value * 100 / sum) > 10 ? percentage : '';
           },
           color: '#fff',
           font: {
-            size: 14,
-            weight: 'bold',
+            size: 12,
           }
         }
       }
