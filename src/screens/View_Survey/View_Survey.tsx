@@ -45,6 +45,7 @@ export interface Response {
   geoPoint?: string,
   sentDate: Date,
   name: string,
+  responseTime?: number,
   answers: Answer[]
 }
 
@@ -101,6 +102,7 @@ export default function View_Survey () {
   const [surveylink, setSurveyLink] = useState("");
   const {token, setAuthToken} = useAuth();
   const [statusbtnLoading, setStatusbtnLoading] = useState(false);
+  const [tallyMode, setTallyMode] = useState(false);
   const [OrgMemberList, setOrgMemberList] = useState<{_id: string, name: string}[]>([]);
 
   const backgroundColor = [
@@ -533,7 +535,7 @@ export default function View_Survey () {
     return encrypted.toString().replaceAll('/', '*');
   }
 
-  function formatData (questions: (Question | Option | string)[], responses: ResponseExpanded[]) {
+  function formatData (questions: (Question | Option | string)[], responses: ResponseExpanded[] | Response[]) {
     var rows:any[][] = [[]];
     var queses:string[] = [];
     rows.push([state.state.name + ' Generated Report'])
@@ -917,23 +919,55 @@ export default function View_Survey () {
         case "FILE":
           return `${process.env.REACT_APP_FILE_SERVER_URL+"/file/static"+encryptPath((answer as Answer).answer)}`
         case "MULTI-PHOTO":
-          var fileDisp = "";
+          let fileDisp = "";
           (answer as Answer).answer.map((ans:any) => (
             fileDisp = fileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+"/file/static"+encryptPath(ans)+", \n")
           ))
           return fileDisp
+        case "MULTI-NUMBER":
+          let numDisp = "";
+          (answer as Answer).answer.map((ans:any) => (
+            numDisp = numDisp.concat(ans+", \n")
+          ))
+          return numDisp
+        case "MULTI-TEXT":
+          let textDisp = "";
+          (answer as Answer).answer.map((ans:any) => (
+            textDisp = textDisp.concat(ans+", \n")
+          ))
+          return textDisp
+        case "MULTI-SELECT":
+          let multSelect = "";
+          (answer as Answer).answer.map((ans:any) => (
+            multSelect = multSelect.concat(getAnswer(ans)+", \n")
+          ))
+          return multSelect
+        case "CHOICE":
+          return getAnswer((answer as Answer).answer)
+        case "MULTI-DATE":
+          let dateDisp = "";
+          (answer as Answer).answer.map((ans:any) => (
+            dateDisp = dateDisp.concat(ans+", \n")
+          ))
+          return dateDisp
+        case "MULTI-TIME":
+          let timeDisp = "";
+          (answer as Answer).answer.map((ans:any) => (
+            timeDisp = timeDisp.concat(ans+", \n")
+          ))
+          return timeDisp
         case "MULTI-GEO-POINT":
-        var geoDisp = "";  
-        (ans:any) => (
-          geoDisp = geoDisp.concat(`https://maps.google.com/?q=${(ans as string).split(',')[0]},${(ans as string).split(',')[1]},\n`)
-        )
+          let geoDisp = "";  
+          (answer as Answer).answer.map((ans:any) => (
+            geoDisp = geoDisp.concat(`https://maps.google.com/?q=${(ans as string).split(',')[0]},${(ans as string).split(',')[1]},\n`)
+          ))
         return geoDisp
         case "MULTI-FILE":
-          var fileDisp = "";
+          let MultifileDisp = "";
           (answer as Answer).answer.map((ans:any, index:number) => (
-            fileDisp = fileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+"/file/static"+encryptPath(ans)+", \n")
+            MultifileDisp = MultifileDisp.concat(process.env.REACT_APP_FILE_SERVER_URL+"/file/static"+encryptPath(ans)+", \n")
           ))
-          return fileDisp
+          return MultifileDisp
         default:
           return (answer.answer)
       }
@@ -941,6 +975,46 @@ export default function View_Survey () {
       return answer;
     }
   }
+
+  function SimplViewDispCorrection (answer: Answer) {
+    if (translateIds("ID", answer.inputType)?.includes("MULTI")) {
+      if (translateIds("ID", answer.inputType)?.includes("SELECT")) {
+        return getAnswer(answer.answer)
+      }
+      else if (translateIds("ID", answer.inputType)?.includes("GEO-POINT")){
+        let locs:string[] = answer.answer;
+        let out_g:any[] = []
+        locs.map((loc, index) => {
+          out_g.push(<div key={index}><a href={`https://maps.google.com/?q=${(loc as string).split(',')[0]},${(loc as string).split(',')[1]}`} target={'_blank'}>View on Maps</a><br /></div>)
+        })
+        return out_g
+      }
+      else if (translateIds("ID", answer.inputType)?.includes("PHOTO") || translateIds("ID", answer.inputType)?.includes("FILE")){
+        let paths:string[] = answer.answer;
+        let out_p:any[] = [];
+        paths.map((path, index) => {
+          out_p.push(<div key={index}><a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath(path)} target={'_blank'}>View File</a></div>)
+        })
+        return out_p
+      }
+      else {
+        return (answer.answer as []).join("\n")
+      }
+    }
+    else if (translateIds("ID", answer.inputType) == "CHOICE") {
+      return getAnswer(answer.answer)
+    }
+    else if (translateIds("ID", answer.inputType) == "GEO-POINT") {
+      return <><a href={`https://maps.google.com/?q=${answer.answer.split(',')[0]},${answer.answer.split(',')[1]}`} target={'_blank'}>View on Maps</a></>
+    }
+    else if (translateIds("ID", answer.inputType) == "FILE" || translateIds("ID", answer.inputType) == "PHOTO") {
+      return <><a href={process.env.REACT_APP_FILE_SERVER_URL+"/file/static/"+encryptPath(answer.answer)} target={'_blank'}>View File</a></>
+    }
+    else {
+      return answer.answer
+    }
+  }
+
   return (
     pageLoading ? <Sb_Loader full/> :
     <>
@@ -967,7 +1041,7 @@ export default function View_Survey () {
           }
 
           <Button style={{'marginRight': '2em'}} variant="primary" size="sm" 
-          onClick={() => exportToXLSX(formatData(questionsForDisplay, responseForDisplay), state.state.name)}>
+          onClick={() => exportToXLSX(tallyMode ? formatData(questionsForDisplay, responseForDisplay) : formatData(questions, responses), state.state.name)}>
             <Sb_Text font={12} color="--lightGrey">Download Excel</Sb_Text>
           </Button>
 
@@ -992,7 +1066,14 @@ export default function View_Survey () {
             </>
           }
           </Col>
-          
+          <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
+            <Sb_Text font={16}>{"Tally View"}</Sb_Text>
+            <label className="switch">
+              <input type="checkbox" onChange={(e) => setTallyMode(e.target.checked)} checked={tallyMode}/>
+              <span className="slider round"></span>
+            </label>
+
+          </Col>
           {
             translateIds("ID", decodeJWT(token as string).role) !== "VIEWER" && surveyType != "REGULAR" &&
             <Col md="2" className="d-flex" style={{'justifyContent':'flex-end', 'alignItems':'center'}}>
@@ -1039,51 +1120,107 @@ export default function View_Survey () {
             }
           </Row>
         </Collapse>
-          <Table bordered hover responsive>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Enumrator</th>
-                <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Sent From</th>
-                <th>Date</th>
-                <th style={{'display': surveyType == "REGULAR" ? 'none' : ''}}>Response Time</th>
-                { 
-                  questionsForDisplay.map(((question, index) => (
-                     <th key={index}>{(question as Question).questionText ?? (question as Option).text ?? question}</th>
+          {
+            tallyMode && 
+            <>
+            <Table bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Enumrator</th>
+                  <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Sent From</th>
+                  <th>Date</th>
+                  <th style={{'display': surveyType == "REGULAR" ? 'none' : ''}}>Response Time</th>
+                  { 
+                    questionsForDisplay.map(((question, index) => (
+                      <th key={index}>{(question as Question).questionText ?? (question as Option).text ?? question}</th>
+                    )))
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  responseForDisplay.slice(arSt, arEnd).map(((response, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      { surveyType == "REGULAR" && <td >{OrgMemberList.filter(m => m._id == response.enumratorId)[0].name}</td>}
+                      { surveyType == "REGULAR" &&
+                      <td>
+                        {
+                          response.geoPoint != undefined ||  response.geoPoint != null ? 
+                          <a href={`https://maps.google.com/?q=${(response.geoPoint as string).split(',')[0]},${(response.geoPoint as string).split(',')[1]}` ?? '-'} target={'_blank'}>View on Google Maps</a> :
+                          "-"
+                        }
+                      </td> }
+                      <td>{(response.sentDate.toString().substring(0, 10)).split("-").reverse().join("-")}</td>
+                      <td style={{'display': surveyType == "REGULAR" ? 'none' : ''}}>{Math.floor((response.responseTime ?? 0)/60)} min {(response.responseTime ?? 0) % 60} sec</td>
+                      {
+                        response.answers.map((answer => (
+                          <td key={Math.random()} style={{'whiteSpace':'pre', }} className={ translateIds("ID", (answer as Answer).inputType) === "NUMBER" ? expectedValDisp(questions, (answer as Answer)) : " "}>
+                            {console.log(expectedValDisp(questions, (answer as Answer)))}
+                            <span className="CellComment">Outside Defined Range</span>
+                            {GenDispCorrection((answer as Answer).inputType, answer)}
+                          </td>
+                        )))
+                      }
+                    </tr>
                   )))
                 }
-              </tr>
-            </thead>
-            <tbody>
-              {
-                responseForDisplay.slice(arSt, arEnd).map(((response, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    { surveyType == "REGULAR" && <td >{OrgMemberList.filter(m => m._id == response.enumratorId)[0].name}</td>}
-                    { surveyType == "REGULAR" &&
-                    <td>
-                      {
-                        response.geoPoint != undefined ||  response.geoPoint != null ? 
-                        <a href={`https://maps.google.com/?q=${(response.geoPoint as string).split(',')[0]},${(response.geoPoint as string).split(',')[1]}` ?? '-'} target={'_blank'}>View on Google Maps</a> :
-                        "-"
-                      }
-                    </td> }
-                    <td>{(response.sentDate.toString().substring(0, 10)).split("-").reverse().join("-")}</td>
-                    <td style={{'display': surveyType == "REGULAR" ? 'none' : ''}}>{Math.floor((response.responseTime ?? 0)/60)} min {(response.responseTime ?? 0) % 60} sec</td>
-                    {
-                      response.answers.map((answer => (
-                        <td key={Math.random()} style={{'whiteSpace':'pre', }} className={ translateIds("ID", (answer as Answer).inputType) === "NUMBER" ? expectedValDisp(questions, (answer as Answer)) : " "}>
-                          {console.log(expectedValDisp(questions, (answer as Answer)))}
-                          <span className="CellComment">Outside Defined Range</span>
-                          {GenDispCorrection((answer as Answer).inputType, answer)}
-                        </td>
+              </tbody>
+            </Table>
+            </>
+          }
+          {
+            !tallyMode && 
+            <>
+              <Table bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Enumrator</th>
+                    <th style={{'display': surveyType == "REGULAR" ? '' : 'none'}}>Sent From</th>
+                    <th>Date</th>
+                    <th style={{'display': surveyType == "REGULAR" ? 'none' : ''}}>Response Time</th>
+                    { 
+                      questions.map(((question, index) => (
+                        <th key={index}>{question.questionText}</th>
                       )))
                     }
                   </tr>
-                )))
-              }
-            </tbody>
-          </Table>
+                </thead>
+                <tbody>
+                  {
+                    responses.sort(function(a,b) { return new Date(a.sentDate).getTime() - new Date(b.sentDate).getTime() } ).slice(arSt, arEnd).map(((response, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        { surveyType == "REGULAR" && <td >{OrgMemberList.filter(m => m._id == response.enumratorId)[0].name}</td>}
+                        { surveyType == "REGULAR" &&
+                        <td>
+                          {
+                            response.geoPoint != undefined ||  response.geoPoint != null ? 
+                            <a href={`https://maps.google.com/?q=${(response.geoPoint as string).split(',')[0]},${(response.geoPoint as string).split(',')[1]}` ?? '-'} target={'_blank'}>View on Google Maps</a> :
+                            "-"
+                          }
+                        </td> }
+                        <td>{(response.sentDate.toString().substring(0, 10)).split("-").reverse().join("-")}</td>
+                        <td style={{'display': surveyType == "REGULAR" ? 'none' : ''}}>{Math.floor((response.responseTime ?? 0)/60)} min {(response.responseTime ?? 0) % 60} sec</td>
+                        {
+                          response.answers.map((answer => (
+                            <td key={Math.random()} style={{'whiteSpace':'pre', }} className={ translateIds("ID", (answer as Answer).inputType) === "NUMBER" ? expectedValDisp(questions, (answer as Answer)) : " "}>
+                              {console.log(expectedValDisp(questions, (answer as Answer)))}
+                              <span className="CellComment">Outside Defined Range</span>
+                              {/* {GenDispCorrection((answer as Answer).inputType, answer)} */}
+                              {SimplViewDispCorrection(answer)}
+                            </td>
+                          )))
+                        }
+                      </tr>
+                    )))
+                  }
+                </tbody>
+              </Table>
+            </>
+          }
           <Row className="mb-4">
             <Col className="d-flex m-4" style={{'justifyContent':'center'}}>
               <Pagination className="sb-pagination">
