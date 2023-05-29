@@ -1,6 +1,9 @@
 * {
   transition: all 150ms ease;
 }
+html {
+  scroll-behavior: unset !important;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Roboto', 'Oxygen',

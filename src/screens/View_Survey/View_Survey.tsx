@@ -1159,7 +1159,7 @@ export default function View_Survey () {
                           <td key={Math.random()} style={{'whiteSpace':'pre', }} className={ translateIds("ID", (answer as Answer).inputType) === "NUMBER" ? expectedValDisp(questions, (answer as Answer)) : " "}>
                             {console.log(expectedValDisp(questions, (answer as Answer)))}
                             <span className="CellComment">Outside Defined Range</span>
-                            {GenDispCorrection((answer as Answer).inputType, answer)}
+                              {GenDispCorrection((answer as Answer).inputType, answer)}
                           </td>
                         )))
                       }
@@ -1210,7 +1210,9 @@ export default function View_Survey () {
                               {console.log(expectedValDisp(questions, (answer as Answer)))}
                               <span className="CellComment">Outside Defined Range</span>
                               {/* {GenDispCorrection((answer as Answer).inputType, answer)} */}
-                              {SimplViewDispCorrection(answer)}
+                              <p className="m-0 p-0" style={{'whiteSpace':'break-spaces'}}>
+                                {SimplViewDispCorrection(answer)}
+                              </p>
                             </td>
                           )))
                         }
