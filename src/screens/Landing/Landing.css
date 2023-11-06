@@ -3,10 +3,10 @@ section {
   height: 100vh;
   justify-content: center;
   background-color: var(--lightGrey);
-  font-family: 'HelveticaNeue';
+  font-family: "HelveticaNeue";
 }
 body {
-  scroll-behavior: unset !important;
+  scroll-behavior: smooth !important;
 }
 .heavy_weight {
   font-weight: 900 !important;
@@ -20,7 +20,7 @@ nav {
   display: flex;
   background-color: var(--lightGrey);
   z-index: 9;
-  font-family: 'HelveticaNeue';
+  font-family: "HelveticaNeue";
   overflow-x: hidden;
 }
 nav a {
@@ -104,16 +104,24 @@ nav a {
 }
 /* ############################################################################ */
 #first {
-  background: linear-gradient(1800deg, var(--primary) 60%, var(--lightGrey) 50%);
+  background: linear-gradient(
+    1800deg,
+    var(--primary) 60%,
+    var(--lightGrey) 50%
+  );
 }
 #download_app {
   position: absolute;
-  bottom: 0;
+  bottom: 10%;
   margin: 3em;
-  background-color: var(--lightGrey);
   padding: 0.5em 1em;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 24px;
+  width: 70%;
+  font-weight: 300;
+  text-align: center;
+  color: var(--lightGrey);
 }
 #download_app a {
   text-decoration: none;
@@ -122,7 +130,7 @@ nav a {
 .headline {
   position: absolute;
   top: 39%;
-  font-family: 'Teko';
+  font-family: "Teko";
   font-size: 5em;
   text-align: center;
   text-transform: uppercase;
@@ -151,7 +159,7 @@ nav a {
   margin: 1em;
 }
 #title {
-  font-family: 'Teko';
+  font-family: "Teko";
   font-weight: 400;
   font-size: 3em;
   /* text-decoration: underline; */
@@ -180,7 +188,10 @@ nav a {
   text-align: center;
   color: var(--secondary);
 }
-#third-and-half .sub_title, #third-and-half .ficon, #third-and-half .desc, #third-and-half > #title{
+#third-and-half .sub_title,
+#third-and-half .ficon,
+#third-and-half .desc,
+#third-and-half > #title {
   color: var(--secondary) !important;
 }
 #third-and-half .arrow {
@@ -201,7 +212,7 @@ nav a {
   margin-bottom: 0.5em;
 }
 .sub_title {
-  font-family: 'Teko';
+  font-family: "Teko";
   font-weight: 400;
   font-size: 2em;
   text-decoration: underline;
@@ -220,16 +231,20 @@ nav a {
   text-align: center;
 }
 .reasons {
-  margin-top: 7em;
-  display: flex;
-  justify-content: space-evenly;
+  width: 100%;
+  margin-top: 5em;
   color: var(--secondary) !important;
+  display: grid;
+  grid-template-columns: repeat(2, 2fr);
+  grid-gap: 1em;
+  align-content: center;
 }
 .reason {
-  width: 15%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-self: center;
 }
 .reason img {
   width: 60%;
@@ -243,24 +258,52 @@ nav a {
 }
 #fifth {
   background-color: var(--yellow);
-  height: 50vh;
+  height: 90vh;
+  padding-top: 7em;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: start;
   align-items: center;
 }
-#fifth p {
-  font-family: 'Teko';
+#fifth h3 {
+  font-family: "Teko";
   font-size: 4em;
   font-weight: 900;
   margin: 0;
 }
+
+#fifth p {
+  font-family: "HelveticaNeue";
+  font-size: 1.5em;
+  font-weight: 900;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  text-align: center;
+  width: 75%;
+}
+
+#sdk-contact-us {
+  background-color: var(--lightGrey);
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 0.7em;
+  cursor: pointer;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  font-size: 1.5em;
+  color: var(--black);
+}
+
 #fifth .arrow {
   font-size: 3em;
   color: var(--secondary) !important;
   margin-left: 1em;
   margin-top: -0.2em;
   cursor: pointer;
-  transition: 'color' 50ms ease;
+  transition: "color" 50ms ease;
 }
 #fifth .arrow:hover {
   color: var(--lightGrey);
@@ -288,7 +331,7 @@ footer a {
 }
 .contact_info {
   display: flex;
-  justify-content:space-evenly
+  justify-content: space-evenly;
 }
 
 /* ################################################################################## */
@@ -341,7 +384,11 @@ footer a {
   }
   /* ------------------- */
   #first {
-    background: linear-gradient(1800deg, var(--primary) 71%, var(--lightGrey) 50%);
+    background: linear-gradient(
+      1800deg,
+      var(--primary) 71%,
+      var(--lightGrey) 50%
+    );
   }
   .headline {
     top: 42%;
@@ -366,7 +413,7 @@ footer a {
   .steps {
     flex-direction: column;
     margin-top: 3em;
-    width: 100%;  
+    width: 100%;
   }
   .step {
     width: 100%;
