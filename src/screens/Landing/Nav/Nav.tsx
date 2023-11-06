@@ -84,7 +84,7 @@ export default function Nav() {
           <a href="/register">
             <div className={"list_item "+t("css_sub_text")} id="down_but">
               <a href="./app/Sebsib-Collect.apk" download={"Sebsib-Collect.apk"} style={{'textDecoration':'none', 'color':'white'}}>
-                Download Sebsib
+                Download Sebsib App
               </a>
             </div>
           </a>

@@ -35,16 +35,11 @@ export default function Landing() {
       <Nav />
       <section id="first">
         <div className="headline">
-          <p id="p_1">Quality Data</p>
-          <p id="p_2">For All</p>
+          <p id="p_1">Collect Your Data</p>
+          <p id="p_2">without limits</p>
         </div>
         
-          <div id="download_app">
-            <a href="./app/Sebsib-Collect.apk" download={"Sebsib-Collect.apk"}>
-              <FontAwesomeIcon icon={faAndroid as IconProp} style={{'marginRight':'0.5rem'}}/>
-              Download App
-            </a>
-          </div>
+      
       </section>
       <section id="second">
         <div className="main">
@@ -55,25 +50,28 @@ export default function Landing() {
             <p>WHO ARE WE?</p>
           </div>
           <div id="intro">
-          Sebsib is your all in one data collection suite to help gather data efficiently and in an affordable way.
-           By using our website and mobile application you can easily start to collect data anywhere and in any condition. 
-           If you are a professional researcher or student trying to collect data with paper questionnaires or 
-           if you are an organization going to the harshest remote sites to gather important 
-          information with expensive foreign tools, Sebsib is here with an alternative to help you in your journey.
+          Sebsib provides efficient offline and online data collection tools
+            to help organizations overcome the challenges of gathering insights
+            in disconnected environments. Our offline mobile app allows field
+            teams to capture responses even without internet. Data is seamlessly
+            synced when connectivity returns. Meanwhile the online forms tool
+            streamlines administration. As experts in remote data collection, we
+            understand the unique needs of clients working in diverse settings.
+            Sebsib's suite of innovative solutions delivers reliable results and
+            easier workflows.
           </div>
         </div>
       </section>
       <section id="third">
         <div id="title">
-          <p>HOW SEBSIB WORKS ON THE FEILD</p>
+          <p>HOW SEBSIB WORKS</p>
         </div>
         <div className="steps">
           <div className="step">
             <FontAwesomeIcon icon={faIdBadge} className="ficon"/>
-            <p className="sub_title">REGISTER</p>
-            <p className="desc">First go to the register page,
-             and enter your details and organization name ( which might be just you ).
-              Also select the package that best suites you
+            <p className="sub_title">GET SEBSIB</p>
+            <p className="desc">Go to the register page and sign up for a Starter offer, or if you need more feature contact us so we can create an account or install the system for you.
+            After you've signed up with the level of offering you desire. Log In and have a look around of what is possible.
             </p>
           </div>
           <div className="arrow">
@@ -81,9 +79,9 @@ export default function Landing() {
           </div>
           <div className="step">
             <FontAwesomeIcon icon={faUsers} className="ficon"/>
-            <p className="sub_title">ADD MEMBERS</p>
-            <p className="desc">After that you can go to the members section and create the enumerators and analysts
-            that can collect the data and help you analyze it respectivley.
+            <p className="sub_title">PROJECTS · MEMBERS</p>
+            <p className="desc">Now that you are in, you can now start creating projects, forms, and members. These forms are going then be sent out to enumerators or to respondents as public links to be filled. 
+            Your members can be enumrators, Project Mangers, or Viewers.
             </p>
           </div>
           <div className="arrow">
@@ -91,10 +89,8 @@ export default function Landing() {
           </div>
           <div className="step">
             <FontAwesomeIcon icon={faClipboardList} className="ficon"/>
-            <p className="sub_title">DESIGN</p>
-            <p className="desc">Then design your survey questions on your liking. The platform supports various input types
-             and has complex skipping patterns for your conditional questions
-            </p>
+            <p className="sub_title">DESIGN · DEPLOY</p>
+            <p className="desc">Once you create your Projects and Members, you design your survey questions/forms on your liking. The platform supports various level of complexity when dealing with forms. When you are done with form you send it out as a link or to enumrators</p>
           </div>
           <div className="arrow">
             <FontAwesomeIcon icon={faLongArrowAltRight}/>
@@ -111,7 +107,7 @@ export default function Landing() {
           </div>
           <div className="step">
             <FontAwesomeIcon icon={faTable} className="ficon"/>
-            <p className="sub_title">VIEW</p>
+            <p className="sub_title">VIEW · SHARE</p>
             <p className="desc">Now that your data is gathered you can view it on the website or download it in an 
             excel format to do additional analysis
             </p>
@@ -119,47 +115,26 @@ export default function Landing() {
         </div>
       </section>
       <section id="third-and-half">
-        <div id="title">
-          <p>HOW SEBSIB WORKS ONLINE</p>
+        <div className="offer" id="offer-text">
+          <p>Offers</p>
         </div>
-        <div className="steps">
-          <div className="step">
-            <FontAwesomeIcon icon={faIdBadge} className="ficon"/>
-            <p className="sub_title">REGISTER</p>
-            <p className="desc">First go to the register page,
-             and enter your details and organization name ( which might be just you ).
-              Also select the package that best suites you
-            </p>
-          </div>
-          <div className="arrow">
-            <FontAwesomeIcon icon={faLongArrowAltRight}/>
-          </div>
-          <div className="step">
-            <FontAwesomeIcon icon={faClipboardList} className="ficon"/>
-            <p className="sub_title">DESIGN</p>
-            <p className="desc">Then design your survey questions on your liking. The platform supports various input types
-             and has complex skipping patterns for your conditional questions
-            </p>
-          </div>
-          <div className="arrow">
-            <FontAwesomeIcon icon={faLongArrowAltRight}/>
-          </div>
-          <div className="step">
-            <FontAwesomeIcon icon={faShareAlt} className="ficon"/>
-            <p className="sub_title">SHARE</p>
-            <p className="desc">After designing your survey, a link will be generated. You share this link to your respondents and gather some responses
-            </p>
-          </div>
-          <div className="arrow">
-            <FontAwesomeIcon icon={faLongArrowAltRight}/>
-          </div>
-          <div className="step">
-            <FontAwesomeIcon icon={faTable} className="ficon"/>
-            <p className="sub_title">VIEW</p>
-            <p className="desc">Now that your data is gathered you can view it on the website or download it in an 
-            excel format to do additional analysis
-            </p>
-          </div>
+        <div className="offer">
+          <p className="offer-title">1 · Simple</p>
+          <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+            voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+        </div>
+        <div className="offer">
+          <p className="offer-title">2 · Manged</p>
+          <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+            voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+        </div>
+        <div className="offer">
+          <p className="offer-title">3 · Enterprise</p>
+          <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+            voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
         </div>
       </section>
       <section id="fourth">

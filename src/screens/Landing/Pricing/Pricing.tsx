@@ -24,7 +24,7 @@ export default function Pricing() {
       <section className="price_section" id="price-top">
         <div className="title">
           <div id="title" style={{'color':'var(--secondary)','textAlign':'center'}}>
-            <p>PACKAGES</p>
+            <p>OFFERS</p>
           </div>
           <div className="toggle_price">
             <span id="mth" className={priceType == 'ONE_MONTH' ? 'active_toggle_mth' : ''}
