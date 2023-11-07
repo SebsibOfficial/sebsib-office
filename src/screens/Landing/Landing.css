@@ -152,12 +152,12 @@ nav a {
 }
 #title {
   font-family: 'Teko';
-  font-weight: 400;
-  font-size: 3em;
+  font-weight: 900;
+  font-size: 4em;
   /* text-decoration: underline; */
   color: var(--lightGrey);
   text-decoration-thickness: from-font;
-  margin: 1em;
+  margin: 0.5em 1em;
   /* text-decoration-line: underline; */
   text-underline-offset: 5px;
 }
@@ -179,7 +179,7 @@ nav a {
   display: flex;
   justify-content: start;
   color: var(--secondary);
-  height: 80vh;
+  height: fit-content;
 }
 #third-and-half .sub_title, #third-and-half .ficon, #third-and-half .desc, #third-and-half > #title{
   color: var(--secondary) !important;
@@ -188,23 +188,31 @@ nav a {
   color: #acacac !important;
 }
 #third-and-half .offer  {
-  height: 100vh;
   padding: 2em;
+  margin-bottom: 4em;
 }
 #third-and-half .offer .offer-title {
   font-family: 'Teko';
   text-align: start;
   font-weight: 900;
-  font-size: 3em;
+  font-size: 5em;
   color: #282829;
 }
 #third-and-half .offer .offer-content {
-  
+  width: 50%;
 }
-#offer-text {
+.offer-text {
   min-width: 15%;
+  height: 100vh;
+  padding: 2em;
 }
-#offer-text p {
+#offer-text-main {
+  position: absolute;
+  width: 15%;
+  height: 100vh;
+  padding: 2em;
+}
+#offer-text-main p {
   font-family: 'Teko';
   font-size: 11em;
   word-break: break-all;
@@ -212,6 +220,8 @@ nav a {
   font-weight: 900;
   color: #282829;
   opacity: 0.2;
+  position: sticky;
+  top: 0.5em;
 }
 .desc {
   opacity: 0.8;

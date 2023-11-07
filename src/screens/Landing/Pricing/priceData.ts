@@ -2,7 +2,7 @@ import { CardI } from "./Card_Comp";
 
 const data:CardI[] = [
   {
-   pkgName: "Simple",
+   pkgName: "Starter",
    cardColor: "white",
    projectCount: "1 Project",
    surveyCount: "2 Surveys",

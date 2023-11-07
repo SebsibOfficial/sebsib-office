@@ -67,7 +67,7 @@ export function Card_Comp(props: Props) {
       <Row className="mt-4">
         <Col>
           <Link to="/register">
-            <Button variant="primary">Get Package</Button>
+            <Button variant="primary">Get Offer</Button>
           </Link>
         </Col>
       </Row>

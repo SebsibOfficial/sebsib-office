@@ -115,26 +115,41 @@ export default function Landing() {
         </div>
       </section>
       <section id="third-and-half">
-        <div className="offer" id="offer-text">
+        <div className="offer-text" id="offer-text-main">
           <p>Offers</p>
         </div>
-        <div className="offer">
-          <p className="offer-title">1 · Simple</p>
-          <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-            voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+        <div className="offer-text">
+          <p></p>
+          {/* Place holder for CSS reasons */}
         </div>
-        <div className="offer">
-          <p className="offer-title">2 · Manged</p>
-          <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-            voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
-        </div>
-        <div className="offer">
-          <p className="offer-title">3 · Enterprise</p>
-          <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-            voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+        <div className="offer-container">
+          <div className="offer">
+            <p className="offer-title">1 · Starter</p>
+            <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis. 
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+          </div>
+          <div className="offer">
+            <p className="offer-title">2 · Managed</p>
+            <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+          </div>
+          <div className="offer">
+            <p className="offer-title">3 · Enterprise</p>
+            <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
+              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+          </div>
         </div>
       </section>
       <section id="fourth">
