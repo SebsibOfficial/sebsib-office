@@ -187,29 +187,30 @@ nav a {
 #third-and-half .arrow {
   color: #acacac !important;
 }
-#third-and-half .offer  {
+.offer  {
   padding: 2em;
-  margin-bottom: 4em;
+  margin-bottom: 6em;
 }
-#third-and-half .offer .offer-title {
+.offer .offer-title {
   font-family: 'Teko';
   text-align: start;
   font-weight: 900;
   font-size: 5em;
   color: #282829;
 }
-#third-and-half .offer .offer-content {
+.offer .offer-content {
   width: 50%;
+  font-size: 1.2em;
 }
 .offer-text {
-  min-width: 15%;
+  min-width: 16%;
   height: 100vh;
   padding: 2em;
 }
 #offer-text-main {
   position: absolute;
   width: 15%;
-  height: 100vh;
+  height: 250vh;
   padding: 2em;
 }
 #offer-text-main p {
@@ -222,6 +223,13 @@ nav a {
   opacity: 0.2;
   position: sticky;
   top: 0.5em;
+}
+
+.offer-container li{
+  list-style-type: square;
+}
+.offer-container sup{
+  font-size: 0.5em;
 }
 .desc {
   opacity: 0.8;
@@ -387,6 +395,7 @@ footer a {
   }
   #title {
     margin: 0;
+    font-size: 3em;
   }
   #intro {
     font-size: 15px;
@@ -397,6 +406,18 @@ footer a {
   }
   #third-and-half {
     height: fit-content;
+  }
+  #offer-text-main {
+    display: none;
+  }
+  .offer-text {
+    display: none;
+  }
+  .offer-content {
+    width: 100% !important;
+  }
+  .offer-title {
+    font-size: 4em !important;
   }
   .steps {
     flex-direction: column;

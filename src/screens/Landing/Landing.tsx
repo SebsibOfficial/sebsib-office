@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAndroid, faFacebook, faGooglePlay, faInstagram, faLinkedin, faTelegram, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faClipboardList, faIdBadge, faLayerGroup, faLongArrowAltRight, faShareAlt, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faClipboardList, faIdBadge, faLayerGroup, faLongArrowAltDown, faLongArrowAltRight, faShareAlt, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "react-bootstrap";
 
 export default function Landing() {
@@ -35,7 +35,7 @@ export default function Landing() {
       <Nav />
       <section id="first">
         <div className="headline">
-          <p id="p_1">Collect Your Data</p>
+          <p id="p_1">Collect Data</p>
           <p id="p_2">without limits</p>
         </div>
         
@@ -50,15 +50,11 @@ export default function Landing() {
             <p>WHO ARE WE?</p>
           </div>
           <div id="intro">
-          Sebsib provides efficient offline and online data collection tools
-            to help organizations overcome the challenges of gathering insights
-            in disconnected environments. Our offline mobile app allows field
-            teams to capture responses even without internet. Data is seamlessly
-            synced when connectivity returns. Meanwhile the online forms tool
-            streamlines administration. As experts in remote data collection, we
-            understand the unique needs of clients working in diverse settings.
-            Sebsib's suite of innovative solutions delivers reliable results and
-            easier workflows.
+          Sebsib Data Kit is your all-in-one solution for efficient and versatile data collection. 
+          Whether you're an organization, researcher, or fieldworker, our platform empowers you with a wide range of features to make data collection a breeze. 
+          And the best part? It's available for sale or via subscription, giving you the flexibility you need. 
+          As experts in remote data collection, we understand the unique needs of clients working in diverse settings. 
+          Sebsib's suite of innovative solutions delivers reliable results and easier workflows.
           </div>
         </div>
       </section>
@@ -70,8 +66,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faIdBadge} className="ficon"/>
             <p className="sub_title">GET SEBSIB</p>
-            <p className="desc">Go to the register page and sign up for a Starter offer, or if you need more feature contact us so we can create an account or install the system for you.
-            After you've signed up with the level of offering you desire. Log In and have a look around of what is possible.
+            <p className="desc">Go to the register page and sign up, Or Contact Us for using managed or enterprise services. After that, Log In and have a look around of what is possible.
             </p>
           </div>
           <div className="arrow">
@@ -80,8 +75,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faUsers} className="ficon"/>
             <p className="sub_title">PROJECTS · MEMBERS</p>
-            <p className="desc">Now that you are in, you can now start creating projects, forms, and members. These forms are going then be sent out to enumerators or to respondents as public links to be filled. 
-            Your members can be enumrators, Project Mangers, or Viewers.
+            <p className="desc">Now that you are in, you can now start creating projects, forms, and members. You will also be able to view and follow up on submissions.
             </p>
           </div>
           <div className="arrow">
@@ -90,7 +84,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faClipboardList} className="ficon"/>
             <p className="sub_title">DESIGN · DEPLOY</p>
-            <p className="desc">Once you create your Projects and Members, you design your survey questions/forms on your liking. The platform supports various level of complexity when dealing with forms. When you are done with form you send it out as a link or to enumrators</p>
+            <p className="desc">Once you create your Projects and Members, you design your survey questions/forms on your liking. The platform supports various level of complexity when dealing with forms.</p>
           </div>
           <div className="arrow">
             <FontAwesomeIcon icon={faLongArrowAltRight}/>
@@ -98,8 +92,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faLayerGroup} className="ficon"/>
             <p className="sub_title">COLLECT</p>
-            <p className="desc">Finally the fun begins, Download the app and enter your sebsib credentials. After your in, download the 
-            survey and gather responses as much as you like and send it to the website
+            <p className="desc">Download the sebsib app if you are using a the Starter offer or download ODK collect if you choose Managed or Enterprise. Then enter the server details to connect and collect.
             </p>
           </div>
           <div className="arrow">
@@ -109,14 +102,14 @@ export default function Landing() {
             <FontAwesomeIcon icon={faTable} className="ficon"/>
             <p className="sub_title">VIEW · SHARE</p>
             <p className="desc">Now that your data is gathered you can view it on the website or download it in an 
-            excel format to do additional analysis
+            excel format. Even more so you can plug the data directly into PowerBI/Excel to do additional analysis.
             </p>
           </div>
         </div>
       </section>
       <section id="third-and-half">
         <div className="offer-text" id="offer-text-main">
-          <p>Offers</p>
+          <p>OFFERS</p>
         </div>
         <div className="offer-text">
           <p></p>
@@ -124,31 +117,45 @@ export default function Landing() {
         </div>
         <div className="offer-container">
           <div className="offer">
-            <p className="offer-title">1 · Starter</p>
-            <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis. 
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+            <p className="offer-title">· STARTER</p>
+            <p className="offer-content">The Starter offer uses the Sebsib Office<sup>TM</sup> to allow 
+            users to get up-to-speed quickly and collect data with the greatest of ease. Sebsib Office<sup>TM</sup>, 
+            in addition to its offline capabilities with the mobile app Sebsib Collect<sup>TM</sup>,  
+            it supports online questionnaires that can be sent through links with Sebsib Forms<sup>TM</sup>, our web platform. Best for
+            <ul className="my-2">
+              <li>To easily create, manage and view projects</li>
+              <li>To quickly run surveys and get results immediately</li>
+              <li>Simple Mobile App configuration</li>
+              <li>Not dealing with unnecessary jargon</li>
+            </ul>
+            </p>
           </div>
           <div className="offer">
-            <p className="offer-title">2 · Managed</p>
-            <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+            <p className="offer-title">· Managed</p>
+            <p className="offer-content">The Managed offer gives the full power of the Sebsib Data Kit, 
+            which is an industrial grade data collection software that applies standards used by professional data collectors, analysts and managers. 
+            Sebsib Data Kit is fully integrated with ODK collect for collection, Power BI/Excel for analysis and XLSForms standard for form designing. 
+            Best for 
+            <ul className="my-2">
+              <li>Handling complex questionnaire design</li>
+              <li>Controlling every data collection activity</li>
+              <li>Conducting longer and bigger projects</li>
+              <li>Complex analysis</li>
+            </ul>
+            </p>
           </div>
           <div className="offer">
-            <p className="offer-title">3 · Enterprise</p>
-            <p className="offer-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-              Placeat aut rerum quidem maiores exercitationem quam possimus hic sed repellat, 
-              voluptatem distinctio repellendus debitis maxime eaque. Autem commodi iure debitis. Nobis.</p>
+            <p className="offer-title">· Enterprise</p>
+            <p className="offer-content">The Enterprise offer will give you the full power of Sebsib Data kit installed on the platform of your choice. 
+            By getting the Enterprise offer you can have unlimited projects, users and forms. 
+            This offer will let you own Sebsib Data Kit and the data collected will always be on your premises. Best for
+              <ul className="my-2">
+                <li>Institution who conduct researches frequently</li>
+                <li>Firms who value data privacy and data ownership</li>
+                <li>Companies who need complete control</li>
+                <li>Individuals conduct surveys often</li>
+              </ul>
+            </p>
           </div>
         </div>
       </section>
@@ -177,7 +184,7 @@ export default function Landing() {
             <div className="pic_cont">
               <img src={COIN}/>
             </div>
-            <p className="sub_title">CHEAP</p>
+            <p className="sub_title">AFFORDABLE</p>
             <p className="desc">No more need for foriegn currency as Sebsib provides high quality service with unbelievable pricing plans using Ethiopian Birr.
             </p>
           </div>
@@ -202,7 +209,7 @@ export default function Landing() {
       <section id="fifth">
         <p>LIKE IT SO FAR? THEN GET STARTED</p>
         <div className="arrow">
-          <Link to="/register" style={{'color':'var(--secondary)'}}><FontAwesomeIcon icon={faLongArrowAltRight}/></Link>
+          <Link to="/register" style={{'color':'var(--secondary)'}}><FontAwesomeIcon icon={faLongArrowAltDown}/></Link>
         </div>
       </section>
       <footer id="contact-us">
