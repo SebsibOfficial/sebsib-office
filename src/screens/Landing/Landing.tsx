@@ -7,6 +7,9 @@ import LOCAL from "../../assets/LOCAL.svg";
 import SHEILD from "../../assets/SHEILD.svg";
 import TIME from "../../assets/TIME.svg";
 import LogoW from "../../assets/logo_3.png";
+import ManagedOfferPic from "../../assets/managed.svg";
+import StarterOfferPic from "../../assets/starter.svg";
+import EnterOfferPic from "../../assets/enterprise.svg";
 import Nav from "./Nav/Nav";
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -39,6 +42,7 @@ export default function Landing() {
           <p id="p_2">without limits</p>
         </div>
         
+        <FontAwesomeIcon id="download_app" icon={faLongArrowAltDown}/>
       
       </section>
       <section id="second">
@@ -50,7 +54,7 @@ export default function Landing() {
             <p>WHO ARE WE?</p>
           </div>
           <div id="intro">
-          Sebsib Data Kit is your all-in-one solution for efficient and versatile data collection. 
+          Sebsib is your all-in-one solution for efficient and versatile data collection. 
           Whether you're an organization, researcher, or fieldworker, our platform empowers you with a wide range of features to make data collection a breeze. 
           And the best part? It's available for sale or via subscription, giving you the flexibility you need. 
           As experts in remote data collection, we understand the unique needs of clients working in diverse settings. 
@@ -118,44 +122,53 @@ export default function Landing() {
         <div className="offer-container">
           <div className="offer">
             <p className="offer-title">· STARTER</p>
-            <p className="offer-content">The Starter offer uses the Sebsib Office<sup>TM</sup> to allow 
-            users to get up-to-speed quickly and collect data with the greatest of ease. Sebsib Office<sup>TM</sup>, 
-            in addition to its offline capabilities with the mobile app Sebsib Collect<sup>TM</sup>,  
-            it supports online questionnaires that can be sent through links with Sebsib Forms<sup>TM</sup>, our web platform. Best for
-            <ul className="my-2">
-              <li>To easily create, manage and view projects</li>
-              <li>To quickly run surveys and get results immediately</li>
-              <li>Simple Mobile App configuration</li>
-              <li>Not dealing with unnecessary jargon</li>
-            </ul>
-            </p>
+            <div className="offer-content">
+              <p className="offer-content-text">The Starter offer uses the Sebsib Office<sup>TM</sup> to allow 
+              users to get up-to-speed quickly and collect data with the greatest of ease. Sebsib Office<sup>TM</sup>, 
+              in addition to its offline capabilities with the mobile app Sebsib Collect<sup>TM</sup>,  
+              it supports online questionnaires that can be sent through links with Sebsib Forms<sup>TM</sup>, our web platform. Best for
+              <ul className="my-2">
+                <li>To easily create, manage and view projects</li>
+                <li>To quickly run surveys and get results immediately</li>
+                <li>Simple Mobile App configuration</li>
+                <li>Not dealing with unnecessary jargon</li>
+              </ul>
+              </p>
+              <img src={StarterOfferPic}/>
+            </div>
           </div>
           <div className="offer">
             <p className="offer-title">· Managed</p>
-            <p className="offer-content">The Managed offer gives the full power of the Sebsib Data Kit, 
-            which is an industrial grade data collection software that applies standards used by professional data collectors, analysts and managers. 
-            Sebsib Data Kit is fully integrated with ODK collect for collection, Power BI/Excel for analysis and XLSForms standard for form designing. 
-            Best for 
-            <ul className="my-2">
-              <li>Handling complex questionnaire design</li>
-              <li>Controlling every data collection activity</li>
-              <li>Conducting longer and bigger projects</li>
-              <li>Complex analysis</li>
-            </ul>
-            </p>
+            <div className="offer-content">
+              <p className="offer-content-text">The Managed offer gives the full power of the Sebsib Data Kit, 
+              which is an industrial grade data collection software that applies standards used by professional data collectors, analysts and managers. 
+              Sebsib Data Kit is fully integrated with ODK collect for collection, Power BI/Excel for analysis and XLSForms standard for form designing. 
+              Best for 
+              <ul className="my-2">
+                <li>Handling complex questionnaire design</li>
+                <li>Controlling every data collection activity</li>
+                <li>Conducting longer and bigger projects</li>
+                <li>Complex analysis</li>
+              </ul>
+              </p>
+              <img src={ManagedOfferPic}/>
+            </div>            
           </div>
           <div className="offer">
             <p className="offer-title">· Enterprise</p>
-            <p className="offer-content">The Enterprise offer will give you the full power of Sebsib Data kit installed on the platform of your choice. 
-            By getting the Enterprise offer you can have unlimited projects, users and forms. 
-            This offer will let you own Sebsib Data Kit and the data collected will always be on your premises. Best for
-              <ul className="my-2">
-                <li>Institution who conduct researches frequently</li>
-                <li>Firms who value data privacy and data ownership</li>
-                <li>Companies who need complete control</li>
-                <li>Individuals conduct surveys often</li>
-              </ul>
-            </p>
+            <div className="offer-content">
+              <p className="offer-content-text">The Enterprise offer will give you the full power of Sebsib Data kit installed on the platform of your choice. 
+              By getting the Enterprise offer you can have unlimited projects, users and forms. 
+              This offer will let you own Sebsib Data Kit and the data collected will always be on your premises. Best for
+                <ul className="my-2">
+                  <li>Institution who conduct researches frequently</li>
+                  <li>Firms who value data privacy and data ownership</li>
+                  <li>Companies who need complete control</li>
+                  <li>Individuals conduct surveys often</li>
+                </ul>
+              </p>
+              <img src={EnterOfferPic}/>
+            </div>
           </div>
         </div>
       </section>
