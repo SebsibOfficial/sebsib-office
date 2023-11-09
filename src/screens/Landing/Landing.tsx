@@ -140,8 +140,8 @@ export default function Landing() {
           <div className="offer">
             <p className="offer-title">· Managed</p>
             <div className="offer-content">
-              <p className="offer-content-text">The Managed offer gives the full power of the Sebsib Data Kit, 
-              which is an industrial grade data collection software that applies standards used by professional data collectors, analysts and managers. 
+              <p className="offer-content-text">The Managed offer gives you a project on the Sebsib Data Kit platform.
+              Sebsib Data Kit is an industrial grade data collection software that applies standards used by professional data collectors, analysts and managers. 
               Sebsib Data Kit is fully integrated with ODK collect for collection, Power BI/Excel for analysis and XLSForms standard for form designing. 
               Best for 
               <ul className="my-2">

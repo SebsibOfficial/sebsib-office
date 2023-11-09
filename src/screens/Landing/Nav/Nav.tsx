@@ -81,11 +81,9 @@ export default function Nav() {
             </div>
           </Link>
           <div className="list_item netela">፣</div>
-          <a href="/register">
+          <a href="./app/Sebsib-Collect.apk" download={"Sebsib-Collect.apk"} style={{'textDecoration':'none', 'color':'white'}}>
             <div className={"list_item "+t("css_sub_text")} id="down_but">
-              <a href="./app/Sebsib-Collect.apk" download={"Sebsib-Collect.apk"} style={{'textDecoration':'none', 'color':'white'}}>
                 Download Sebsib App
-              </a>
             </div>
           </a>
         </div>
