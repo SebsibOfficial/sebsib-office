@@ -41,9 +41,12 @@ export default function Dashboard () {
     }
   },[location.state]);
 
-  window.addEventListener("beforeunload", (ev) => {
-    if (!rem) setAuthToken('');
-  });
+  /* The Remember me functionality is here: the beforeunload events
+    gets triggered on refresh which is wrong, rethink this.
+  */
+  // window.addEventListener("beforeunload", (ev) => {
+  //   if (!rem) setAuthToken('');
+  // });
 
   function capitalizeFirst (str:string):string {
     var splitStr = str.toLowerCase().split(' ');
