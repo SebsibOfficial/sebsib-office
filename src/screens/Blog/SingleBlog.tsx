@@ -67,7 +67,7 @@ export default function SingleBlog () {
               </Row>
             </Col>
             <Col>
-              <Row className="headline_img" style={{'background':'url('+blog?.thumbnail+')', 'backgroundSize':'cover'}}>
+              <Row className="headline_img" style={{'backgroundImage':'url('+blog?.thumbnail+')'}}>
                 <Col>
                 </Col>
               </Row>

@@ -14,6 +14,7 @@
   background-size: cover;
   border-radius: 10px;
   margin-bottom: 2em;
+  background-position: center;
 }
 
 .headline_title {
@@ -22,6 +23,7 @@
   font-family: 'Teko';
   text-transform: uppercase;
   font-weight: 700;
+  line-height: 1em;
 }
 
 .author_sec {

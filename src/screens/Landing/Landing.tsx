@@ -7,6 +7,9 @@ import LOCAL from "../../assets/LOCAL.svg";
 import SHEILD from "../../assets/SHEILD.svg";
 import TIME from "../../assets/TIME.svg";
 import LogoW from "../../assets/logo_3.png";
+import ManagedOfferPic from "../../assets/managed.svg";
+import StarterOfferPic from "../../assets/starter.svg";
+import EnterOfferPic from "../../assets/enterprise.svg";
 import Nav from "./Nav/Nav";
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -14,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAndroid, faFacebook, faGooglePlay, faInstagram, faLinkedin, faTelegram, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faClipboardList, faIdBadge, faLayerGroup, faLongArrowAltRight, faShareAlt, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faClipboardList, faIdBadge, faLayerGroup, faLongArrowAltDown, faLongArrowAltRight, faShareAlt, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "react-bootstrap";
 
 export default function Landing() {
@@ -35,16 +38,12 @@ export default function Landing() {
       <Nav />
       <section id="first">
         <div className="headline">
-          <p id="p_1">Quality Data</p>
-          <p id="p_2">For All</p>
+          <p id="p_1">Collect Data</p>
+          <p id="p_2">without limits</p>
         </div>
         
-          <div id="download_app">
-            <a href="./app/Sebsib-Collect.apk" download={"Sebsib-Collect.apk"}>
-              <FontAwesomeIcon icon={faAndroid as IconProp} style={{'marginRight':'0.5rem'}}/>
-              Download App
-            </a>
-          </div>
+        <FontAwesomeIcon id="download_app" icon={faLongArrowAltDown}/>
+      
       </section>
       <section id="second">
         <div className="main">
@@ -55,25 +54,23 @@ export default function Landing() {
             <p>WHO ARE WE?</p>
           </div>
           <div id="intro">
-          Sebsib is your all in one data collection suite to help gather data efficiently and in an affordable way.
-           By using our website and mobile application you can easily start to collect data anywhere and in any condition. 
-           If you are a professional researcher or student trying to collect data with paper questionnaires or 
-           if you are an organization going to the harshest remote sites to gather important 
-          information with expensive foreign tools, Sebsib is here with an alternative to help you in your journey.
+          Sebsib is your all-in-one solution for efficient and versatile data collection. 
+          Whether you're an organization, researcher, or fieldworker, our platform empowers you with a wide range of features to make data collection a breeze. 
+          And the best part? It's available for sale or via subscription, giving you the flexibility you need. 
+          As experts in remote data collection, we understand the unique needs of clients working in diverse settings. 
+          Sebsib's suite of innovative solutions delivers reliable results and easier workflows.
           </div>
         </div>
       </section>
       <section id="third">
         <div id="title">
-          <p>HOW SEBSIB WORKS ON THE FEILD</p>
+          <p>HOW SEBSIB WORKS</p>
         </div>
         <div className="steps">
           <div className="step">
             <FontAwesomeIcon icon={faIdBadge} className="ficon"/>
-            <p className="sub_title">REGISTER</p>
-            <p className="desc">First go to the register page,
-             and enter your details and organization name ( which might be just you ).
-              Also select the package that best suites you
+            <p className="sub_title">GET SEBSIB</p>
+            <p className="desc">Go to the register page and sign up, Or Contact Us for using managed or enterprise services. After that, Log In and have a look around of what is possible.
             </p>
           </div>
           <div className="arrow">
@@ -81,9 +78,8 @@ export default function Landing() {
           </div>
           <div className="step">
             <FontAwesomeIcon icon={faUsers} className="ficon"/>
-            <p className="sub_title">ADD MEMBERS</p>
-            <p className="desc">After that you can go to the members section and create the enumerators and analysts
-            that can collect the data and help you analyze it respectivley.
+            <p className="sub_title">PROJECTS · MEMBERS</p>
+            <p className="desc">Now that you are in, you can now start creating projects, forms, and members. You will also be able to view and follow up on submissions.
             </p>
           </div>
           <div className="arrow">
@@ -91,10 +87,8 @@ export default function Landing() {
           </div>
           <div className="step">
             <FontAwesomeIcon icon={faClipboardList} className="ficon"/>
-            <p className="sub_title">DESIGN</p>
-            <p className="desc">Then design your survey questions on your liking. The platform supports various input types
-             and has complex skipping patterns for your conditional questions
-            </p>
+            <p className="sub_title">DESIGN · DEPLOY</p>
+            <p className="desc">Once you create your Projects and Members, you design your survey questions/forms on your liking. The platform supports various level of complexity when dealing with forms.</p>
           </div>
           <div className="arrow">
             <FontAwesomeIcon icon={faLongArrowAltRight}/>
@@ -102,8 +96,7 @@ export default function Landing() {
           <div className="step">
             <FontAwesomeIcon icon={faLayerGroup} className="ficon"/>
             <p className="sub_title">COLLECT</p>
-            <p className="desc">Finally the fun begins, Download the app and enter your sebsib credentials. After your in, download the 
-            survey and gather responses as much as you like and send it to the website
+            <p className="desc">Download the sebsib app if you are using a the Starter offer or download ODK collect if you choose Managed or Enterprise. Then enter the server details to connect and collect.
             </p>
           </div>
           <div className="arrow">
@@ -111,54 +104,71 @@ export default function Landing() {
           </div>
           <div className="step">
             <FontAwesomeIcon icon={faTable} className="ficon"/>
-            <p className="sub_title">VIEW</p>
+            <p className="sub_title">VIEW · SHARE</p>
             <p className="desc">Now that your data is gathered you can view it on the website or download it in an 
-            excel format to do additional analysis
+            excel format. Even more so you can plug the data directly into PowerBI/Excel to do additional analysis.
             </p>
           </div>
         </div>
       </section>
       <section id="third-and-half">
-        <div id="title">
-          <p>HOW SEBSIB WORKS ONLINE</p>
+        <div className="offer-text" id="offer-text-main">
+          <p>OFFERS</p>
         </div>
-        <div className="steps">
-          <div className="step">
-            <FontAwesomeIcon icon={faIdBadge} className="ficon"/>
-            <p className="sub_title">REGISTER</p>
-            <p className="desc">First go to the register page,
-             and enter your details and organization name ( which might be just you ).
-              Also select the package that best suites you
-            </p>
+        <div className="offer-text">
+          <p></p>
+          {/* Place holder for CSS reasons */}
+        </div>
+        <div className="offer-container">
+          <div className="offer">
+            <p className="offer-title">· STARTER</p>
+            <div className="offer-content">
+              <p className="offer-content-text">The Starter offer uses the Sebsib Office<sup>TM</sup> to allow 
+              users to get up-to-speed quickly and collect data with the greatest of ease. Sebsib Office<sup>TM</sup>, 
+              in addition to its offline capabilities with the mobile app Sebsib Collect<sup>TM</sup>,  
+              it supports online questionnaires that can be sent through links with Sebsib Forms<sup>TM</sup>, our web platform. Best for
+              <ul className="my-2">
+                <li>To easily create, manage and view projects</li>
+                <li>To quickly run surveys and get results immediately</li>
+                <li>Simple Mobile App configuration</li>
+                <li>Not dealing with unnecessary jargon</li>
+              </ul>
+              </p>
+              <img src={StarterOfferPic}/>
+            </div>
           </div>
-          <div className="arrow">
-            <FontAwesomeIcon icon={faLongArrowAltRight}/>
+          <div className="offer">
+            <p className="offer-title">· Managed</p>
+            <div className="offer-content">
+              <p className="offer-content-text">The Managed offer gives you a project on the Sebsib Data Kit platform.
+              Sebsib Data Kit is an industrial grade data collection software that applies standards used by professional data collectors, analysts and managers. 
+              Sebsib Data Kit is fully integrated with ODK collect for collection, Power BI/Excel for analysis and XLSForms standard for form designing. 
+              Best for 
+              <ul className="my-2">
+                <li>Handling complex questionnaire design</li>
+                <li>Controlling every data collection activity</li>
+                <li>Conducting longer and bigger projects</li>
+                <li>Complex analysis</li>
+              </ul>
+              </p>
+              <img src={ManagedOfferPic}/>
+            </div>            
           </div>
-          <div className="step">
-            <FontAwesomeIcon icon={faClipboardList} className="ficon"/>
-            <p className="sub_title">DESIGN</p>
-            <p className="desc">Then design your survey questions on your liking. The platform supports various input types
-             and has complex skipping patterns for your conditional questions
-            </p>
-          </div>
-          <div className="arrow">
-            <FontAwesomeIcon icon={faLongArrowAltRight}/>
-          </div>
-          <div className="step">
-            <FontAwesomeIcon icon={faShareAlt} className="ficon"/>
-            <p className="sub_title">SHARE</p>
-            <p className="desc">After designing your survey, a link will be generated. You share this link to your respondents and gather some responses
-            </p>
-          </div>
-          <div className="arrow">
-            <FontAwesomeIcon icon={faLongArrowAltRight}/>
-          </div>
-          <div className="step">
-            <FontAwesomeIcon icon={faTable} className="ficon"/>
-            <p className="sub_title">VIEW</p>
-            <p className="desc">Now that your data is gathered you can view it on the website or download it in an 
-            excel format to do additional analysis
-            </p>
+          <div className="offer">
+            <p className="offer-title">· Enterprise</p>
+            <div className="offer-content">
+              <p className="offer-content-text">The Enterprise offer will give you the full power of Sebsib Data kit installed on the platform of your choice. 
+              By getting the Enterprise offer you can have unlimited projects, users and forms. 
+              This offer will let you own Sebsib Data Kit and the data collected will always be on your premises. Best for
+                <ul className="my-2">
+                  <li>Institution who conduct researches frequently</li>
+                  <li>Firms who value data privacy and data ownership</li>
+                  <li>Companies who need complete control</li>
+                  <li>Individuals conduct surveys often</li>
+                </ul>
+              </p>
+              <img src={EnterOfferPic}/>
+            </div>
           </div>
         </div>
       </section>
@@ -187,7 +197,7 @@ export default function Landing() {
             <div className="pic_cont">
               <img src={COIN}/>
             </div>
-            <p className="sub_title">CHEAP</p>
+            <p className="sub_title">AFFORDABLE</p>
             <p className="desc">No more need for foriegn currency as Sebsib provides high quality service with unbelievable pricing plans using Ethiopian Birr.
             </p>
           </div>
@@ -212,7 +222,7 @@ export default function Landing() {
       <section id="fifth">
         <p>LIKE IT SO FAR? THEN GET STARTED</p>
         <div className="arrow">
-          <Link to="/register" style={{'color':'var(--secondary)'}}><FontAwesomeIcon icon={faLongArrowAltRight}/></Link>
+          <Link to="/register" style={{'color':'var(--secondary)'}}><FontAwesomeIcon icon={faLongArrowAltDown}/></Link>
         </div>
       </section>
       <footer id="contact-us">

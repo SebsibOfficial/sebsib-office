@@ -177,9 +177,12 @@ export default function Register() {
               onChange={(e) => setPackage(e.target.value)}
               required>
                 <option value="">{t('register.package_type')}</option>
-                <option value="FREE TRIAL">Free Trial</option>
+                <option value="FREE TRIAL">Starter</option>
                 <option value="PREMIUM">
-                  Premium
+                  Managed
+                </option>
+                <option value="ENTERPRISE">
+                  Enterprise
                 </option>
               </Form.Select>
             </Form.Group>
