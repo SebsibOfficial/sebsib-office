@@ -248,9 +248,9 @@ export function Dashboard_Landing () {
     }).catch((err) => console.log(err));
   }, [])
 
-  useEffect(() => {
-    getRecentResp();
-  }, [members, surveys])
+  // useEffect(() => {
+  //   getRecentResp();
+  // }, [members, surveys])
 
   function getProjectId (surveyId: string):{id: string, name: string} {
     var id:string = "";
@@ -370,7 +370,7 @@ export function Dashboard_Landing () {
                 </div>
               </Col>
             </Row>
-            <Row>
+            {/* <Row>
               <Col>
               <div className='dash-cols dash-recent'>
                   <Row className='g-0 mb-2'>
@@ -398,7 +398,7 @@ export function Dashboard_Landing () {
                   </Row>
                 </div>
               </Col>
-            </Row>
+            </Row> */}
           </Col>
           <Col md="3">
             <div className='dash-cols dash-members'>
